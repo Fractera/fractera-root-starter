@@ -33,10 +33,23 @@
     "Reaches stored data only through the node's data element; never opens a database file.",
     "Public pages stay static: no force-dynamic, no cookies() or headers() in a layout or a page."
   ],
-  "provides": ["site"],
+  "provides": [
+    "site"
+  ],
   "languages": {
-    "count": 1,
-    "note": "The starter page is English only; the node's public pages arrive in a later version with their own languages."
+    "count": 2,
+    "note": "en is the base, ru the translation; the set is this site's own setting (NEXT_PUBLIC_SUPPORTED_LANGUAGES, kind own)."
   },
-  "license": "MIT"
+  "license": "MIT",
+  "settings": {
+    "door": "/api/settings/design",
+    "key": {
+      "header": "X-Settings-Key",
+      "env": "SETTINGS_SECRET"
+    },
+    "owns": [
+      "DESIGN-CONFIG"
+    ],
+    "note": "The site owns its settings; the node core reads and patches them through this door and rebuilds the site. Without the door the core leaves this site's settings alone."
+  }
 }
