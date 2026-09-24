@@ -24,7 +24,9 @@
     "build": "npm run build",
     "start": "node .next/standalone/<traced path>/server.js",
     "startNote": "The standalone server reads PORT and HOSTNAME from the environment. The installer finds server.js under .next/standalone and copies .next/static next to it.",
-    "nativeModules": []
+    "nativeModules": [],
+    "distDirEnv": "NEXT_DIST_DIR",
+    "distDirNote": "The node builds into a neighbour folder named by this variable while the old build serves, then switches: no downtime. A replacement that does not declare it is stopped for the build."
   },
   "contract": [
     "Takes its port from the environment; never remembers a number.",

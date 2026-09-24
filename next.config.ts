@@ -12,6 +12,9 @@ const root = path.resolve(__dirname)
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // 280-9: the node builds this site into a NEIGHBOUR folder (.next-a / .next-b) while the running
+  // build keeps serving — no downtime. Unset, it is the usual .next.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   outputFileTracingRoot: root,
   turbopack: { root },
   serverExternalPackages: ["better-sqlite3"],

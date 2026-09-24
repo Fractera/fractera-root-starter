@@ -99,3 +99,5 @@ lib/images/previews.generated.ts
 # только что написанный навык оказался вне git.
 .install-stamp.json
 next-env.d.ts
+.next-a/
+.next-b/
