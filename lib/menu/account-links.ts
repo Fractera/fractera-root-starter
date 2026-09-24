@@ -1,5 +1,5 @@
 import { administrationUsersUi } from "@/app/[lang]/(protectedLayer)/(admin)/administration/users/_data/ui.i18n"
-import type { DrawerLink } from "@/components/menu/account/account-drawer.client"
+import type { ShellLink as DrawerLink } from "@/components/shell/shell-types"
 // The architect pages live in the node's core (280); /<lang>/architect redirects there.
 const ARCHITECT_HOME = "/architect"
 const ARCHITECT_TITLE: Record<string, string> = {
