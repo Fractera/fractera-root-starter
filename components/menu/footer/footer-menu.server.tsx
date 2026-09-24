@@ -189,7 +189,10 @@ export function FooterMenu({ lang }: { lang: string }) {
         <div className="flex flex-row items-center justify-between gap-3 text-sm">
           <div className="flex flex-col gap-1 min-w-0">
             <span className="truncate">
-              © {new Date().getFullYear()} {cfg.short_name}.<span className="hidden sm:inline"> {ui.rights}</span>
+              {/* Имя ведёт в корень проекта, как имя в шапке (слово владельца 2026-09-24). */}
+              © {new Date().getFullYear()}{" "}
+              <Link href={`/${lang}`} className="hover:text-primary transition-colors">{cfg.short_name}</Link>.
+              <span className="hidden sm:inline"> {ui.rights}</span>
             </span>
             {address && <span className="text-xs text-muted-foreground truncate">{address}</span>}
           </div>
