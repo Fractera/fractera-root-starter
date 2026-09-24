@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getAppConfig } from "@/config/app-config";
-import { getMenuGroups, slotHasGroups } from "@/lib/menu/group-menus";
-import { navGroupsFromConfig } from "@/lib/menu/nav-config";
+import { slotHasGroups } from "@/lib/menu/group-menus";
 import { DesktopNav } from "@/components/menu/top/desktop-nav.client";
 import { MobileMenu } from "@/components/menu/top/mobile-menu.client";
 import { AccountButton } from "@/components/menu/account/account-button.client";
@@ -11,6 +10,7 @@ import { accountLinks } from "@/lib/menu/account-links";
 import { appDialogUi } from "@/components/dialog/app-dialog.i18n"
 import { DrawerToggle } from "@/components/menu/shared/drawer-toggle.client";
 import { featureOn } from "@/config/platform-config";
+import { resolveTopGroups } from "@/lib/menu/site-menu";
 import { topMenuUi } from "@/components/menu/top/top-menu.i18n";
 
 // Always-present TOP menu (step 160). Exists in every project, renders NOTHING until a
@@ -39,37 +39,9 @@ export async function TopMenu({ lang }: { lang: string }) {
   // Источник пунктов: настройки панели, а если владелец их ещё не открывал —
   // прежние манифесты на диске. Различие «ветки нет» и «ветка пуста» разобрано
   // в `nav-config.ts`; без него каждый существующий проект потерял бы меню.
+  // 283-1: меню собирается одной функцией с дверью /api/menu/<язык> — ту же отдают всем службам.
   const menuOn = featureOn("topMenu");
-  const fromConfig = menuOn ? navGroupsFromConfig("top", lang) : null;
-  const baseGroups = menuOn ? (fromConfig ?? getMenuGroups("top", lang)) : [];
-
-  // Полоса шапки нужна, когда её кто-то населяет: само меню (даже пустое — это
-  // состояние, а не ошибка) или ящик сбоку, которому нужен переключатель.
-  // 🔒 ЗАРЕЗЕРВИРОВАННЫЕ КНОПКИ (261-6) — слово владельца 2026-09-21: «Nostr - blog. Два
-  // последних названия будут просто кнопки про которые пока никуда не будут везти».
-  // Nostr — будущий визуальный поиск микросервисов сети. Кнопка без адреса, а не
-  // ссылка на пустую страницу: пустая страница в выдаче хуже отсутствующей.
-  // Новый массив, а не push: список групп может быть закэширован, и каждое
-  // обновление страницы дописывало бы кнопки ещё раз.
-  const ui0 = topMenuUi(lang);
-  // 🔒 STORE И A2A (277) — слово владельца 2026-09-23: «После кнопки core need Store, a после AGI
-  // need A2A, заглушки то есть неактивные». Встают ВПЛОТНУЮ за своим соседом, а не по `order`:
-  // меню выводится в порядке массива. Соседа нет (владелец убрал пункт) — кнопка встаёт перед Nostr,
-  // а не пропадает молча.
-  const reserved = (slug: string, label: string) =>
-    ({ slug, label, order: 0, childrenAsDropdown: false, roles: "public", children: [], inert: true });
-  const after: Record<string, ReturnType<typeof reserved>> = {
-    core: reserved("store", ui0.store),
-    "agi-item": reserved("a2a", ui0.a2a),
-  };
-  const placed = baseGroups.flatMap((g) => (after[g.slug] ? [g, after[g.slug]] : [g]));
-  const orphans = Object.keys(after).filter((s) => !baseGroups.some((g) => g.slug === s)).map((s) => after[s]);
-  const groups = menuOn ? [
-    ...placed,
-    ...orphans,
-    { slug: "nostr", label: ui0.nostr, order: 50, childrenAsDropdown: false, roles: "public", children: [], inert: true },
-    { slug: "blog", label: ui0.blog, order: 60, childrenAsDropdown: false, roles: "public", children: [], inert: true },
-  ] : baseGroups;
+  const groups = resolveTopGroups(lang);
 
   const barNeeded = menuOn || leftHas || rightHas;
 

@@ -4,9 +4,8 @@ import { findSocialIcon } from "@/components/icons/socials";
 import { isUploadedIcon } from "@/lib/socials/catalogue";
 import { getAppConfig } from "@/config/app-config";
 import { resolveSocialLinks, socialHref } from "@/config/app-config.defaults";
-import { getMenuGroups } from "@/lib/menu/group-menus";
-import { navGroupsFromConfig, defaultFooterGroups } from "@/lib/menu/nav-config";
 import { featureOn } from "@/config/platform-config";
+import { resolveFooterGroups } from "@/lib/menu/site-menu";
 import { buttonVariants } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/menu/shared/theme-toggle.client";
 import { AppWidthToggle } from "@/components/menu/footer/app-width-toggle.client";
@@ -80,12 +79,10 @@ export function FooterMenu({ lang }: { lang: string }) {
   // он раздел не открывал, и работает прежний источник. Иначе каждый
   // существующий проект потерял бы ссылки подвала молча.
   const pagesOn = featureOn("footerPages");
-  const fromConfig = pagesOn ? navGroupsFromConfig("footer", lang) : null;
   // Владелец раздел не открывал — показываем три страницы, которые в проекте
   // уже есть. Плюс группы с диска, если разработчик их объявил.
-  const groups = pagesOn
-    ? (fromConfig ?? [...defaultFooterGroups(lang), ...getMenuGroups("footer", lang)])
-    : [];
+  // 283-1: та же функция, что у двери /api/menu/<язык>.
+  const groups = resolveFooterGroups(lang);
   const ui = footerLabels(lang);
   // 🔒 ВИДИМОСТЬ — ВОПРОС PLATFORM-CONFIG, СОДЕРЖАНИЕ — APP-CONFIG (шаг 523,
   // разделение владельца). Прежде ряд значков появлялся просто оттого, что в
