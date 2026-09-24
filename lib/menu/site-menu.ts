@@ -25,8 +25,10 @@ export function resolveTopGroups(lang: string): MenuGroup[] {
   // кнопка встаёт перед Nostr, а не пропадает молча.
   const reserved = (slug: string, label: string): MenuGroup =>
     ({ slug, label, order: 0, childrenAsDropdown: false, roles: "public", children: [], inert: true })
+  // 290: Store — за Root (слово владельца: «между кнопкой core и кнопкой store добавить кнопку Root»); нет Root — за Core.
+  const storeAfter = baseGroups.some((g) => g.slug === "root") ? "root" : "core"
   const after: Record<string, MenuGroup> = {
-    core: reserved("store", ui0.store),
+    [storeAfter]: reserved("store", ui0.store),
     "agi-item": reserved("a2a", ui0.a2a),
   }
   const placed = baseGroups.flatMap((g) => (after[g.slug] ? [g, after[g.slug]] : [g]))
