@@ -49,11 +49,15 @@ async function ask(url: string): Promise<ShellData> {
   throw last
 }
 
-export function loadProjectShell(lang: string): Promise<ShellData | null> {
+/**
+ * `where` — адреса, если поверхность знает их сама (ядро узла выводит их из реестра и домена); иначе —
+ * окружение службы, которое выдаёт установщик узла.
+ */
+export function loadProjectShell(lang: string, where?: { shellUrl?: string | null; siteUrl?: string | null }): Promise<ShellData | null> {
   const hit = memo.get(lang)
   if (hit) return hit
-  const shellUrl = process.env.PROJECT_SHELL_URL?.trim()
-  const base = trim(process.env.PROJECT_SITE_URL?.trim() ?? "")
+  const shellUrl = (where?.shellUrl ?? process.env.PROJECT_SHELL_URL)?.trim()
+  const base = trim((where?.siteUrl ?? process.env.PROJECT_SITE_URL)?.trim() ?? "")
   const job = (async () => {
     if (!shellUrl || !base) {
       console.warn(`[project-shell] ${lang}: нет PROJECT_SHELL_URL или PROJECT_SITE_URL — шапки и подвала проекта не будет`)
