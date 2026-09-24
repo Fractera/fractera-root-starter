@@ -291,6 +291,17 @@ async function apiAuthGate(request: NextRequest): Promise<NextResponse> {
 }
 
 // ── Job 2: language routing for content pages ──────────────────────────────
+// 🔒 ВНУТРЕННЯЯ ПЕРЕЗАПИСЬ — ПО ПРОТОКОЛУ САМОГО СЕРВЕРА (289, измерено 2026-09-24). Туннель Cloudflare ставит
+// `x-forwarded-proto: https`, и `nextUrl` получает `https:`. Перезапись на `https://localhost:<порт>/en` Next счёл
+// ВНЕШНЕЙ и пошёл сам к себе по TLS: `EPROTO wrong version number` → корень `https://<домен>/` отдавал посетителям 500,
+// а с машины (без заголовка) — 200. Перезапись внутренняя по смыслу, поэтому протокол — `http:`.
+function internalRewrite(request: NextRequest, pathname: string): NextResponse {
+  const url = request.nextUrl.clone();
+  url.pathname = pathname;
+  url.protocol = "http:";
+  return NextResponse.rewrite(url);
+}
+
 function languageRouter(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
   const firstSegment = pathname.split("/")[1];
@@ -308,9 +319,7 @@ function languageRouter(request: NextRequest): NextResponse {
       url.pathname = without;
       return withLangCookie(NextResponse.redirect(url, 301), singleLang, request);
     }
-    const url = request.nextUrl.clone();
-    url.pathname = `/${singleLang}${pathname}`;
-    return withLangCookie(NextResponse.rewrite(url), singleLang, request);
+    return withLangCookie(internalRewrite(request, `/${singleLang}${pathname}`), singleLang, request);
   }
 
   // Multi-language mode: language already present in the URL → pass through.
@@ -328,9 +337,7 @@ function languageRouter(request: NextRequest): NextResponse {
   // receive real HTML at the root instead of a redirect.
   if (pathname === "/" || pathname === "") {
     if (lang === DEFAULT_LANGUAGE) {
-      const url = request.nextUrl.clone();
-      url.pathname = `/${DEFAULT_LANGUAGE}`;
-      const res = NextResponse.rewrite(url);
+      const res = internalRewrite(request, `/${DEFAULT_LANGUAGE}`);
       res.headers.set("x-lang", lang);
       res.headers.set("Vary", "Cookie, Accept-Language");
       return withLangCookie(res, lang, request);
