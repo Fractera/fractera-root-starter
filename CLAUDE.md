@@ -29,13 +29,14 @@ that keeps the contract below can take your place with one line in the node's
 settings. The installer gives you only neighbours (`AUTH_SERVICE_URL`, `REMOTE_DATA_URL`,
 `ARCHITECT_URL`, `NEXT_PUBLIC_AUTH_URL`) and the data key.
 
-**Since node step 299-6 the owner's decisions come from the node's settings element** (`config`,
-`config.<zone>`). `lib/project-settings.ts` asks it (`CONFIG_SERVICE_URL` + `SETTINGS_SECRET`) at server
-start (`instrumentation.ts`) and whenever it pushes `POST /api/settings/refresh` after a save; the answer
-is kept as the **last received copy** in `SERVICE_DATA_DIR/project-settings.json` (outside the build).
-The three readers (`config/app-config.ts`, `platform-config.ts`, `design-config.ts`) lay that copy over
-this site's defaults; with no copy yet they read the site's own files (the seed). The element is down —
-the site keeps serving the last copy. Change the owner's settings in the element, not in these files.
+**The node's settings element (`config`, `config.<zone>`) is a source you CHOSE, not a master** (node
+step 299-6). It keeps the owner's decisions and gives them over MCP (`settings_version`,
+`get_project_settings`); it calls no one. This site takes them of its own will: `lib/project-settings.ts`
+asks at server start and once a minute (`instrumentation.ts` → own door `POST /api/settings/refresh`),
+fetches only when the fingerprint moves, and keeps the **last received copy** in
+`SERVICE_DATA_DIR/project-settings.json` (outside the build). The three readers (`config/app-config.ts`,
+`platform-config.ts`, `design-config.ts`) lay that copy over this site's defaults whenever it exists; the
+element is down or removed — the last copy keeps serving. No copy ever received — the site's own files apply.
 
 ## 🔒 The first edit makes this site the person's own repository
 

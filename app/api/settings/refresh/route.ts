@@ -5,17 +5,14 @@ import { revalidatePath } from "next/cache"
 
 import { pullProjectSettings } from "@/lib/project-settings"
 
-// ТОЛЧОК ЭЛЕМЕНТА «НАСТРОЙКИ ПРОЕКТА» (шаг 299-6).
+// ОБНОВИТЬ НАСТРОЙКИ ПРОЕКТА — СОБСТВЕННАЯ ДВЕРЬ САЙТА (шаг 299-6).
 //
-// Элемент `config` после каждого сохранения зовёт эту дверь у всех элементов узла. Сайт сам спрашивает элемент
-// (`pullProjectSettings`), записывает последнюю копию и сбрасывает кэш статических страниц и дверей оболочки —
-// правка видна на следующей загрузке, без пересборки. Страницы остаются статическими (ISR): сброс кэша не делает
-// их динамическими.
+// Её зовёт опрос самого сайта раз в минуту (`instrumentation.ts`, по петле) — элемент настроек никого не зовёт. Дверь
+// спрашивает элемент по MCP (`pullProjectSettings`); отпечаток сменился — пишет последнюю копию и сбрасывает кэш
+// статических страниц и дверей оболочки: правка видна на следующей загрузке, без пересборки. Страницы остаются
+// статическими (ISR). Почему дверь, а не прямой вызов из таймера: сброс кэша Next работает только внутри запроса.
 //
-// 🔒 ТОЛЧОК НЕ НЕСЁТ НАСТРОЕК — ТОЛЬКО ПОВОД. Сайт берёт их сам, тем же ключом, что при запуске: одна дорога
-// данных вместо двух, и чужой толчок с подделанным телом ничего не запишет.
-// 🔒 КЛЮЧ, А НЕ РОЛЬ: элемент приходит без сессии посетителя. Ключ `SETTINGS_SECRET` общий у узла (установщик
-// кладёт одно значение всем, кто его объявил). Ключа в окружении нет — дверь закрыта для всех.
+// 🔒 КЛЮЧ, А НЕ РОЛЬ: `SETTINGS_SECRET` узла. Ключа в окружении нет — дверь закрыта для всех.
 export const dynamic = "force-dynamic"
 
 function keyOk(req: NextRequest): boolean {
@@ -29,8 +26,8 @@ export async function POST(req: NextRequest) {
   if (!keyOk(req)) return NextResponse.json({ ok: false, reason: "bad-key" }, { status: 401 })
 
   const pulled = await pullProjectSettings()
-  // Отказ элемента — не повод держать старый кэш страниц, но и не повод его сбрасывать: копия прежняя.
-  if (!pulled.ok) return NextResponse.json(pulled, { status: 502 })
+  // Элемент не ответил — копия прежняя, кэш страниц не трогаем.
+  if (!pulled.ok) return NextResponse.json(pulled, { status: pulled.reason === "no-config-element" ? 200 : 502 })
 
   if (pulled.changed) {
     // Всё дерево: настройки питают мету, JSON-LD, манифест, шапку и подвал каждой страницы.
@@ -40,5 +37,5 @@ export async function POST(req: NextRequest) {
     revalidatePath("/api/shell/[lang]", "page")
     revalidatePath("/api/menu/[lang]", "page")
   }
-  return NextResponse.json({ ok: true, changed: pulled.changed, receivedAt: pulled.receivedAt })
+  return NextResponse.json({ ok: true, changed: pulled.changed, version: pulled.version })
 }
