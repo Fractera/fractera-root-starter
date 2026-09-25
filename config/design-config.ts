@@ -5,6 +5,7 @@ import { cache } from "react"
 import { DEFAULT_DESIGN_CONFIG, type DesignConfig } from "./design-config.defaults"
 import { designConfigSchema } from "./design-config.schema"
 import { validateConfig } from "./config-validate"
+import { projectSettingsPatch } from "@/lib/project-settings"
 
 // Читатель живого оформления. Приёмы намеренно те же, что у соседей
 // (`app-config.ts`, `platform-config.ts`): чтение с диска, `cache()` на один
@@ -33,7 +34,8 @@ const CONFIG_PATH =
  */
 export const getDesignConfig = cache((): DesignConfig => {
   try {
-    const raw = JSON.parse(readFileSync(CONFIG_PATH, "utf8")) as Partial<DesignConfig>
+    // 299-6: решения владельца — из последней копии элемента «Настройки проекта»; копии нет — свой файл (посев).
+    const raw = (projectSettingsPatch("design") ?? JSON.parse(readFileSync(CONFIG_PATH, "utf8"))) as Partial<DesignConfig>
     const merged: DesignConfig = {
       colors: {
         light: raw.colors?.light ?? {},

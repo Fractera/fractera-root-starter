@@ -4,6 +4,7 @@ import { cache } from "react";
 import { AppConfig, DEFAULT_APP_CONFIG } from "./app-config.defaults";
 import { appConfigSchema } from "./app-config.schema";
 import { validateConfig } from "./config-validate";
+import { projectSettingsPatch } from "@/lib/project-settings";
 
 // Server-only loader for the live site config. The config is a REAL JSON file on disk
 // (APP-CONFIG/app-config.json at the project working dir = /opt/fractera/app), edited via
@@ -101,8 +102,9 @@ function normalize(cfg: AppConfig): AppConfig {
 // незнакомый ключ проходит как есть, потому что панель бывает новее слота.
 export const getAppConfig = cache((): AppConfig => {
   try {
-    const raw = readFileSync(CONFIG_PATH, "utf8");
-    const merged = deepMerge(DEFAULT_APP_CONFIG, JSON.parse(raw));
+    // 299-6: решения владельца — из последней копии элемента «Настройки проекта»; копии нет — свой файл (посев).
+    const own = projectSettingsPatch("app") ?? JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
+    const merged = deepMerge(DEFAULT_APP_CONFIG, own);
     return normalize(validateConfig(appConfigSchema, merged, DEFAULT_APP_CONFIG, "APP-CONFIG"));
   } catch {
     return DEFAULT_APP_CONFIG;

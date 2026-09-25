@@ -48,10 +48,24 @@ import {
 } from "./platform-config.defaults";
 import { platformConfigSchema } from "./platform-config.schema";
 import { validateConfig } from "./config-validate";
+import { projectSettingsPatch } from "@/lib/project-settings";
 
 const CONFIG_PATH =
   process.env.PLATFORM_CONFIG_PATH ??
   join(process.cwd(), "PLATFORM-CONFIG", "platform-config.json");
+
+// 🔒 У ЭЛЕМЕНТА НАСТРОЕК ВЫКЛЮЧАТЕЛИ ЛЕЖАТ ПЛОСКО (`{"faq": false}`), У ФАЙЛА САЙТА — В ВЕТКЕ `features`.
+// Форма переводится здесь, в одном месте: ключ-выключатель уходит в `features`, остальное (режим маршрутизации)
+// остаётся наверху. Без перевода копия читалась бы как «владелец ничего не решал» — молча, без ошибки.
+function asPlatformFile(patch: Record<string, unknown>): Record<string, unknown> {
+  const features: Record<string, unknown> = {};
+  const rest: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(patch)) {
+    if (k in DEFAULTS) features[k] = v;
+    else rest[k] = v;
+  }
+  return { ...rest, features };
+}
 
 /**
  * Живое состояние возможностей.
@@ -64,7 +78,9 @@ const CONFIG_PATH =
 export const getPlatformConfig = cache((): PlatformConfig => {
   let parsed: unknown = {};
   try {
-    parsed = JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
+    // 299-6: решения владельца — из последней копии элемента «Настройки проекта»; копии нет — свой файл (посев).
+    const fromElement = projectSettingsPatch("platform");
+    parsed = fromElement ? asPlatformFile(fromElement) : JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
   } catch {
     parsed = {};
   }
