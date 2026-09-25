@@ -9,7 +9,7 @@ export const en: FooterPageCell = {
   description: 'Every AGI ITEM is a separate service with its own repository, its own public page and its own protocols for programs and agents. The project is assembled from them.',
   keywords: 'AGI ITEM, microservice, sign-in, data, blocks, API, MCP, Fractera',
   blocks: [
-    { kind: 'p', text: 'A project here is not one application that holds everything inside. It is assembled from AGI ITEMS: sign-in, data, page blocks — each one a separate service that can be added, replaced or removed.' },
+    { kind: 'p', text: 'A project here is not one application that holds everything inside. It is assembled from AGI ITEMS: sign-in, data, page blocks — each one a separate service that can be added, replaced or removed. Back to [%SITE%](/en).' },
     { kind: 'h2', text: 'What every item has' },
     {
       kind: 'list',

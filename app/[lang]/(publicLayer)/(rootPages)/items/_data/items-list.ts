@@ -19,9 +19,11 @@ export function itemsMenu(lang: string): { slug: string; title: string; href: st
 }
 
 export function itemsBlocks(lang: string): Block[] {
-  // Под h2 страницы — h3 на каждый элемент (якорь = slug) и абзац со ссылкой: иерархия заголовков h1 → h2 → h3.
+  // Под h2 страницы — h3 на каждый элемент (якорь = slug), абзац и кнопка на его публичную главную: h1 → h2 → h3.
+  // Ссылка — кнопкой, а не внутри текста: адрес вычисляется из домена, а ссылки в тексте проверяются по исходнику.
   return ITEMS.flatMap((i): Block[] => [
     { kind: 'h3', text: word(i.title, lang), id: i.slug },
-    { kind: 'p', text: `${word(i.text, lang)} [${word({ en: 'Open', ru: 'Открыть' }, lang)} →](${itemHref(i.slug, lang)})` },
+    { kind: 'p', text: word(i.text, lang) },
+    { kind: 'cta', href: itemHref(i.slug, lang), label: `${word({ en: 'Open', ru: 'Открыть' }, lang)} — ${word(i.title, lang)}` },
   ])
 }
