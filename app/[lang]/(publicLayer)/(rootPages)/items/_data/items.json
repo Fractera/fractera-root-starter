@@ -1,0 +1,8 @@
+{
+  "_": "AGI ITEMS проекта — ОДИН список на меню «Items» и на страницу /items (297). Адрес элемента — https://<slug>.<зона>/<язык> при подключённом домене; без домена — якорь на странице /items.",
+  "items": [
+    { "slug": "auth", "title": { "en": "Sign-in", "ru": "Авторизация" }, "text": { "en": "Sign-in, registration and the roles of the project — the one service that grants access.", "ru": "Вход, регистрация и роли проекта — единственная служба, которая выдаёт доступ." } },
+    { "slug": "data", "title": { "en": "Data", "ru": "Данные" }, "text": { "en": "The single door to stored data: tables, files and vector search.", "ru": "Единственная дверь к данным: таблицы, файлы и векторный поиск." } },
+    { "slug": "blocks", "title": { "en": "Blocks", "ru": "Блоки" }, "text": { "en": "Ready-made page blocks in one style, reachable by API and MCP.", "ru": "Готовые блоки страниц в едином стиле, доступные по API и MCP." } }
+  ]
+}

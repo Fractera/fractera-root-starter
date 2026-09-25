@@ -7,6 +7,7 @@ import { data as homeData } from "@/app/[lang]/(publicLayer)/_data"
 import { data as agiItemData } from "@/app/[lang]/(publicLayer)/(rootPages)/agi-item/_data"
 import { data as architectureData } from "@/app/[lang]/(publicLayer)/(rootPages)/m2m/_data"
 import { data as hostData } from "@/app/[lang]/(publicLayer)/(rootPages)/host/_data"
+import { data as itemsData } from "@/app/[lang]/(publicLayer)/(rootPages)/items/_data"
 import { data as privacyData } from "@/app/[lang]/(publicLayer)/(footerPages)/privacy/_data"
 import { data as termsData } from "@/app/[lang]/(publicLayer)/(footerPages)/terms/_data"
 import { data as cookiesData } from "@/app/[lang]/(publicLayer)/(footerPages)/cookies/_data"
@@ -46,6 +47,7 @@ const ROOT_PAGES = [
   { sub: "/agi-item", data: agiItemData },
   { sub: "/m2m", data: architectureData },
   { sub: "/host", data: hostData },
+  { sub: "/items", data: itemsData },
 ] as const
 
 const FOOTER_PAGES = [

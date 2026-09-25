@@ -26,7 +26,8 @@ export function resolveTopGroups(lang: string): MenuGroup[] {
   const reserved = (slug: string, label: string): MenuGroup =>
     ({ slug, label, order: 0, childrenAsDropdown: false, roles: "public", children: [], inert: true })
   // 290: Store — за Root (слово владельца: «между кнопкой core и кнопкой store добавить кнопку Root»); нет Root — за Core.
-  const storeAfter = baseGroups.some((g) => g.slug === "root") ? "root" : "core"
+  // 297: Store — после Items (слово владельца: «между кнопками root и store … кнопку … Items»).
+  const storeAfter = baseGroups.some((g) => g.slug === "items") ? "items" : baseGroups.some((g) => g.slug === "root") ? "root" : "core"
   const after: Record<string, MenuGroup> = {
     [storeAfter]: reserved("store", ui0.store),
     "agi-item": reserved("a2a", ui0.a2a),

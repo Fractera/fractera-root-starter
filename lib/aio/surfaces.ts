@@ -7,6 +7,7 @@ import { data as termsData } from '@/app/[lang]/(publicLayer)/(footerPages)/term
 import { data as cookiesData } from '@/app/[lang]/(publicLayer)/(footerPages)/cookies/_data'
 import { data as architectureData } from '@/app/[lang]/(publicLayer)/(rootPages)/m2m/_data'
 import { data as hostData } from '@/app/[lang]/(publicLayer)/(rootPages)/host/_data'
+import { data as itemsData } from '@/app/[lang]/(publicLayer)/(rootPages)/items/_data'
 import { homePage as agiItemPage, homeLead as agiItemLead } from '@/app/[lang]/(publicLayer)/(rootPages)/agi-item/_data'
 import { homePage as corePage, homeLead as coreLead } from '@/app/[lang]/(publicLayer)/(rootPages)/core/_data'
 import { homePage as web3Page, homeLead as web3Lead } from '@/app/[lang]/(publicLayer)/(rootPages)/web3/_data'
@@ -129,13 +130,14 @@ export function publicSurfaces(lang: string): Surface[] {
     [architectureData, '/m2m'],
     // Host (261-7) — лендинг развёртывания, собран теми же ячейками, раздел 'main'.
     [hostData, '/host'],
+    [itemsData, '/items'],
   ] as const) {
     const page = footerPage(data as never, lang)
     surfaces.push({
       subPath: sub,
       title: page.title,
       description: page.description,
-      section: sub === '/m2m' || sub === '/host' ? 'main' : 'legal',
+      section: sub === '/m2m' || sub === '/host' || sub === '/items' ? 'main' : 'legal',
       body: () =>
         [`# ${page.title}`, '', `> ${page.description}`, '', blocksToMarkdown(page.blocks, home.siteName)].join('\n').trim(),
     })

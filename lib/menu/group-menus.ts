@@ -2,6 +2,7 @@ import "server-only";
 import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { MENU_SLOTS, type MenuSlot } from "./menu-types";
+import { publicAuth } from "@/lib/domain/public-auth.cjs";
 
 // Build-time menu source (step 160). The always-present menu components ask this for
 // "which groups belong in slot X, in what order". It SCANS the on-disk group manifests
@@ -76,6 +77,22 @@ function groupLabel(groupDir: string, slug: string, lang: string): string {
 
 // Child pages of a group = its subfolders holding a page.tsx (excluding _data/_lib/_components).
 function groupChildren(groupDir: string, lang: string): MenuChild[] {
+  // 297: группа со списком внешних элементов (`_data/items.json`, меню «Items») — пункты ведут на публичные главные
+  // элементов `https://<slug>.<зона>/<язык>`; без домена — к карточке на странице группы. Тот же список читает сама
+  // страница (`items/_data/items-list.ts`) — второго списка нет.
+  const listFile = join(groupDir, "_data", "items.json");
+  if (existsSync(listFile)) {
+    try {
+      const list = JSON.parse(read(listFile)) as { items: { slug: string; title: Record<string, string> }[] };
+      const pub = publicAuth(process.cwd());
+      const slugOf = groupDir.split(/[\\/]/).pop() ?? "";
+      return list.items.map((i) => ({
+        slug: i.slug,
+        title: i.title[lang] ?? i.title.en,
+        href: pub ? `https://${i.slug}.${pub.zone}/${lang}` : `/${lang}/${slugOf}#${i.slug}`,
+      }));
+    } catch { /* битый список — как обычная группа */ }
+  }
   const out: MenuChild[] = [];
   let entries: string[] = [];
   try { entries = readdirSync(groupDir); } catch { return out; }
