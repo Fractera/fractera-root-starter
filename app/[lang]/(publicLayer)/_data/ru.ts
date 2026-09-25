@@ -7,7 +7,7 @@ export const ru: Partial<HomeCell> = {
   keywords: '',
   blocks: [
   {
-    kind: 'heroSplit',
+    kind: 'heroCentered',
     pill: 'Инфраструктура агентной инженерии',
     title: 'От MVP, собранного на вайб-кодинге, до продукта, готового к продаже',
     description:
@@ -18,8 +18,11 @@ export const ru: Partial<HomeCell> = {
       label: 'Установить Claude Code',
       secondary: { href: '/ru/architect/build/subscription', label: 'Начать строить' },
     },
-    image: 'homePage',
-    imageAlt: 'Стартовый шаблон SaaS',
+    steps: [
+      { title: "Установите Claude Code", text: "Агент строит продукт на вашем собственном сервере" },
+      { title: "Опишите продукт", text: "Вход, данные и хранилище уже связаны между собой" },
+      { title: "Запускайтесь на 82 языках", text: "Статические страницы, готовые к поиску с первого дня" },
+    ],
   },
 
   { kind: 'projectTypeMarquee' },

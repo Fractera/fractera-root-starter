@@ -267,6 +267,16 @@ export type LeafBlock =
        */
       cta?: { href: string; label: string; secondary?: { href: string; label: string } }
     }
+  // Первый экран по центру (303–304, владелец 2026-09-26): зарево фирменного цвета, бейдж, заголовок не длиннее двух
+  // строк, описание, одна или две кнопки, полоса из трёх шагов. Картинки нет. Несёт H1 (страница — `titleInBody`).
+  | {
+      kind: 'heroCentered'
+      title: string
+      description: string
+      pill?: string
+      cta?: { href: string; label: string; secondary?: { href: string; label: string } }
+      steps?: [{ title: string; text: string }, { title: string; text: string }, { title: string; text: string }]
+    }
   // ЗАВЕРШАЮЩАЯ СЕКЦИЯ (outro) — бегущая лента языков во всю ширину экрана.
   //
   // 🔒 «OUTRO» — ЭТО КЛАСС СЕКЦИИ, А НЕ ОДИН БЛОК. Как `hero` открывает страницу

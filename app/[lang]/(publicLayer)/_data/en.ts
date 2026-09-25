@@ -7,7 +7,7 @@ export const en: HomeCell = {
   keywords: '',
   blocks: [
   {
-    kind: 'heroSplit',
+    kind: 'heroCentered',
     pill: 'Agentic engineering infrastructure',
     title: 'From Vibe-Coded MVP to Commercially Ready Product',
     description:
@@ -18,8 +18,11 @@ export const en: HomeCell = {
       label: 'Install Claude Code',
       secondary: { href: '/en/architect/build/subscription', label: 'Start building' },
     },
-    image: 'homePage',
-    imageAlt: 'SaaS starter template',
+    steps: [
+      { title: "Install Claude Code", text: "The agent builds the product on your own server" },
+      { title: "Describe the product", text: "Sign-in, data and storage are already wired together" },
+      { title: "Launch in 82 languages", text: "Static pages, ready for search from day one" },
+    ],
   },
 
   { kind: 'projectTypeMarquee' },

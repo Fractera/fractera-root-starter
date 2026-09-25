@@ -219,9 +219,7 @@
   "kinds": [
     {
       "id": "0012",
-      "codes": [
-        "p01"
-      ],
+      "codes": [],
       "kind": "p",
       "type": "page-material",
       "shape": "text",
@@ -261,6 +259,11 @@
           "times": 1
         },
         {
+          "page": "items",
+          "order": 1,
+          "times": 1
+        },
+        {
           "page": "m2m",
           "order": 1,
           "times": 11
@@ -269,6 +272,11 @@
           "page": "privacy",
           "order": 2,
           "times": 2
+        },
+        {
+          "page": "root",
+          "order": 1,
+          "times": 6
         },
         {
           "page": "terms",
@@ -284,9 +292,7 @@
     },
     {
       "id": "0013",
-      "codes": [
-        "h201"
-      ],
+      "codes": [],
       "kind": "h2",
       "type": "page-material",
       "shape": "heading",
@@ -311,6 +317,11 @@
           "times": 2
         },
         {
+          "page": "items",
+          "order": 2,
+          "times": 2
+        },
+        {
           "page": "privacy",
           "order": 1,
           "times": 1
@@ -329,9 +340,7 @@
     },
     {
       "id": "0014",
-      "codes": [
-        "h301"
-      ],
+      "codes": [],
       "kind": "h3",
       "type": "page-material",
       "shape": "heading",
@@ -361,6 +370,11 @@
           "times": 10
         },
         {
+          "page": "root",
+          "order": 9,
+          "times": 2
+        },
+        {
           "page": "web3",
           "order": 26,
           "times": 6
@@ -369,9 +383,7 @@
     },
     {
       "id": "0033",
-      "codes": [
-        "h401"
-      ],
+      "codes": [],
       "kind": "h4",
       "type": "page-material",
       "shape": "heading",
@@ -394,9 +406,7 @@
     },
     {
       "id": "0034",
-      "codes": [
-        "h501"
-      ],
+      "codes": [],
       "kind": "h5",
       "type": "page-material",
       "shape": "heading",
@@ -408,9 +418,7 @@
     },
     {
       "id": "0015",
-      "codes": [
-        "quote01"
-      ],
+      "codes": [],
       "kind": "quote",
       "type": "page-material",
       "shape": "quote",
@@ -435,6 +443,11 @@
           "times": 1
         },
         {
+          "page": "root",
+          "order": 23,
+          "times": 1
+        },
+        {
           "page": "web3",
           "order": 4,
           "times": 1
@@ -443,9 +456,7 @@
     },
     {
       "id": "0016",
-      "codes": [
-        "list01"
-      ],
+      "codes": [],
       "kind": "list",
       "type": "page-material",
       "shape": "list",
@@ -465,6 +476,11 @@
           "times": 1
         },
         {
+          "page": "items",
+          "order": 3,
+          "times": 1
+        },
+        {
           "page": "web3",
           "order": 12,
           "times": 1
@@ -473,9 +489,7 @@
     },
     {
       "id": "0017",
-      "codes": [
-        "olist01"
-      ],
+      "codes": [],
       "kind": "olist",
       "type": "page-material",
       "shape": "list",
@@ -498,14 +512,17 @@
           "page": "host",
           "order": 5,
           "times": 1
+        },
+        {
+          "page": "root",
+          "order": 11,
+          "times": 2
         }
       ]
     },
     {
       "id": "0018",
-      "codes": [
-        "figure01"
-      ],
+      "codes": [],
       "kind": "figure",
       "type": "page-material",
       "shape": "figure",
@@ -517,9 +534,7 @@
     },
     {
       "id": "0019",
-      "codes": [
-        "code01"
-      ],
+      "codes": [],
       "kind": "code",
       "type": "page-material",
       "shape": "code",
@@ -531,9 +546,7 @@
     },
     {
       "id": "0020",
-      "codes": [
-        "note01"
-      ],
+      "codes": [],
       "kind": "note",
       "type": "page-material",
       "shape": "callout",
@@ -551,9 +564,7 @@
     },
     {
       "id": "0029",
-      "codes": [
-        "cta01"
-      ],
+      "codes": [],
       "kind": "cta",
       "type": "page-material",
       "shape": "cta",
@@ -576,9 +587,7 @@
     },
     {
       "id": "0021",
-      "codes": [
-        "callout01"
-      ],
+      "codes": [],
       "kind": "callout",
       "type": "page-material",
       "shape": "callout",
@@ -590,9 +599,7 @@
     },
     {
       "id": "0022",
-      "codes": [
-        "table01"
-      ],
+      "codes": [],
       "kind": "table",
       "type": "page-material",
       "shape": "table",
@@ -604,9 +611,7 @@
     },
     {
       "id": "0023",
-      "codes": [
-        "docref01"
-      ],
+      "codes": [],
       "kind": "docref",
       "type": "page-material",
       "shape": "docref",
@@ -618,9 +623,7 @@
     },
     {
       "id": "0008",
-      "codes": [
-        "founder01"
-      ],
+      "codes": [],
       "kind": "founder",
       "type": "testimonials",
       "shape": "quote",
@@ -632,9 +635,7 @@
     },
     {
       "id": "0024",
-      "codes": [
-        "columns01"
-      ],
+      "codes": [],
       "kind": "columns",
       "type": "page-material",
       "shape": "two-columns",
@@ -657,9 +658,7 @@
     },
     {
       "id": "0025",
-      "codes": [
-        "group01"
-      ],
+      "codes": [],
       "kind": "group",
       "type": "page-material",
       "shape": "text",
@@ -682,9 +681,7 @@
     },
     {
       "id": "0001",
-      "codes": [
-        "heroBadge01"
-      ],
+      "codes": [],
       "kind": "heroBadge",
       "type": "hero",
       "shape": "hero",
@@ -696,9 +693,7 @@
     },
     {
       "id": "0002",
-      "codes": [
-        "heroSplit01"
-      ],
+      "codes": [],
       "kind": "heroSplit",
       "type": "hero",
       "shape": "hero-split",
@@ -707,11 +702,6 @@
       "description": "**Type:** Hero (1). The only kind meant to open a landing page.\n\n## What it actually draws\n\nMark and eyebrow centred; under them two columns — the heading with its text and button on the left, an\nillustration on the right.\n\n🔒 **This is the ONE kind that carries the H1 itself.** Everywhere else the title is printed by the page\nfactory. Here it has to stand inside the left column, and outside the grid it cannot get there. A page\nusing this section declares `titleInBody`, and the factory stops printing its own — otherwise the page\ngets two H1s.\n\n🔒 **The picture names a SETTINGS SLOT, not a file.** Every project has its own image and changes it in\nthe panel without a rebuild. Hard-coding a path here would ship one picture to every customer.\n\n🔒 **Its own width limit: 56rem, and it is a meaning decision** (owner, 2026-08-15). The section spans\nthe full screen and ignores the width toggle, but its CONTENT must not stretch: on a 2500px monitor a\nheading and a picture pushed to opposite edges read as a broken page, not a wide one.\n\n## When to take it\n\nThe first screen of a landing page — the one where the offer has to be readable in three seconds.\n\n## When NOT to take it\n\n- On a post, a legal page or a catalogue: they get their title from the factory, and this section would\n  fight it.\n- More than once on a site. Two different first screens teach the visitor that the site has no front\n  door.",
       "hasCard": true,
       "usedOn": [
-        {
-          "page": "(home)",
-          "order": 1,
-          "times": 1
-        },
         {
           "page": "agi-item",
           "order": 1,
@@ -723,6 +713,11 @@
           "times": 1
         },
         {
+          "page": "root",
+          "order": 2,
+          "times": 1
+        },
+        {
           "page": "web3",
           "order": 1,
           "times": 1
@@ -730,10 +725,26 @@
       ]
     },
     {
+      "id": "0069",
+      "codes": [],
+      "kind": "heroCentered",
+      "type": "hero",
+      "shape": "hero-centered",
+      "fields": "title: string; description: string; pill?: string; cta?: { href: string; label: string; secondary?: { href: string; label: string } }; steps?: [{ title: string; text: string }, { title: string; text: string }, { title: string; text: string }]",
+      "title": "the centered first screen: glow, badge, two-line title, three steps",
+      "description": "**Type:** Hero (1). A first screen without a picture (owner, 2026-09-26).\n\n## What it actually draws\n\nEverything centered over a glow in the brand colour: the badge with ✦, a title of at most two lines, the\ndescription, one or two actions and a strip of three steps (a column on a phone, a row from a tablet up).\n\n🔒 **It carries the H1 itself.** A page using this section declares `titleInBody`, and the factory stops\nprinting its own title.\n\n🔒 **Everything comes from the design system.** Type — the typography primitives (the title on\n`--fs-hero-one*`), colours — theme tokens, the glow `.hero-ignite*`, the entrance `.hero-appear`, the badge\nframe `.pill-ai` — classes in `styles/globals.css`. A new palette re-colours it without a code change.\n\n🔒 **The glow starts at the top of the page**, not at the edge of the section: cut by the section it drew a\nstraight line under the header.\n\n## When to take it\n\nThe first screen of a page where the point is said in words: a product page, a service home page.\n\n## When NOT to take it\n\n- The page needs a picture beside the words — that is `heroSplit`.\n- Only the mark and a label above a title the page prints itself — that is `heroBadge`.",
+      "hasCard": true,
+      "usedOn": [
+        {
+          "page": "(home)",
+          "order": 1,
+          "times": 1
+        }
+      ]
+    },
+    {
       "id": "0004",
-      "codes": [
-        "badges01"
-      ],
+      "codes": [],
       "kind": "badges",
       "type": "benefits",
       "shape": "badges",
@@ -758,6 +769,11 @@
           "times": 1
         },
         {
+          "page": "root",
+          "order": 5,
+          "times": 1
+        },
+        {
           "page": "web3",
           "order": 5,
           "times": 1
@@ -766,9 +782,7 @@
     },
     {
       "id": "0026",
-      "codes": [
-        "panel01"
-      ],
+      "codes": [],
       "kind": "panel",
       "type": "page-material",
       "shape": "panel",
@@ -791,9 +805,7 @@
     },
     {
       "id": "0009",
-      "codes": [
-        "metrics01"
-      ],
+      "codes": [],
       "kind": "metrics",
       "type": "trust",
       "shape": "numbers",
@@ -816,14 +828,17 @@
           "page": "m2m",
           "order": 2,
           "times": 1
+        },
+        {
+          "page": "root",
+          "order": 4,
+          "times": 1
         }
       ]
     },
     {
       "id": "0005",
-      "codes": [
-        "flow01"
-      ],
+      "codes": [],
       "kind": "flow",
       "type": "how-it-works",
       "shape": "steps",
@@ -848,6 +863,11 @@
           "times": 1
         },
         {
+          "page": "root",
+          "order": 6,
+          "times": 1
+        },
+        {
           "page": "web3",
           "order": 6,
           "times": 3
@@ -856,9 +876,7 @@
     },
     {
       "id": null,
-      "codes": [
-        "personaCases01"
-      ],
+      "codes": [],
       "kind": "personaCases",
       "type": "page-material",
       "shape": "text",
@@ -876,9 +894,7 @@
     },
     {
       "id": "0006",
-      "codes": [
-        "problemSolution01"
-      ],
+      "codes": [],
       "kind": "problemSolution",
       "type": "comparison",
       "shape": "two-columns",
@@ -901,14 +917,17 @@
           "page": "m2m",
           "order": 14,
           "times": 1
+        },
+        {
+          "page": "root",
+          "order": 25,
+          "times": 1
         }
       ]
     },
     {
       "id": "0003",
-      "codes": [
-        "cards01"
-      ],
+      "codes": [],
       "kind": "cards",
       "type": "benefits",
       "shape": "cards",
@@ -938,6 +957,11 @@
           "times": 3
         },
         {
+          "page": "root",
+          "order": 7,
+          "times": 2
+        },
+        {
           "page": "web3",
           "order": 24,
           "times": 2
@@ -946,9 +970,7 @@
     },
     {
       "id": "0027",
-      "codes": [
-        "card01"
-      ],
+      "codes": [],
       "kind": "card",
       "type": "page-material",
       "shape": "panel",
@@ -978,6 +1000,11 @@
           "times": 10
         },
         {
+          "page": "root",
+          "order": 8,
+          "times": 5
+        },
+        {
           "page": "web3",
           "order": 25,
           "times": 6
@@ -986,9 +1013,7 @@
     },
     {
       "id": "0028",
-      "codes": [
-        "statement01"
-      ],
+      "codes": [],
       "kind": "statement",
       "type": "page-material",
       "shape": "statement",
@@ -1011,9 +1036,7 @@
     },
     {
       "id": "0055",
-      "codes": [
-        "invite01"
-      ],
+      "codes": [],
       "kind": "invite",
       "type": "page-material",
       "shape": "invite",
@@ -1025,9 +1048,7 @@
     },
     {
       "id": "0007",
-      "codes": [
-        "noBill01"
-      ],
+      "codes": [],
       "kind": "noBill",
       "type": "pricing",
       "shape": "statement",
@@ -1045,14 +1066,17 @@
           "page": "core",
           "order": 24,
           "times": 1
+        },
+        {
+          "page": "root",
+          "order": 24,
+          "times": 1
         }
       ]
     },
     {
       "id": "0030",
-      "codes": [
-        "faq01"
-      ],
+      "codes": [],
       "kind": "faq",
       "type": "page-material",
       "shape": "faq",
@@ -1064,9 +1088,7 @@
     },
     {
       "id": "0031",
-      "codes": [
-        "toc01"
-      ],
+      "codes": [],
       "kind": "toc",
       "type": "page-material",
       "shape": "toc",
@@ -1078,9 +1100,7 @@
     },
     {
       "id": "0010",
-      "codes": [
-        "languageMarquee01"
-      ],
+      "codes": [],
       "kind": "languageMarquee",
       "type": "trust",
       "shape": "marquee",
@@ -1098,14 +1118,17 @@
           "page": "core",
           "order": 26,
           "times": 1
+        },
+        {
+          "page": "root",
+          "order": 26,
+          "times": 1
         }
       ]
     },
     {
       "id": "0011",
-      "codes": [
-        "projectTypeMarquee01"
-      ],
+      "codes": [],
       "kind": "projectTypeMarquee",
       "type": "trust",
       "shape": "marquee",
@@ -1123,14 +1146,17 @@
           "page": "core",
           "order": 3,
           "times": 1
+        },
+        {
+          "page": "root",
+          "order": 3,
+          "times": 1
         }
       ]
     },
     {
       "id": "0032",
-      "codes": [
-        "voiceField01"
-      ],
+      "codes": [],
       "kind": "voiceField",
       "type": "page-material",
       "shape": "text",
@@ -1142,10 +1168,7 @@
     },
     {
       "id": "0035",
-      "codes": [
-        "workspace01",
-        "workspace02"
-      ],
+      "codes": [],
       "kind": "workspace",
       "type": "workspace",
       "shape": "two-columns",
@@ -1157,9 +1180,7 @@
     },
     {
       "id": null,
-      "codes": [
-        "accordion01"
-      ],
+      "codes": [],
       "kind": "accordion",
       "type": "page-material",
       "shape": "text",
@@ -1171,9 +1192,7 @@
     },
     {
       "id": null,
-      "codes": [
-        "accordionItem01"
-      ],
+      "codes": [],
       "kind": "accordionItem",
       "type": "page-material",
       "shape": "text",
@@ -1185,9 +1204,7 @@
     },
     {
       "id": "0036",
-      "codes": [
-        "benefitCards01"
-      ],
+      "codes": [],
       "kind": "benefitCards",
       "type": "benefits",
       "shape": "cards",
@@ -1205,9 +1222,7 @@
     },
     {
       "id": "0037",
-      "codes": [
-        "splitPair01"
-      ],
+      "codes": [],
       "kind": "splitPair",
       "type": "product-demo",
       "shape": "two-columns",
@@ -1219,9 +1234,7 @@
     },
     {
       "id": "0038",
-      "codes": [
-        "logoCards01"
-      ],
+      "codes": [],
       "kind": "logoCards",
       "type": "showcase",
       "shape": "cards",
@@ -1233,9 +1246,7 @@
     },
     {
       "id": "0039",
-      "codes": [
-        "carousel01"
-      ],
+      "codes": [],
       "kind": "carousel",
       "type": "how-it-works",
       "shape": "figure",
@@ -1247,9 +1258,7 @@
     },
     {
       "id": "0040",
-      "codes": [
-        "support01"
-      ],
+      "codes": [],
       "kind": "support",
       "type": "pricing",
       "shape": "cards",
@@ -1261,9 +1270,7 @@
     },
     {
       "id": "0041",
-      "codes": [
-        "showcaseCarousel01"
-      ],
+      "codes": [],
       "kind": "showcaseCarousel",
       "type": "use-cases",
       "shape": "figure",
@@ -1275,9 +1282,7 @@
     },
     {
       "id": "0042",
-      "codes": [
-        "featureGrid01"
-      ],
+      "codes": [],
       "kind": "featureGrid",
       "type": "benefits",
       "shape": "cards",
@@ -1289,9 +1294,7 @@
     },
     {
       "id": "0043",
-      "codes": [
-        "promoBand01"
-      ],
+      "codes": [],
       "kind": "promoBand",
       "type": "trust",
       "shape": "two-columns",
@@ -1303,9 +1306,7 @@
     },
     {
       "id": "0044",
-      "codes": [
-        "priceTable01"
-      ],
+      "codes": [],
       "kind": "priceTable",
       "type": "pricing",
       "shape": "cards",
@@ -1317,9 +1318,7 @@
     },
     {
       "id": "0045",
-      "codes": [
-        "spotlightPair01"
-      ],
+      "codes": [],
       "kind": "spotlightPair",
       "type": "comparison",
       "shape": "two-columns",
@@ -1331,9 +1330,7 @@
     },
     {
       "id": "0046",
-      "codes": [
-        "platformGrid01"
-      ],
+      "codes": [],
       "kind": "platformGrid",
       "type": "benefits",
       "shape": "cards",
@@ -1345,9 +1342,7 @@
     },
     {
       "id": "0047",
-      "codes": [
-        "chartArea01"
-      ],
+      "codes": [],
       "kind": "chartArea",
       "type": "charts",
       "shape": "chart",
@@ -1359,9 +1354,7 @@
     },
     {
       "id": "0048",
-      "codes": [
-        "chartBar01"
-      ],
+      "codes": [],
       "kind": "chartBar",
       "type": "charts",
       "shape": "chart",
@@ -1373,9 +1366,7 @@
     },
     {
       "id": "0049",
-      "codes": [
-        "chartLine01"
-      ],
+      "codes": [],
       "kind": "chartLine",
       "type": "charts",
       "shape": "chart",
@@ -1387,9 +1378,7 @@
     },
     {
       "id": "0050",
-      "codes": [
-        "chartPie01"
-      ],
+      "codes": [],
       "kind": "chartPie",
       "type": "charts",
       "shape": "chart",
@@ -1401,9 +1390,7 @@
     },
     {
       "id": "0051",
-      "codes": [
-        "chartRadar01"
-      ],
+      "codes": [],
       "kind": "chartRadar",
       "type": "charts",
       "shape": "chart",
@@ -1415,9 +1402,7 @@
     },
     {
       "id": "0052",
-      "codes": [
-        "chartRadial01"
-      ],
+      "codes": [],
       "kind": "chartRadial",
       "type": "charts",
       "shape": "chart",
@@ -1429,9 +1414,7 @@
     },
     {
       "id": "0053",
-      "codes": [
-        "chartTooltip01"
-      ],
+      "codes": [],
       "kind": "chartTooltip",
       "type": "charts",
       "shape": "chart",
@@ -1443,9 +1426,7 @@
     },
     {
       "id": "0054",
-      "codes": [
-        "orbitLayers01"
-      ],
+      "codes": [],
       "kind": "orbitLayers",
       "type": "product-demo",
       "shape": "cards",
@@ -1457,9 +1438,7 @@
     },
     {
       "id": "0056",
-      "codes": [
-        "chat01"
-      ],
+      "codes": [],
       "kind": "chat",
       "type": "workspace",
       "shape": "list",
@@ -1471,23 +1450,7 @@
     },
     {
       "id": null,
-      "codes": [
-        "domainLadder01"
-      ],
-      "kind": "domainLadder",
-      "type": "page-material",
-      "shape": "text",
-      "fields": "lang: string; words: import('@/components/domain/domain-ladder.i18n').DomainLadderWords",
-      "title": null,
-      "description": null,
-      "hasCard": false,
-      "usedOn": []
-    },
-    {
-      "id": null,
-      "codes": [
-        "servicePort01"
-      ],
+      "codes": [],
       "kind": "servicePort",
       "type": "page-material",
       "shape": "text",
@@ -1499,9 +1462,7 @@
     },
     {
       "id": null,
-      "codes": [
-        "authGoogleSetup01"
-      ],
+      "codes": [],
       "kind": "authGoogleSetup",
       "type": "page-material",
       "shape": "text",
@@ -1513,9 +1474,7 @@
     },
     {
       "id": null,
-      "codes": [
-        "authResendSetup01"
-      ],
+      "codes": [],
       "kind": "authResendSetup",
       "type": "page-material",
       "shape": "text",
