@@ -31,14 +31,18 @@ settings. The installer gives you only neighbours (`AUTH_SERVICE_URL`, `REMOTE_D
 
 **The node's settings element (`config`, `config.<zone>`) is a source you CHOSE, not a master** (node
 step 299-6). It keeps the owner's decisions and gives them over MCP (`settings_version`,
-`get_project_settings`); it calls no one. This site takes them of its own will: `lib/project-settings.ts`
-asks ONCE, at server start (`instrumentation.ts`), fetches only when the fingerprint moved, and keeps
+`get_project_settings`). This site takes them of its own will: `lib/project-settings.ts` asks at server
+start (`instrumentation.ts`), fetches only when the fingerprint moved, and keeps
 the **last received copy** in
 `SERVICE_DATA_DIR/project-settings.json` (outside the build). The three readers (`config/app-config.ts`,
 `platform-config.ts`, `design-config.ts`) lay that copy over this site's defaults whenever it exists; the
 element is down or removed — the last copy keeps serving. No copy ever received — the site's own files apply.
-🛑 No polling, no self-refresh, no timers: the owner cancelled them (2026-09-25). A change in CONFIG reaches
-this element at its next start. Do not add self-acting behaviour the owner did not order.
+**The site is subscribed to the CONFIG signal** (node step 306, owner 2026-09-26: «строим уведомление от
+CONFIG»): after the architect saves, CONFIG POSTs «the version changed» to `/api/settings/changed`, and the site
+fetches the settings itself and refreshes its pages with `revalidatePath` — no restart, pages stay static. The
+module, how to carry it to another service and its limits — `lib/settings-listener.README.md`.
+🛑 Still no polling, no timers, no retries: action only in answer to a human save (the 2026-09-25 cancellation
+stands). A missed signal is caught up at the next start. Do not add self-acting behaviour the owner did not order.
 
 ## 🔒 The first edit makes this site the person's own repository
 

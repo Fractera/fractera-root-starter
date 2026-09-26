@@ -11,9 +11,10 @@ import { join, dirname } from "path"
 // ПО MCP («мы делаем у него MCP также как мы делаем MCP у блоков»); он никого не зовёт. Этот сайт РЕШИЛ их забирать —
 // это его выбор, а не обязанность: нет элемента (`CONFIG_SERVICE_URL` пуст) — сайт живёт своими файлами.
 //
-// Как забирает: один раз при запуске сервера (`instrumentation.ts`) — MCP-команда `settings_version` (отпечаток);
-// отпечаток сменился — `get_project_settings` и запись копии. Опроса и самообновления нет (отменено владельцем
-// 2026-09-25): правка в CONFIG доходит до root при его следующем запуске.
+// Как забирает: при запуске сервера (`instrumentation.ts`) — MCP-команда `settings_version` (отпечаток); отпечаток
+// сменился — `get_project_settings` и запись копии. И по сигналу CONFIG после сохранения архитектором (шаг 306, слово
+// владельца 2026-09-26): сайт подписан, CONFIG шлёт «версия сменилась» на `/api/settings/changed` — `lib/settings-listener.ts`.
+// Таймеров и опроса нет (отменены 2026-09-25): без сигнала правка доходит при следующем запуске.
 //
 // 🔒 ПОСЛЕДНЯЯ ПОЛУЧЕННАЯ КОПИЯ — ФАЙЛ, А НЕ ПАМЯТЬ ПРОЦЕССА. Элемент недоступен — сайт работает по копии и не теряет
 // шапку; перезапуск копию не стирает. Копия лежит в папке данных элемента у узла (`SERVICE_DATA_DIR`), а не рядом с
@@ -63,7 +64,7 @@ export function projectSettingsPatch(kind: SettingsKind): Record<string, unknown
 // Сервер элемента — MCP Streamable HTTP без сессий: каждый запрос самостоятелен, `tools/call` идёт без рукопожатия.
 // Ответ приходит либо JSON, либо потоком событий (`data: {…}`) — читаются оба вида. Команда, вернувшая `isError`,
 // — отказ с её текстом (например, неверный ключ).
-async function callTool(base: string, key: string, name: string, args: Record<string, unknown> = {}): Promise<unknown> {
+export async function callTool(base: string, key: string, name: string, args: Record<string, unknown> = {}): Promise<unknown> {
   const res = await fetch(`${base}/mcp`, {
     method: "POST",
     headers: { "content-type": "application/json", accept: "application/json, text/event-stream", "x-settings-key": key },
