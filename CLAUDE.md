@@ -17,6 +17,7 @@ that keeps the contract below can take your place with one line in the node's
 | port from `PORT`; never a remembered number | the node assigns ports from the block 24680–24699 |
 | `GET /api/health` answers 200 without a session | the watchdog asks the capability, not the process |
 | sign-in only through the node's `auth` element; never your own | two sign-ins on one node are no sign-in |
+| `GET /api/me` answers the element subdomains `https://<id>.<this host>` with CORS + credentials, nobody else | their header asks it from the browser; without it a signed-in architect saw «Sign in» there (312) |
 | stored data only through the `data` element (`REMOTE_DATA_URL` + `DATA_SECRET`); never a database file of your own | one door to the data |
 | public pages stay static: no `force-dynamic`, no `cookies()`/`headers()` in a layout or page | search visibility dies silently |
 | `next.config.ts` names this folder as the build root (`outputFileTracingRoot`, `turbopack.root`) | inside a node Next otherwise takes the node for the project |
