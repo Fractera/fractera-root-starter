@@ -35,6 +35,17 @@
       }
     },
     {
+      "slug": "design",
+      "title": {
+        "en": "Design",
+        "ru": "Дизайн"
+      },
+      "text": {
+        "en": "The look of the whole project in one place: colours, fonts, shapes and spacing — every service re-styles itself on save.",
+        "ru": "Оформление всего проекта в одном месте: цвета, шрифты, формы и отступы — каждая служба перекрашивается в момент сохранения."
+      }
+    },
+    {
       "slug": "blocks",
       "title": {
         "en": "Blocks",
