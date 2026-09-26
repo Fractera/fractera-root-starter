@@ -211,7 +211,8 @@ export function StandardContentPage({
   // шире неё — можно лишь вытягивать её отрицательными отступами, и это ломается
   // на каждой второй ширине экрана. Поэтому такие секции физически стоят снаружи
   // колонки, а внутри неё остаётся текст.
-  const heroBlock = blocks.find(b => b.kind === 'heroSplit')
+  // Первым экраном считается любой из двух видов hero, несущих H1: сетка и первый экран по центру (304-1).
+  const heroBlock = blocks.find(b => b.kind === 'heroSplit' || b.kind === 'heroCentered')
   const outroBlock = blocks.find(b => b.kind === 'languageMarquee')
   const bodyBlocks = blocks.filter(b => b !== heroBlock && b !== outroBlock)
 

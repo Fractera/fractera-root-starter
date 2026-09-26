@@ -35,7 +35,7 @@ import type { Block } from '@/lib/content/blocks/types'
  * экране.** Всё, что кто-то позже вынимает из потока, обязано быть названо здесь
  * поимённо — иначе соседство, рассчитанное по списку, на экране окажется другим.
  */
-const RENDERED_ELSEWHERE = new Set(['heroSplit', 'languageMarquee'])
+const RENDERED_ELSEWHERE = new Set(['heroSplit', 'heroCentered', 'languageMarquee'])
 
 /**
  * Что считается разделом.

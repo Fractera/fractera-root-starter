@@ -86,6 +86,9 @@ function lines(block: Block): string[] {
     // потерять его здесь значило бы отдать модели пустую главную.
     case 'heroSplit':
       return [`## ${block.title}`, '', block.description]
+    // Первый экран по центру: заголовок, описание и три шага — нумерованным списком, порядок в них и есть смысл.
+    case 'heroCentered':
+      return [`## ${block.title}`, '', block.description, ...(block.steps ? ['', ...block.steps.map((s, i) => `${i + 1}. **${s.title}** — ${s.text}`)] : [])]
     // Завершающая секция. Восемьдесят два названия языков машинному читателю не
     // нужны — он их и так знает; смысл секции целиком в её заголовке.
     case 'languageMarquee':
