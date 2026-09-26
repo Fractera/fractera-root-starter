@@ -1,53 +1,39 @@
-// @api rebuild public pages after the owner changes app settings
+// @api redraw the pages of this element at once after a change
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
+import { getSession } from "@/lib/auth/get-session";
+import { withSiblingCors } from "@/lib/sibling-origin";
 
-// On-demand revalidation of the PUBLIC surface after an App Settings change.
-// The App Settings MCP (:3218) and the Admin config panel write app-config.json in
-// a DIFFERENT process, then POST here so the change shows on the NEXT page load
-// instead of waiting out the ISR window (revalidate=600). The public pages stay
-// STATIC (ISR) — this only purges their cache, it never makes them dynamic. The
-// config feeds metadata / JSON-LD / manifest on every page, so we purge the whole
-// public tree. → CRUD-DOCS/workspace-standards/app-settings.md.
+// ПЕРЕРИСОВАТЬ СТРАНИЦЫ СЕЙЧАС. Страницы элемента статические и обновляются раз в пять минут (первый заход после срока
+// ещё старый); эта дверь помечает их устаревшими сразу, и следующий заход рисует новую версию. Страницы остаются
+// статическими — дверь только сбрасывает их кэш.
 //
-// Auth: when REVALIDATE_SECRET is set a matching Bearer is required; when it is unset
-// (current servers) the endpoint still works — it sits behind the proxy.ts API gate
-// (the caller sends x-agent-identity) and only purges cache, which cannot corrupt
-// data. Role-based enforcement across all mutating surfaces is unified in step 135.
+// 🔒 КТО МОЖЕТ ЗВАТЬ (шаг 314-2), два пути и оба без ключа в адресе:
+//   1. ключ `REVALIDATE_SECRET` в заголовке `Authorization: Bearer …` — так зовёт агент (`npm run pages:refresh`)
+//      и службы узла;
+//   2. сессия архитектора или администратора — так зовёт кнопка «Обновить» в Preview ядра (`architect.<зона>`), по куке
+//      входа. Ответ ядру читается благодаря CORS своего источника (`lib/sibling-origin.ts`).
+// Ни то ни другое — 401 (нет входа) или 403 (не та роль). Хозяин за этой машиной проходит как архитектор (get-session).
+// 🛑 Ключ никогда не приходит в адресе: он осел бы в истории, журналах и `Referer`.
 
 const SECRET = process.env.REVALIDATE_SECRET ?? "";
+const ROLES = new Set(["architect", "admin"]);
+
+async function allowed(req: NextRequest): Promise<200 | 401 | 403> {
+  const auth = req.headers.get("authorization") ?? "";
+  if (SECRET && auth === `Bearer ${SECRET}`) return 200;
+  const session = await getSession(req);
+  if (!session) return 401;
+  return session.roles?.some((r) => ROLES.has(r)) ? 200 : 403;
+}
 
 export async function POST(req: NextRequest) {
-  if (SECRET) {
-    const auth = req.headers.get("authorization") ?? "";
-    if (!auth.startsWith("Bearer ") || auth.slice(7) !== SECRET) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const status = await allowed(req);
+  if (status !== 200) {
+    return withSiblingCors(req, NextResponse.json({ error: status === 401 ? "Unauthorized" : "Forbidden" }, { status }));
   }
-  // Purge the whole public tree. "/" covers the root + app-root routes (manifest,
-  // robots, sitemap, llms.txt); "/[lang]" covers every localized content route.
+  // Весь сайт: "/" — корень и файлы корня (manifest, robots, sitemap, llms.txt); "/[lang]" — все страницы на языках.
   revalidatePath("/", "layout");
   revalidatePath("/[lang]", "layout");
-
-  // 🔒 СТРАНИЦУ МАЛО ПЕРЕСОБРАТЬ — НАДО ЕЩЁ СБРОСИТЬ ЕЁ ДАННЫЕ (владелец
-  // 2026-08-14: «в медиатеке картинки есть, а в товарах их нет»).
-  //
-  // Каталог читается через `unstable_cache` со СВОИМ сроком в час
-  // (`lib/catalogue.ts`). Это два независимых кэша: `revalidatePath` помечает
-  // устаревшим HTML, а строки товаров приходят из кэша данных и остаются
-  // прежними. Пересобранная страница честно рисует то же самое — и выглядит
-  // это как «сброс не работает».
-  //
-  // Живой случай: на свежем сервере сборка идёт ДО запуска слоя данных, поэтому
-  // посев картинок из `prebuild` ничего не находит и каталог собирается с
-  // прочерками. Позже `prestart` (`seed-media-when-ready.mjs`) дожидается слоя
-  // данных и связывает картинки в базе — но кэш каталога держит строки без
-  // них ЧАС. Владелец видит картинки в медиатеке и прочерки в товарах.
-  //
-  // Поэтому здесь сбрасываются ОБА кэша: разметка и данные, которыми она
-  // наполняется. `{ expire: 0 }` — истечь немедленно, а не «обновить в фоне»:
-  // второй вариант отдал бы ещё один старый ответ, ради которого этот вызов и
-  // делается.
-
-  return NextResponse.json({ ok: true, revalidated: ["/", "/[lang]"], ts: Date.now() });
+  return withSiblingCors(req, NextResponse.json({ ok: true, revalidated: ["/", "/[lang]"], ts: Date.now() }));
 }
