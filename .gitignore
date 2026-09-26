@@ -101,3 +101,6 @@ lib/images/previews.generated.ts
 next-env.d.ts
 .next-a/
 .next-b/
+
+# 315: font files copied from @fontsource packages before each build (scripts/local-fonts.mjs)
+public/fonts/
