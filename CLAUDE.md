@@ -41,6 +41,13 @@ element is down or removed — the last copy keeps serving. No copy ever receive
 CONFIG»): after the architect saves, CONFIG POSTs «the version changed» to `/api/settings/changed`, and the site
 fetches the settings itself and refreshes its pages with `revalidatePath` — no restart, pages stay static. The
 module, how to carry it to another service and its limits — `lib/settings-listener.README.md`.
+
+**The design is the node element `design`, not CONFIG** (node step 309, owner 2026-09-26: «любые микро сервисы … будут
+менять свой дизайн … в тот момент когда микро сервис дизайн будет вносить изменения»). `lib/design-follow.ts` takes
+the whole design (colours light/dark, fonts, type, shapes, blocks) from `DESIGN_SERVICE_URL` over MCP at start and on its
+signal, writes it into this site's own `DESIGN-CONFIG` and the signal door re-renders the pages. `config/design-config.ts`
+reads ONLY that file — the CONFIG copy carries no design any more. The same three pieces live in every service of the node
+(`fractera-design-starter/README.md` — how to connect one). A design element is absent — the site keeps its own file.
 🛑 Still no polling, no timers, no retries: action only in answer to a human save (the 2026-09-25 cancellation
 stands). A missed signal is caught up at the next start. Do not add self-acting behaviour the owner did not order.
 
