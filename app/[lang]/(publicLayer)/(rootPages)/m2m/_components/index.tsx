@@ -19,6 +19,8 @@ const page = createContentPage({
   data,
   meta: { subPath: `/${data.meta.slug}`, ogImage: data.meta.ogImage },
   resolve: lang => footerPage(data, lang),
+  // Заголовок печатает первый экран по центру (heroCentered, 304-2) — шапка второй H1 не печатает.
+  titleInBody: true,
   chrome: (lang, content) => ({
     // Корень сайта в путь НЕ вписывается: его печатает сам компонент крошек
     // (`components/nav/breadcrumbs.server.tsx`). Пока он стоял здесь, страница

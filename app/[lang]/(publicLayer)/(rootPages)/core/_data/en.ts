@@ -12,19 +12,20 @@ export const en: HomeCell = {
   blocks: [
     { kind: 'p', text: 'Back to [%SITE%](/en).' },
   {
-    kind: 'heroSplit',
-    pill: 'Agentic engineering infrastructure',
-    title: 'From Vibe-Coded MVP to Commercially Ready Product',
-    description:
-      'Scale 100× without scaling your infrastructure costs — with enterprise-level reliability, security, and compliance.',
-
+    kind: 'heroCentered',
+    pill: "Agentic engineering infrastructure",
+    title: "The core of your project",
+    description: 'Scale 100× without scaling your infrastructure costs — with enterprise-level reliability, security, and compliance.',
     cta: {
       href: 'https://code.claude.com/',
       label: 'Install Claude Code',
       secondary: { href: '/en/architect/build/subscription', label: 'Start building' },
     },
-    image: 'homePage',
-    imageAlt: 'SaaS starter template',
+    steps: [
+      { title: "Install the core", text: "Sign-in, data and pages on your own machine" },
+      { title: "Add items", text: "Each part is a separate replaceable service" },
+      { title: "Grow without rework", text: "Swap any part — the rest keeps working" },
+    ],
   },
 
   { kind: 'projectTypeMarquee' },

@@ -8,11 +8,9 @@ export const en: HomeCell = {
   blocks: [
   {
     kind: 'heroCentered',
-    pill: 'Agentic engineering infrastructure',
-    title: 'From Vibe-Coded MVP to Commercially Ready Product',
-    description:
-      'Scale 100× without scaling your infrastructure costs — with enterprise-level reliability, security, and compliance.',
-
+    pill: "Agentic engineering infrastructure",
+    title: "From vibe-coded MVP to real product",
+    description: 'Scale 100× without scaling your infrastructure costs — with enterprise-level reliability, security, and compliance.',
     cta: {
       href: 'https://code.claude.com/',
       label: 'Install Claude Code',

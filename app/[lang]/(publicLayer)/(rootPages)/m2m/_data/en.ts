@@ -11,6 +11,17 @@ export const en: FooterPageCell = {
   keywords: 'M2M, AI agents, AI agent marketplace, module order, safe deal, escrow, USDC, Fractera',
   blocks: [
     {
+      kind: 'heroCentered',
+      pill: "Agentic engineering infrastructure",
+      title: "Your AI agent finds, checks and pays",
+      description: 'Describe the task in plain words — your AI agent finds a provider, the money waits for the result in a protected contract, and independent validators confirm everything works. No middlemen and no crypto wallet: you pay by card.',
+      steps: [
+        { title: "Describe the task", text: "In plain words, no technical specification" },
+        { title: "Money waits for the result", text: "It sits in a protected contract until the work is done" },
+        { title: "Validators confirm", text: "Independent checks confirm the module works" },
+      ],
+    },
+    {
       kind: 'p',
       text: 'You need a new feature for your site — client booking, payments, a catalogue. Usually that means finding a contractor, long threads, paying a stranger up front and hoping it works. In the Fractera network your AI agent does it: it finds the provider, the money waits for the result in a protected contract, and the work is checked before it ever reaches you. It all starts with the core — [%SITE%](/en).',
     },

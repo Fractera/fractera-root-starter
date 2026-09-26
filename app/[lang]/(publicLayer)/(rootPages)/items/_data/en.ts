@@ -9,6 +9,17 @@ export const en: FooterPageCell = {
   description: 'Every AGI ITEM is a separate service with its own repository, its own public page and its own protocols for programs and agents. The project is assembled from them.',
   keywords: 'AGI ITEM, microservice, sign-in, data, blocks, API, MCP, Fractera',
   blocks: [
+    {
+      kind: 'heroCentered',
+      pill: "Agentic engineering infrastructure",
+      title: "The parts your project is made of",
+      description: 'Every AGI ITEM is a separate service with its own repository, its own public page and its own protocols for programs and agents. The project is assembled from them.',
+      steps: [
+        { title: "Own repository", text: "Each item is installed by a pinned version" },
+        { title: "Own public page", text: "Indexed by search and readable by agents" },
+        { title: "Own protocols", text: "Programs and agents reach it through API and MCP" },
+      ],
+    },
     { kind: 'p', text: 'A project here is not one application that holds everything inside. It is assembled from AGI ITEMS: sign-in, data, page blocks — each one a separate service that can be added, replaced or removed. Back to [%SITE%](/en).' },
     { kind: 'h2', text: 'What every item has' },
     {

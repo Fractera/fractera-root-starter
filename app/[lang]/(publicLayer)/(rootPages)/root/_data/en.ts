@@ -12,19 +12,20 @@ export const en: HomeCell = {
   blocks: [
     { kind: 'p', text: 'Back to [%SITE%](/en).' },
   {
-    kind: 'heroSplit',
-    pill: 'Agentic engineering infrastructure',
-    title: 'From Vibe-Coded MVP to Commercially Ready Product',
-    description:
-      'Scale 100× without scaling your infrastructure costs — with enterprise-level reliability, security, and compliance.',
-
+    kind: 'heroCentered',
+    pill: "Agentic engineering infrastructure",
+    title: "The site at the root of your domain",
+    description: 'Scale 100× without scaling your infrastructure costs — with enterprise-level reliability, security, and compliance.',
     cta: {
       href: 'https://code.claude.com/',
       label: 'Install Claude Code',
       secondary: { href: '/en/architect/build/subscription', label: 'Start building' },
     },
-    image: 'homePage',
-    imageAlt: 'SaaS starter template',
+    steps: [
+      { title: "Static pages", text: "Prerendered, fast and readable without scripts" },
+      { title: "82 languages", text: "Each language is its own set of pages" },
+      { title: "Search from settings", text: "Search tags come from the project settings" },
+    ],
   },
 
   { kind: 'projectTypeMarquee' },
@@ -57,6 +58,26 @@ export const en: HomeCell = {
       { label: 'Parallel routing · 8 areas', tone: 'code' },
       { label: 'Next 16+', tone: 'code' },
       { label: '100+ more', tone: 'muted' },
+    ],
+  },
+  // 304-3 (владелец 2026-09-26): статика, языки и SEO из Config — перед «как это работает», со снимком Lighthouse.
+  {
+    kind: 'columns',
+    cols: 2,
+    children: [
+      {
+        kind: 'group',
+        children: [
+          { kind: 'h2', text: "Static pages, every language, search set up from Config" },
+          { kind: 'p', text: "Every page of the site is prerendered in advance: it opens instantly, reads without scripts and costs the same on a hundred visits as on a hundred thousand. Languages are built in — each language is its own set of pages linked to the others, so search engines see one page in several languages, not copies of it." },
+          { kind: 'list', items: [
+            "**Top scores with no extra setup.** Speed, accessibility and search optimisation reach the top of the scale out of the box.",
+            "**Search settings live in Config.** Indexing, robots rules, the title template, the canonical address, the sitemap, language alternates, social previews and structured data reach every page automatically.",
+            "**Change them by interface or by AI.** Edit them on the Config screen, or ask the Claude Code agent of the Config section — no code to touch.",
+          ] },
+        ],
+      },
+      { kind: 'figure', media: 'image', src: '/placeholders/home.jpg', alt: "Lighthouse scores of a page built on this template" },
     ],
   },
   {

@@ -8,6 +8,17 @@ export const en: FooterPageCell = {
   keywords: 'dedicated server, VPS, hosting, deployment, Fractera, node',
   blocks: [
     {
+      kind: 'heroCentered',
+      pill: "Agentic engineering infrastructure",
+      title: "Your project on a dedicated server",
+      description: 'Move your Fractera node from a home computer to a dedicated server: the site runs around the clock, no longer depends on whether your computer is on, and stays yours.',
+      steps: [
+        { title: "Always online", text: "A server answers even when your computer is off" },
+        { title: "The same project", text: "Pages, sign-in and data move as they are" },
+        { title: "Your domain", text: "The address belongs to you, not to us" },
+      ],
+    },
+    {
       kind: 'p',
       text: 'You can deploy this project on a dedicated server so the site answers around the clock — even when your computer is off, rebooting or travelling with you. The code, the data and the domain stay yours: you rent the server, and nobody but you controls it. Back to [%SITE%](/en).',
     },

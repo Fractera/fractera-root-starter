@@ -14,25 +14,20 @@ export const en: HomeCell = {
   keywords: '',
   blocks: [
     {
-      kind: 'heroSplit',
-
-      pill: 'Agentic engineering infrastructure',
-
-      title: '',
+      kind: 'heroCentered',
+      pill: "Agentic engineering infrastructure",
+      title: "Web3 infrastructure for your agents",
       description: 'A node on your own machine: the core, its capabilities and its link to the network. Everything inside the circle is yours.',
       cta: {
         href: 'https://code.claude.com/',
         label: 'Install Claude Code',
         secondary: { href: '/en/architect/build/subscription', label: 'Start building' },
       },
-
-      image: 'agiNode',
-      imageAlt: 'Diagram of an AGI node: the core, its capabilities and neighbouring nodes',
-      diagram: {
-        core: 'Core',
-        ring: ['Auth', 'Data', 'Skills', 'Catalogue'],
-        peers: 'Neighbouring nodes',
-      },
+      steps: [
+        { title: "Open code", text: "The node is yours, and so is its code" },
+        { title: "Lives on your machine", text: "The core runs on your own computer" },
+        { title: "Sells in the agent network", text: "Its abilities are offered to other agents" },
+      ],
     },
 
     { kind: 'h2', text: 'Why we call this AGI' },
