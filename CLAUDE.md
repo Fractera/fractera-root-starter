@@ -9,6 +9,14 @@ the **core**, which holds the architect pages and the installer. You are replace
 that keeps the contract below can take your place with one line in the node's
 `AGI-ITEMS-CONFIG/agi-items.json`.
 
+
+## 🛑 Multi-agent development is forbidden — all development is sequential (owner, 2026-09-28)
+
+The owner, verbatim: «a categorical ban on multi-agent development … all development is sequential only». One agent, one
+task at a time, step by step: no sub-agents, no parallel agents, no agent teams, no background agents splitting the work.
+Long work is a sequence of steps with its state written down, never a fan-out. This holds for every agent of the project —
+the core, the element template and every element.
+
 ## 🔒 The contract — what makes this repository an element
 
 | Rule | Why |
