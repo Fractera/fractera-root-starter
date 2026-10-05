@@ -7,7 +7,7 @@ it is `AGI-ITEMS/core/root`; your terminal is the page «Root → Terminal» of 
 The node around you has three required elements — `auth` (sign-in), `data` (stored data) and you — plus
 the **core**, which holds the architect pages and the installer. You are replaceable: another repository
 that keeps the contract below can take your place with one line in the node's
-`AGI-ITEMS-CONFIG/agi-items.json`.
+`AGI-ITEMS-REGISTRY/agi-items.json`.
 
 
 ## 🛑 Multi-agent development is forbidden — all development is sequential (owner, 2026-09-28)
@@ -74,7 +74,7 @@ So **before your first change**:
 1. fork this repository (or create one from it) on the person's GitHub account;
 2. set `origin` here to that fork and commit your work there;
 3. tag a version (`vX.Y.Z`) and push the tag;
-4. in the node, change the `root` line of `AGI-ITEMS-CONFIG/agi-items.json` to the fork and the tag;
+4. in the node, change the `root` line of `AGI-ITEMS-REGISTRY/agi-items.json` to the fork and the tag;
 5. run `npm run services:install` in the node root.
 
 Ask the person before creating a repository on their account: it is an action outside this machine.
