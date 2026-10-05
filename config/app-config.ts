@@ -5,6 +5,7 @@ import { AppConfig, DEFAULT_APP_CONFIG } from "./app-config.defaults";
 import { appConfigSchema } from "./app-config.schema";
 import { validateConfig } from "./config-validate";
 import { projectSettingsPatch } from "@/lib/project-settings";
+import { ownSiteUrl } from "@/lib/own-site";
 
 // Server-only loader for the live site config. The config is a REAL JSON file on disk
 // (APP-CONFIG/app-config.json at the project working dir = /opt/fractera/app), edited via
@@ -105,7 +106,10 @@ export const getAppConfig = cache((): AppConfig => {
     // 299-6: решения владельца — из последней копии элемента «Настройки проекта»; копии нет — свой файл (посев).
     const own = projectSettingsPatch("app") ?? JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
     const merged = deepMerge(DEFAULT_APP_CONFIG, own);
-    return normalize(validateConfig(appConfigSchema, merged, DEFAULT_APP_CONFIG, "APP-CONFIG"));
+    const cfg = normalize(validateConfig(appConfigSchema, merged, DEFAULT_APP_CONFIG, "APP-CONFIG"));
+    // 396: адрес, выданный узлом, сильнее `url` настроек — canonical, sitemap, hreflang, robots, og.
+    const nodeAddress = ownSiteUrl();
+    return nodeAddress ? { ...cfg, url: nodeAddress, seo: { ...cfg.seo, canonicalBase: nodeAddress } } : cfg;
   } catch {
     return DEFAULT_APP_CONFIG;
   }

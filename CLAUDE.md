@@ -38,6 +38,11 @@ the core, the element template and every element.
 settings. The installer gives you only neighbours (`AUTH_SERVICE_URL`, `REMOTE_DATA_URL`,
 `ARCHITECT_URL`, `NEXT_PUBLIC_AUTH_URL`) and the data key.
 
+**Your address is given by the node, not by settings** (node step 396): `lib/own-site.ts` makes `getAppConfig().url`
+(and `canonicalBase`) the node's domain — `SERVICE_DATA_DIR/domain.json` `url`, else `https://<hostname ?? zone>` from
+`NODE_DOMAIN_FILE`; canonical, sitemap, hreflang and robots follow it. No node domain — the settings `url`, empty in the
+seed, so the site is closed to search. Never write a domain into the seed `APP-CONFIG`: it ships to every node.
+
 **The node's settings element (`config`, `config.<zone>`) is a source you CHOSE, not a master** (node
 step 299-6). It keeps the owner's decisions and gives them over MCP (`settings_version`,
 `get_project_settings`). This site takes them of its own will: `lib/project-settings.ts` asks at server
