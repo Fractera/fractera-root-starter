@@ -7,6 +7,16 @@ other elements read are the template doors. The former pages of root (v1.7.36) s
 
 ---
 
+## In the Fractera project
+
+The site at the root of the node's domain. It is a custom element born from the standard custom template with nothing of its own, so it is the
+place where your main site grows.
+
+You can change it freely: it is your site. Open it in the core (left menu, root), go to Build and tell its agent what you need; the agent
+edits `WEB4-ITEMS/user/root` and commits. The change goes live with Deploy in Build, Deployments. Two template doors of root are read by
+other elements, the project shell `/api/shell/<lang>` and the menu `/api/menu/<lang>`; keep their requests and answers as they are.
+To keep your site when the node is reinstalled, save it to your own GitHub repository in Build, GitHub.
+
 # fractera-custom-item-starter
 
 The reference starter template of a Fractera custom element (WEB4 ITEM). The node's button «Create WEB4 ITEM» births every new
