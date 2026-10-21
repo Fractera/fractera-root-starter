@@ -104,15 +104,15 @@ for (const file of files) {
   }
 }
 
-// 5 — движение в слое секций. Слой серверный ЦЕЛИКОМ, и это его свойство, а не
-// случайность: интерактив живёт в островке, который секция монтирует.
-for (const file of walk(path.join(ROOT, "sections"))) {
+// 5 — движение в блоках. Блоки страницы (`components/blocks/`, из «Блоков») серверные: интерактив живёт в островке,
+// который блок монтирует. 314-2: прежде здесь проверялся удалённый слой `sections/`.
+for (const file of walk(path.join(ROOT, "components", "blocks"))) {
   const code = codeOnly(fs.readFileSync(file, "utf8"));
   if (/^\s*["']use client["']/m.test(code)) {
-    errors.push(`${rel(file)}: "use client" под sections/ — слой секций серверный целиком`);
+    errors.push(`${rel(file)}: "use client" под components/blocks/ — блок страницы серверный`);
   }
   if (/from\s+["'](motion|framer-motion)/.test(code)) {
-    errors.push(`${rel(file)}: motion под sections/ — рендерер серверный, движение монтируется островком из components/`);
+    errors.push(`${rel(file)}: motion под components/blocks/ — блок серверный, движение монтируется островком`);
   }
 }
 

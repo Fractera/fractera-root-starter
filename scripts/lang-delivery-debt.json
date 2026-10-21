@@ -14,14 +14,5 @@
     "ДО этого дня, а не после."
   ],
   "since": "2026-09-21",
-  "items": [
-    {
-      "file": "_tools/translations-dialog/client/translations-dialog.client.tsx",
-      "note": "тянет @/lib/i18n/platform-errors"
-    },
-    {
-      "file": "components/project-types/project-type-marquee.client.tsx",
-      "note": "тянет @/lib/i18n/project-types.i18n"
-    }
-  ]
+  "items": []
 }

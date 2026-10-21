@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { H1 } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button"
 
 // Error boundary for the public [lang] surface (step 149 — language-safety vaccine).
 // Next REQUIRES error.tsx to be a Client Component: this is the sanctioned exception to the
@@ -49,12 +50,12 @@ export default function LangError({
         We hit an unexpected problem rendering this page. The rest of the site is unaffected.
       </p>
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <button
+        <Button variant="bare" size="bare"
           onClick={() => reset()}
           className="inline-flex items-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-bold text-white transition-opacity hover:opacity-80"
         >
           Try again
-        </button>
+        </Button>
         <Link
           href="/"
           className="inline-flex items-center gap-2 rounded-full border border-black/20 px-6 py-3 text-sm font-bold text-black transition-colors hover:bg-black/[0.04]"

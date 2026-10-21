@@ -6,7 +6,7 @@ import type { NextConfig } from "next"
 // refuses to run with `output: standalone`, so the passport names the server file.
 //
 // The ROOT IS THIS FOLDER, named explicitly. Inside a node the site lives in
-// AGI-ITEMS/core/root, and Next, seeing the node's lockfile above, took the node for
+// WEB4-ITEMS/core/root, and Next, seeing the node's lockfile above, took the node for
 // the project root and tried to compile the node's own proxy.ts.
 const root = path.resolve(__dirname)
 
@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
   // build keeps serving — no downtime. Unset, it is the usual .next.
   distDir: process.env.NEXT_DIST_DIR || ".next",
   outputFileTracingRoot: root,
+  // 314-2: данные страниц (JSON дерева) едут в standalone-сборку — запасной источник, когда `ELEMENT_DIR` не задан.
+  outputFileTracingIncludes: {
+    '/**': ['./app/**/_data/*.json', './app/**/_pages/**/*.json'],
+    // 458-3: шрифт сниппетов читается с диска (lib/snippet/render.mjs), сборщик сам его не находит.
+    '/[lang]/**': ['./node_modules/@fontsource/inter/files/inter-*-normal.woff'],
+  },
   turbopack: { root },
   serverExternalPackages: ["better-sqlite3"],
 

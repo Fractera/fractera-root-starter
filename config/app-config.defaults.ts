@@ -103,6 +103,8 @@ export interface AppConfig {
   // Object-storage references (media URL like /api/media/{id}/file) or null when unset.
   images: Record<RegularImageType, string | null>;
   logo: string | null;
+  /** Квадратный знак для значка вкладки и иконок (шаг 452); пусто — иконки из `logo`. */
+  iconMark?: string | null;
 
   // Individual icon URLs (used when no generated set is present).
   icons: {
@@ -289,7 +291,9 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
     keywords: undefined,
     canonicalBase: undefined,
     sitemapUrl: undefined,
-    disallowPaths: ["/api", "/api/*", "/_next", "/_next/*"],
+    // 461 (владелец 2026-10-12: «ok» на вопрос аудита 457): /_next открыт — там CSS и JS страниц; Google: закрытые файлы делают
+    // «harder … to understand the page» (документация Google Search, сверено в аудите 457).
+    disallowPaths: ["/api", "/api/*"],
     locales: ["en"],
     defaultLocale: "en",
     googleVerification: undefined,

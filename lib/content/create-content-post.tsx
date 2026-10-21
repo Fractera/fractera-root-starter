@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import type { Block, FaqPair } from '@/lib/content/blocks/types'
 import { buildAlternates } from '@/lib/seo/alternates'
-import { translatedLanguages, isTranslated, type TranslatedPage } from '@/lib/seo/translation-state'
+import { alternatesLanguages, isIndexable, type TranslatedPage } from '@/lib/seo/translation-state'
 import { author, authorSameAs } from '@/lib/author'
 import { brand } from '@/lib/brand'
 import { StandardContentPage, type Breadcrumb } from '@/components/content-page/standard-content-page'
@@ -88,11 +88,15 @@ export type ContentPostConfig = {
     breadcrumbs: Breadcrumb[]
     backHref: string
     backLabel: string
+    /** 458-11: следующая страница по порядку — «вперёд» рядом с «назад». */
+    next?: { href: string; label: string; title: string }
   }
   /** <title> suffix, e.g. (lang) => 'Fractera News'. */
   titleSuffix: (lang: string) => string
   /** "min read" label; defaults to 'min read'. */
   minLabel?: (lang: string) => string
+  /** 458-5: разметка после тела поста (оглавление документов на корне /docs) — слот `afterBody` шаблона страницы. */
+  afterBody?: (lang: string) => ReactNode
 }
 
 function abs(path: string): string {
@@ -140,7 +144,7 @@ export function createContentPost(config: ContentPostConfig) {
       title: { absolute: `${seoTitle} | ${titleSuffix(lang)} | ${brand().name}` },
       description: post.description,
       ...(post.keywords ? { keywords: post.keywords } : {}),
-      alternates: buildAlternates(lang, subPath, translatedLanguages(config.data)),
+      alternates: buildAlternates(lang, subPath, alternatesLanguages(lang, config.data)),
       // 🔒 НЕПЕРЕВЕДЁННАЯ ВЕРСИЯ НЕ ИНДЕКСИРУЕТСЯ (256-6). Здесь стояло
       // безусловное `index: true`. Адрес на включённом языке существует всегда —
       // резолвер честно отдаёт английскую основу, — и без этой строки такая
@@ -149,7 +153,7 @@ export function createContentPost(config: ContentPostConfig) {
       //
       // Человек её по-прежнему видит: правило о том, что ПОКАЗЫВАТЬ, и правило о
       // том, что ОБЕЩАТЬ машине, — разные.
-      robots: isTranslated(lang, config.data)
+      robots: isIndexable(lang, config.data)
         ? { index: true, follow: true }
         : { index: false, follow: true },
       openGraph: {
@@ -172,7 +176,7 @@ export function createContentPost(config: ContentPostConfig) {
   async function Page({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params
     const post = resolve(lang)
-    const { breadcrumbs, backHref, backLabel } = chrome(lang, post)
+    const { breadcrumbs, backHref, backLabel, next } = chrome(lang, post)
     const url = `${brand().siteUrl}/${lang}${subPath}`
     const ogImage = snippetImage(post)
 
@@ -214,27 +218,9 @@ export function createContentPost(config: ContentPostConfig) {
         keywords: post.keywords ?? post.tags.join(', '),
         ...(ogImage ? { image: ogImage } : {}),
       },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: breadcrumbs.map((b, i) => ({
-          '@type': 'ListItem',
-          position: i + 1,
-          name: b.label,
-          item: i === breadcrumbs.length - 1 ? url : abs(b.href ?? subPath),
-        })),
-      },
-      ...(faq && faq.length > 0
-        ? [{
-            '@context': 'https://schema.org',
-            '@type': 'FAQPage',
-            mainEntity: faq.map(f => ({
-              '@type': 'Question',
-              name: f.q,
-              acceptedAnswer: { '@type': 'Answer', text: plainAnswer(f.a) },
-            })),
-          }]
-        : []),
+      // 🪦 458-4: здесь стояла вторая разметка `BreadcrumbList` — её уже ставят видимые крошки (`components/nav/breadcrumbs.server.tsx`,
+      // с главной сайта первым пунктом). Две разметки одного пути спорили бы друг с другом в выдаче.
+      // 🪦 314-2: разметку `FAQPage` ставит сам блок `faq` из «Блоков» рядом с видимыми вопросами; здесь она была бы второй.
     ]
 
     // Сведения поста ЧАСТЯМИ: раскладку и разделители рисует `PageHeader`
@@ -264,6 +250,8 @@ export function createContentPost(config: ContentPostConfig) {
           faq={faq}
           backHref={backHref}
           backLabel={backLabel}
+          next={next}
+          afterBody={config.afterBody?.(lang)}
         />
       </>
     )

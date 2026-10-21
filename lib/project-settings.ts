@@ -2,6 +2,7 @@
 // пустит `fs` — клиентская сборка упадёт на импорте.
 import { readFileSync, writeFileSync, renameSync, mkdirSync, unlinkSync, existsSync } from "fs"
 import { join, dirname } from "path"
+import { linkOn } from "./own-site"
 
 // САЙТ — ДОБРОВОЛЬНЫЙ ПОТРЕБИТЕЛЬ ЭЛЕМЕНТА «НАСТРОЙКИ ПРОЕКТА» (шаг 299-6, 2026-09-25).
 //
@@ -54,6 +55,8 @@ function readCopy(): Copy | null {
  * `null` значит «читай свой файл», а пустой объект — «владелец ничего не менял»: это разные ответы.
  */
 export function projectSettingsPatch(kind: SettingsKind): Record<string, unknown> | null {
+  // 324-7: связь с CONFIG выключена — элемент живёт своими файлами.
+  if (!linkOn("config")) return null
   const copy = readCopy()
   if (!copy) return null
   const patch = copy.patches[kind]
@@ -95,6 +98,7 @@ export async function pullProjectSettings(): Promise<PullResult> {
   const key = process.env.SETTINGS_SECRET?.trim()
   // Элемента нет у этого узла — честный ответ, а не сбой: сайт живёт своими файлами.
   if (!base) return { ok: false, reason: "no-config-element" }
+  if (!linkOn("config")) return { ok: false, reason: "config-disconnected" }
   if (!key) return { ok: false, reason: "no-settings-key" }
 
   const before = readCopy()

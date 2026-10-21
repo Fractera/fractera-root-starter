@@ -15,7 +15,8 @@ import { join, relative, sep } from "node:path"
 
 const ROOT = process.cwd()
 const LAYER = join(ROOT, "app", "[lang]", "(protectedLayer)")
-const GROUPS = ["(account)", "(admin)", "(finance)", "(staff)"]
+// 314-2: категории — ветки с собственным адресом (/<lang>/account …), а не группы в скобках.
+const GROUPS = ["account", "admin", "finance", "staff"]
 
 const problems = []
 const fail = (file, rule, detail) => problems.push({ file: relative(ROOT, file), rule, detail })
@@ -101,7 +102,7 @@ for (const g of GROUPS) {
 // Правило теперь такое:
 //   наружу выходит то, что отвечает «как проект вообще делает X» —
 //     сквозные соглашения (`lib/architecture/project-api`, тост, примитивы
-//     `components/ui/*`, модель предмета `lib/<сущность>/`, инструменты `_tools/`);
+//     `components/ui/*`, модель предмета `lib/<сущность>/`, инструменты — будущая служба инструментов);
 //   внутри маршрута остаётся всё, что отвечает «как выглядит и ведёт себя
 //     ЭТОТ виджет» — разметка, колонки, пустое состояние, поведение и скелетон.
 //
@@ -114,7 +115,9 @@ for (const g of GROUPS) {
   for (const f of walk(join(LAYER, g))) {
     const src = stripComments(read(f))
     for (const other of GROUPS.filter(x => x !== g)) {
-      if (src.includes(`${other}/`)) {
+      // 314-2: ветки зовутся без скобок, и голое `account/` совпало бы с `components/menu/account/` — чужой веткой
+      // считается только путь В ветку: `(protectedLayer)/<ветка>/` или `../<ветка>/`.
+      if (new RegExp(`(\\(protectedLayer\\)/|\\.\\./)${other}/`).test(src)) {
         fail(f, "cross-group-import", `тянет из ${other} — общее поднимается к общему предку, а не берётся у соседа`)
       }
     }
@@ -156,6 +159,9 @@ for (const f of walk(APP)) {
   const i = rel.lastIndexOf("_widgets")
   if (i === -1) continue
   const kind = rel[i + 1]
+  // Исключение поимённо (владелец 2026-10-07): `_widgets/index.tsx` — список виджетов этой ветки; ветка объявляет их у себя.
+  // Шаг 428: его пара `_widgets/markdown.ts` — текст тех же виджетов для машинной копии страницы (сверяет `check:aio`).
+  if (rel.length === i + 2 && (kind === "index.tsx" || kind === "markdown.ts")) continue
   if (!WIDGET_KINDS.has(kind)) {
     fail(f, "widget-without-kind", `лежит в _widgets/${kind ?? "?"} — вид виджета называется папкой: _widgets/static/<имя> или _widgets/dynamic/<имя>`)
   }

@@ -1,16 +1,14 @@
+import type { ReactNode } from 'react'
 import type { Block } from '@/lib/content/blocks/types'
-import { getPostBodyUi } from '@/lib/content/post-body-ui'
 import { renderBlocks } from '@/lib/content/blocks/registry'
 
-// PostBody is now a thin dispatcher over the shared block registry
-// (lib/content/blocks/registry). The actual per-kind renderers live in the
-// catalog so any content surface (news, blog, documentation, StandardContentPage)
-// renders blocks identically and new block kinds are added in one place.
-// `headingId` is re-exported for the table-of-contents builders that import it
-// from here, keeping their import paths unchanged.
-export { headingId } from '@/lib/content/blocks/inline'
+/** Виджеты ветки: имя → отрисовка на языке страницы (`<ветка>/_widgets/index.tsx`). */
+export type WidgetSet = Record<string, (lang: string) => ReactNode>
 
-export function PostBody({ blocks, lang = 'en' }: { blocks: Block[]; lang?: string }) {
-  const ui = getPostBodyUi(lang)
-  return <div className="flex flex-col gap-6">{renderBlocks(blocks, lang, ui)}</div>
+// PostBody — тонкая обёртка над набором блоков элемента (`lib/content/blocks/registry.tsx`, фабрика `page-body` из
+// «Блоков»). Любая поверхность с содержимым рисует блоки одинаково; новый вид добавляется в одном месте (314-2).
+export function PostBody({ blocks, lang = 'en', widgets }: { blocks: Block[]; lang?: string; widgets?: WidgetSet }) {
+  // 423: виджет ветки стоит в последовательности на своём месте; фабрике он приходит уже привязанным к языку.
+  const set = widgets ? Object.fromEntries(Object.entries(widgets).map(([name, draw]) => [name, () => draw(lang)])) : undefined
+  return <div className="flex flex-col gap-6">{renderBlocks(blocks, 'blk', set)}</div>
 }

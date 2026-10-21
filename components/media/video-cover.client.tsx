@@ -22,6 +22,7 @@
 // Терять содержимое ради оптимизации нельзя.
 
 import { useState } from "react"
+import { Button } from "@/components/ui/button"
 
 export function VideoCover(
   { src, poster, label, cover, captions, lang }:
@@ -54,7 +55,7 @@ export function VideoCover(
   }
 
   return (
-    <button
+    <Button variant="bare" size="bare"
       type="button"
       onClick={() => setPlaying(true)}
       aria-label={label}
@@ -68,6 +69,6 @@ export function VideoCover(
           </svg>
         </span>
       </span>
-    </button>
+    </Button>
   )
 }

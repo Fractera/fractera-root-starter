@@ -44,7 +44,9 @@ const SCAN_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|md|json)$/
 // ошибка, что чинить гостевой слот на тест-сервере: правка живёт до первой
 // переустановки и в источник не попадает. Сторож узла в них не заходит.
 const SKIP_DIR = new Set(["node_modules", ".git", ".turbo", "dist", "build", ".vercel", ...FOREIGN_DIRS])
-const SKIP_PREFIX = [".next"]
+// 330-5: и `node_modules` тоже префиксом. ✗ Измерено 2026-09-28: установщик узла на Windows отодвигает занятую папку
+// библиотек в `node_modules.old-<время>`, сканер зашёл в неё (десятки тысяч чужих файлов) и сборка элемента висела больше часа.
+const SKIP_PREFIX = [".next", "node_modules"]
 const SKIP_FILE = /\.generated\.|package-lock\.json$|\.tsbuildinfo$/
 
 // The single detection rule (mirrors hasBrokenChar in the content emitters). Returns the codepoint

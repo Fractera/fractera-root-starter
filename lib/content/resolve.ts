@@ -11,8 +11,8 @@ export function resolveLocalizedBody<TOverride extends LocalizedBodyOverride>(
   const blocks = override?.blocks
     ?? (override?.headings
       ? base.blocks.map(b =>
-          b.kind === 'h2' && override.headings?.[b.text]
-            ? { ...b, text: override.headings[b.text] }
+          b.kind === 'block-section-head' && override.headings?.[b.title]
+            ? { ...b, title: override.headings[b.title] }
             : b,
         )
       : base.blocks)

@@ -1,0 +1,36 @@
+{
+  "id": "root",
+  "name": "root",
+  "shortDescription": "WEB4 element root, the site at the root of the node domain, from fractera-custom-item-starter v0.3.124 on 2026-10-21 (node step 549-6). Its capabilities are written by its agent from Settings → Capabilities description.",
+  "longDescription": "",
+  "accepts": "",
+  "returns": "",
+  "designSkill": "impeccable",
+  "isFracteraArchitecture": true,
+  "framework": "next",
+  "elementType": "custom",
+  "visibility": "network",
+  "calls": [
+    "auth",
+    "data",
+    "config",
+    "design"
+  ],
+  "messengers": {
+    "h2a": true,
+    "h2h": true,
+    "a2a": true
+  },
+  "automation": {
+    "cron": true
+  },
+  "marketplace": {
+    "listed": false,
+    "price": "",
+    "currency": ""
+  },
+  "nostr": {
+    "tags": [],
+    "description": ""
+  }
+}

@@ -19,10 +19,18 @@ import fs from "node:fs"
 import path from "node:path"
 
 const ROOT = process.cwd()
-const AREAS = ["sections", "components"]
+// 314-2: `sections/` удалён из шаблона — блоки «Блоков» лежат в `components/blocks/`.
+// 425 (владелец 2026-10-07: «ни при каких обстоятельствах для виджетов, инструментов или блоков не использовать самописный
+// инструмент»): виджеты живут в `app/**/_widgets/`, инструменты — в `_tools/`; оба теперь под сторожем.
+const AREAS = ["components", "_tools", "app"]
 const SKIP_DIRS = new Set(["ui", "node_modules"])
 
 const RULES = [
+  {
+    id: "no-raw-control",
+    why: "элемент управления и таблица — только из components/ui (Button, Input, Select, Textarea, Table, Label, AppDialog); нет нужного — npx shadcn@latest add <component>. Сырой тег не перекрашивается токенами, теряет клавиатуру и читалку экрана, не получает адрес подсветки",
+    test: /<(button|input|select|textarea|table|dialog|label)(?=[\s>/]|$)/,
+  },
   {
     id: "gap-not-space",
     why: "space-x-*/space-y-* заменяются на flex + gap-*. Исключение внутри правила: space-[xy]-0 — это СБРОС чужого отступа, а не расстановка своего",
@@ -68,6 +76,11 @@ const RULES = [
 // 🔒 ИСКЛЮЧЕНИЯ — поимённо, с причиной.
 const EXEMPT = [
   {
+    file: "app/global-error.tsx",
+    rule: "no-raw-control",
+    why: "заменяет корневой макет целиком: глобальный CSS и компоненты там не гарантированы, вся разметка на инлайн-стилях",
+  },
+  {
     file: "components/ui/",
     rule: "*",
     why: "исходник shadcn: чужой код, автор этих же правил",
@@ -75,17 +88,12 @@ const EXEMPT = [
   {
     file: "components/ai-elements/",
     rule: "*",
-    why: "исходник AI Elements (Vercel): та же семья, что shadcn, вендорен целиком в 80-2 — правим его только заменой путей импорта, иначе правка живёт до первого обновления библиотеки",
+    why: "AI Elements (Vercel, реестр @ai-elements, шаг 333-12): чужой исходник shadcn-формата, ставится `shadcn add`; наши правки в нём — только облегчение (без streamdown и shiki) и цвет текста",
   },
   {
-    file: "sections/tone.ts",
+    file: "lib/blocks/tone.ts",
     rule: "no-literal-colour",
-    why: "карта тонов ПЕРЕЧИСЛЯЕТ классы намеренно — именно так класс попадает в сборку Tailwind (урок шага 54)",
-  },
-  {
-    file: "components/workspace/workspace-shell.tsx",
-    rule: "no-manual-dark",
-    why: "та же карта тонов, что в sections/tone.ts, только для полос рабочего экрана: тон — это ПАРА классов на обе темы, перечисленная целиком, иначе класс не доедет до сборки",
+    why: "карта тонов блока «Блоков» ПЕРЕЧИСЛЯЕТ классы намеренно — именно так класс попадает в сборку Tailwind (урок шага 54)",
   },
 ]
 
@@ -122,11 +130,21 @@ const debts = []
 for (const f of files.sort()) {
   const r = rel(f)
   const lines = fs.readFileSync(f, "utf8").split("\n")
+  // 425: строки внутри блочного комментария — объяснение, а не разметка (правило no-raw-control их не считает).
+  const inComment = []
+  let open = false
+  for (const line of lines) {
+    const starts = line.includes("/*"), ends = line.includes("*/")
+    inComment.push(open || (starts && !line.trimStart().startsWith("<")))
+    if (starts && !ends) open = true
+    if (ends) open = false
+  }
   for (const rule of RULES) {
     const skip = EXEMPT.find(e => r.includes(e.file) && (e.rule === "*" || e.rule === rule.id))
     if (skip) continue
     lines.forEach((line, i) => {
       if (!rule.test.test(line)) return
+      if (rule.id === "no-raw-control" && (inComment[i] || /^\s*(\/\/|\*|\/\*)/.test(line))) return
       if (rule.id === "gap-not-space" && /<(ul|ol)\b/.test(line)) return
       const debt = KNOWN_DEBT.find(d => d.file === r && d.rules.includes(rule.id))
       if (debt) {

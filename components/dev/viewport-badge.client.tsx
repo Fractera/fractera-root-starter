@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button"
 
 // Индикатор ширины экрана — только в режиме разработки.
 //
@@ -48,8 +49,20 @@ function stepName(width: number): string {
   return "xs";
 }
 
-export function ViewportBadge() {
+// 333-4 (слово владельца): «раздели этот элемент на две части поровну и в нижней части напиши название дизайна … название навыка
+// максимум 10 букв потом … мелким шрифтом design skill»; «кнопку закрыть, который перепрописывает собственный CONFIG»,
+// закрывает «только архитектор». Имя навыка приходит пропсом из макета (паспорт `designSkill`), кнопка появляется только
+// после ответа `/api/me` с ролью architect; круг по-прежнему пропускает клики сквозь себя, кроме самой кнопки.
+const SKILL_MAX = 10;
+
+function shortName(name: string): string {
+  return name.length > SKILL_MAX ? `${name.slice(0, SKILL_MAX)}…` : name;
+}
+
+export function ViewportBadge({ skill, closeLabel }: { skill: string | null; closeLabel: string }) {
   const [width, setWidth] = useState<number | null>(null);
+  const [architect, setArchitect] = useState(false);
+  const [closed, setClosed] = useState(false);
 
   useEffect(() => {
     const read = () => setWidth(window.innerWidth);
@@ -58,21 +71,58 @@ export function ViewportBadge() {
     return () => window.removeEventListener("resize", read);
   }, []);
 
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/me", { cache: "no-store", credentials: "include" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((me: { roles?: string[] } | null) => { if (alive) setArchitect(!!me?.roles?.includes("architect")); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
+  async function close() {
+    const r = await fetch("/api/settings/platform", {
+      method: "POST",
+      credentials: "include",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ viewportBadge: false }),
+    }).catch(() => null);
+    if (r?.ok) setClosed(true);
+  }
+
   if (!ALWAYS_VISIBLE && process.env.NODE_ENV === "production") return null;
   // До первого замера ничего не рисуем: подставить сюда серверное число нельзя —
   // на сервере ширины экрана не существует, и любое значение было бы выдумкой,
   // которая мигнёт при гидратации.
-  if (width === null) return null;
+  if (width === null || closed) return null;
 
   return (
-    <div
-      aria-hidden
-      className="pointer-events-none fixed bottom-4 left-4 z-50 flex size-20 select-none flex-col items-center justify-center rounded-full border border-white/30 bg-white/30 text-black shadow-lg backdrop-blur-sm"
-    >
-      <span className="font-mono text-sm font-bold leading-none tabular-nums">{width}</span>
-      <span className="mt-1 font-mono text-[10px] uppercase leading-none tracking-widest opacity-70">
-        {stepName(width)}
-      </span>
+    <div className="pointer-events-none fixed bottom-4 left-4 z-50 select-none">
+      <div
+        aria-hidden
+        className="flex size-20 flex-col overflow-hidden rounded-full border border-white/30 bg-white/30 text-black shadow-lg backdrop-blur-sm"
+      >
+        <div className="flex flex-1 flex-col items-center justify-end pb-1">
+          <span className="font-mono text-sm font-bold leading-none tabular-nums">{width}</span>
+          <span className="mt-0.5 font-mono text-[10px] uppercase leading-none tracking-widest opacity-70">{stepName(width)}</span>
+        </div>
+        <div className="h-px w-full bg-black/30" />
+        <div className="flex flex-1 flex-col items-center justify-start pt-1">
+          {skill && <span className="font-mono text-[10px] font-bold leading-none">{shortName(skill)}</span>}
+          <span className="mt-0.5 font-mono text-[7px] uppercase leading-none tracking-wider opacity-60">design skill</span>
+        </div>
+      </div>
+      {architect && (
+        <Button variant="bare" size="bare"
+          type="button"
+          onClick={close}
+          aria-label={closeLabel}
+          title={closeLabel}
+          className="pointer-events-auto absolute -right-1 -top-1 grid size-5 place-items-center rounded-full border border-black/20 bg-white text-[11px] font-bold leading-none text-black shadow"
+        >
+          ×
+        </Button>
+      )}
     </div>
   );
 }

@@ -48,7 +48,6 @@ const FILES = [
   // списке — часть того же коммита, что и само окно.
   ["components/dialog/app-dialog.i18n.ts", "AppDialogUi", 2],
   ["components/auth/access-gate.i18n.ts", "AccessGateUi", 2],
-  ["_tools/translations-dialog/types/translations-dialog.i18n.ts", "TranslationsUi", 2],
   // Слова публичного каталога и подписи движка материалов.
   ["lib/content/page-ui.ts", "PageUi", 2],
   ["lib/content/post-body-ui.ts", "PostBodyUi", 2],

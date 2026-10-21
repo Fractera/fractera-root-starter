@@ -1,3 +1,4 @@
+import { ticketFrom, whoByTicket } from '@/lib/auth/ticket';
 import { authUrl as nodeAuthUrl } from '@/lib/microservices/urls';
 import { NextRequest } from "next/server"
 import { shouldBypassAuth } from "@/lib/auth/auth-bypass"
@@ -111,6 +112,13 @@ export async function getSession(req?: NextRequest): Promise<AppSession | null> 
   const authUrl =
     nodeAuthUrl() ?? ''
   const cookie = req?.headers.get('cookie') ?? ''
+  // 🔒 328-3: БИЛЕТ ЕДИНОГО ВХОДА — на собственном домене элемента кука службы входа не живёт; человека знает центр по
+  // билету, который `/api/auth/callback` поставил своей кукой. Погашенный билет (выход в центре) — дальше обычный путь.
+  const ticket = ticketFrom(cookie)
+  if (ticket) {
+    const who = await whoByTicket(ticket)
+    if (who) return { userId: who.userId, email: who.email ?? '', roles: who.roles }
+  }
   try {
     const res = await fetch(`${authUrl}/api/session`, { headers: { cookie } })
     if (!res.ok) return null

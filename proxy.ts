@@ -26,7 +26,11 @@ import {
 // /logout (step 169): the account drawer's sign-out is a relative /logout link, routed to the
 // auth service the same way — the auth service clears the session cookie and redirects back
 // here (Job 0 attaches the absolute redirectUrl, since the auth host can't guess this origin).
-const AUTH_FORM_PATHS = new Set(["/login", "/register", "/guest-login", "/logout"]);
+// /guest-in (node step 331): the guest lock of `(guestLayer)` — the proxy sends it where a guest can be made: the node centre on an
+// own domain, the auth service's `/api/auth/guest` everywhere else (the same address rule as /login).
+const AUTH_FORM_PATHS = new Set(["/login", "/register", "/guest-login", "/logout", "/guest-in"]);
+// The path on the sign-in service: every form keeps its name, the guest lock is the service's guest door.
+const authPathOf = (pathname: string): string => (pathname === "/guest-in" ? "/api/auth/guest" : pathname);
 
 // ──────────────────────────────────────────────────────────────────────────
 // This proxy does TWO jobs, branched by path:
@@ -62,13 +66,23 @@ const PUBLIC_API_PREFIXES = [
   // Дверь настроек сайта (280-6): приходит ядро узла, у него нет сессии посетителя. Стережёт
   // общий ключ SETTINGS_SECRET внутри обработчика, а не роль.
   "/api/settings",
+  // Шаг узла 406: конечная точка A2A стережёт себя сама — ключ узла (X-Node-Key) и граница узла (видимость node → 403);
+  // ворота здесь отвечали бы извне своим {"error"}, не в формате протокола A2A.
+  "/api/a2a",
+  // 417 (владелец 2026-10-06): паспорт элемента — открыто, без ключа, приватного в нём нет (OWN-SERVICE-PROPS/README.md).
+  "/api/own-service-props",
   // Меню проекта (283-1): публично, его и так видно на каждой странице; читают другие службы узла.
   "/api/menu",
+  // 324-6: адрес ядра своего узла — островку подсветки у посетителя без сессии; секрета в нём нет.
+  "/api/core-origin",
+  // 328-3: возврат из центра единого входа — человек ещё не вошёл, дверь ставит ему билет.
+  "/api/auth/callback",
   // 285-3: данные оболочки проекта (шапка и подвал) для всех служб узла — публичны, как и сами шапка и подвал.
   "/api/shell",
   "/api/catalogue",   // догрузка витрины: те же товары, что в статическом HTML
   "/api/i18n",        // строки интерфейса — они и так в разметке
-  "/api/project-types",
+  // 356-2: отчёт о задаче для окна предпросмотра — без входа; дверь сама отвечает только на этой машине (127.0.0.1 / localhost).
+  "/api/task-report",
   // Служба каналов толкает сюда сообщение бота: у неё нет сессии, поэтому дверь
   // стережёт общий секрет, а не роль. Без этой строки гейт закрыл бы её от самой платформы.
   "/api/telegram/hook",
@@ -83,6 +97,9 @@ const PUBLIC_API_PREFIXES = [
   // Заявка на разработку от агента автоматизации (133): та же машина, тот же
   // секрет. Соседняя api/architect/pre-step закрыта РОЛЬЮ — у машины сессии нет.
   "/api/intake/request",
+  // 518-7: поиск по страницам отзывов — то же, что и так видно в списке `/reviews`. Запись (POST, DELETE) стережёт сам обработчик:
+  // ключ элемента или вход архитектора.
+  "/api/reviews",
 ];
 
 // Non-content root pages that live at the ROOT and never take a language prefix
@@ -189,25 +206,7 @@ async function apiAuthGate(request: NextRequest): Promise<NextResponse> {
     return NextResponse.next();
   }
 
-  // 🔒 ОПИСАНИЕ НАПРАВЛЕНИЯ — ПУБЛИЧНО, И ЭТО ТРЕТИЙ СЛУЧАЙ ТОГО ЖЕ КЛАССА
-  // (найдено живым запросом 2026-08-17, сразу после включения домена).
-  //
-  // Лента направлений стоит на ГЛАВНОЙ, где посетитель не авторизован по
-  // определению, а тело окна она берёт по нажатию с этого адреса. Пока путь был
-  // закрыт, окно открывалось и показывало «описание не загрузилось» — каждому,
-  // ради кого лента и сделана.
-  //
-  // 🔒 ПОЧЕМУ ЭТОГО НЕ БЫЛО ВИДНО ДО СЕГОДНЯ. Сервер работал в режиме без домена,
-  // где авторизация обходится целиком (`shouldBypassAuth`), и адрес отвечал 200 —
-  // я проверил его живьём и увидел зелёное. С включением HTTPS и домена режим
-  // сменился на строгий, и та же проверка стала давать 401. Пруф, снятый в режиме
-  // обхода, ничего не говорит о защищённом режиме — вот дословный пример.
-  //
-  // Отдаётся статический файл, собранный на сборке из корпуса, который целиком
-  // лежит в разметке публичной страницы: прятать за сессией нечего.
-  if (/^\/api\/project-types\/[a-z]{2}\/[a-z0-9-]+\/?$/.test(pathname)) {
-    return NextResponse.next();
-  }
+  // 🪦 314-2: дверь описаний направлений (`/api/project-types`) удалена из шаблона вместе с лентой направлений root.
 
   if (pathname.startsWith("/api/") && !PUBLIC_API_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
     // 🔒 ХОЗЯИН ЗА КЛАВИАТУРОЙ ЭТОЙ МАШИНЫ ПРОХОДИТ ВОРОТА (2026-09-19).
@@ -268,9 +267,12 @@ async function apiAuthGate(request: NextRequest): Promise<NextResponse> {
     if (!shouldBypassAuthEdge()) {
       const agentIdentity = request.headers.get("x-agent-identity");
       if (!agentIdentity) {
+        // 328-3: на собственном домене элемента вместо куки службы входа — билет единого входа; подлинность билета
+        // проверяет `getSession` у центра, ворота смотрят только на наличие (как и для куки службы).
         const sessionToken =
           request.cookies.get("authjs.session-token") ??
-          request.cookies.get("__Secure-authjs.session-token");
+          request.cookies.get("__Secure-authjs.session-token") ??
+          request.cookies.get("fractera-ticket");
 
         if (!sessionToken) {
           return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -308,6 +310,11 @@ function languageRouter(request: NextRequest): NextResponse {
 
   // Service pages stay at the root — never prefixed with a language.
   if (SERVICE_ROOTS.has(firstSegment)) return NextResponse.next();
+
+  // 422 (владелец 2026-10-07: «переносить двери внутрь ветки, а язык в адресе принять как цену»): дверь ветки
+  // `/<язык>/…/api/…` идёт к обработчику как есть — без переадресации режима одного языка (301 превратил бы POST в GET).
+  // Ворота `/api/*` выше её не видят: такая дверь стережёт себя сама (роль по сессии, предел с адреса).
+  if (SUPPORTED_LANGUAGES.includes(firstSegment) && /^\/[a-z]{2}(?:\/[^/]+)*\/api\//.test(pathname)) return NextResponse.next();
 
   // Single-language mode: hide the lang prefix from public URLs.
   // /en/about → 301 /about ; internally rewrite /about → /en/about.
@@ -450,9 +457,44 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     // такой cookie не примет, и вход на петле «прошёл бы», оставив человека
     // неузнанным. Хозяину за клавиатурой вход не нужен (его узнаёт правило
     // хозяина), но если он пошёл входить — ведём туда, где вход работает.
+    // 🔒 328: СОБСТВЕННЫЙ ДОМЕН ЭЛЕМЕНТА — ВХОД И ВЫХОД ЧЕРЕЗ ЦЕНТР УЗЛА. ✗ Найдено владельцем 2026-09-28: на aifa.dev
+    // «Войти» и «Выйти» шапки уводили на `http://127.0.0.1:24681` (запасная ветка ниже) — петлю машины ПОСЕТИТЕЛЯ, а выход
+    // возвращал на зону узла. Здесь: вход — через код центра (`/api/auth/sso` → наш `/api/auth/callback`), выход — выход
+    // центра с возвратом на этот домен, и свой билет стирается сразу.
+    {
+      const center = connectedDomainAuthBase();
+      const zone = center ? new URL(center).hostname.replace(/^auth\./, "") : "";
+      const here = (host ?? "").split(":")[0].toLowerCase();
+      const ownDomain = !!center && !!here && here !== zone && !here.endsWith(`.${zone}`)
+        && here !== "localhost" && !/^\d{1,3}(\.\d{1,3}){3}$/.test(here);
+      if (ownDomain && (pathname === "/login" || pathname === "/register" || pathname === "/logout" || pathname === "/guest-in")) {
+        const q = new URLSearchParams(request.nextUrl.search);
+        // 🔒 331: ГОСТЬ НА СВОЁМ ДОМЕНЕ — ТЕМ ЖЕ КОДОМ ЦЕНТРА. Центр с `guest=1` создаёт гостя вместо формы входа; вернуться —
+        // на ту же страницу (только путь этого сайта: `next` принимает лишь локальный путь).
+        if (pathname === "/guest-in") {
+          let next = "/";
+          try {
+            const u = new URL(q.get("redirectUrl") ?? "/", `https://${here}`);
+            if (u.hostname === here) next = `${u.pathname}${u.search}`;
+          } catch { /* не адрес — главная */ }
+          const ret = `https://${here}/api/auth/callback?next=${encodeURIComponent(next)}`;
+          return NextResponse.redirect(`${center}/api/auth/sso?return=${encodeURIComponent(ret)}&guest=1`);
+        }
+        const langRaw = q.get("lang") ?? request.cookies.get(LOCALE_COOKIE)?.value ?? DEFAULT_LANGUAGE;
+        const lang = SUPPORTED_LANGUAGES.includes(langRaw) ? langRaw : DEFAULT_LANGUAGE;
+        if (pathname === "/logout") {
+          const out = NextResponse.redirect(`${center}/logout?redirectUrl=${encodeURIComponent(`https://${here}/${lang}`)}`);
+          out.cookies.set("fractera-ticket", "", { path: "/", maxAge: 0, httpOnly: true, secure: true, sameSite: "lax" });
+          return out;
+        }
+        const next = `/${lang}?signed-in=1`;
+        const ret = `https://${here}/api/auth/callback?next=${encodeURIComponent(next)}`;
+        return NextResponse.redirect(`${center}/api/auth/sso?return=${encodeURIComponent(ret)}&requireRole=${q.get("requireRole") ?? "user"}`);
+      }
+    }
     const domainAuth = connectedDomainAuthBase();
     if (domainAuth && isOwnerAtMachine(request)) {
-      return NextResponse.redirect(`${domainAuth}${pathname}${request.nextUrl.search}`);
+      return NextResponse.redirect(`${domainAuth}${authPathOf(pathname)}${request.nextUrl.search}`);
     }
 
     const assignedAuth = nodeAuthUrl();
@@ -460,7 +502,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
       const authPort = new URL(assignedAuth).port;
       const ownHost = (host ?? "localhost").split(":")[0];
       const qsOwn = request.nextUrl.search;
-      return NextResponse.redirect(`${proto}://${ownHost}:${authPort}${pathname}${qsOwn}`);
+      return NextResponse.redirect(`${proto}://${ownHost}:${authPort}${authPathOf(pathname)}${qsOwn}`);
     }
 
     if (isOwnerAtMachine(request)) {
@@ -490,7 +532,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
       if (!search.has("requireRole")) search.set("requireRole", "user");
     }
     const qs = search.toString();
-    const target = `${authBaseFromHost(host, proto)}${pathname}${qs ? `?${qs}` : ""}`;
+    const target = `${authBaseFromHost(host, proto)}${authPathOf(pathname)}${qs ? `?${qs}` : ""}`;
     return NextResponse.redirect(target);
   }
 
@@ -553,7 +595,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 // На СВОЁМ домене (235-2) исключение не действует — там работает запрет.
 //
 // 🛑 ЧЕГО ЗДЕСЬ ПОКА НЕТ, И ЭТО ДОЛГ, А НЕ УМОЛЧАНИЕ: проверки роли `architect`
-// по сессии. У узла линии AGI своей службы входа нет — `NEXT_PUBLIC_AUTH_URL`
+// по сессии. У узла линии WEB4 своей службы входа нет — `NEXT_PUBLIC_AUTH_URL`
 // показывает на адрес, которого на этой машине не существует. Посылать человека
 // в несуществующую дверь хуже, чем честно ответить «страницы нет»: дверь без
 // ключа выглядит как непослушание продукта. Поэтому чужой получает 404, а не

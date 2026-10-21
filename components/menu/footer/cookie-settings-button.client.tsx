@@ -1,7 +1,7 @@
 "use client";
 
 import { Cookie } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 // Кнопка «Настройки cookie» в подвале — открывает баннер повторно.
 //
@@ -19,13 +19,13 @@ import { buttonVariants } from "@/components/ui/button";
 
 export function CookieSettingsButton({ label }: { label: string }) {
   return (
-    <button
+    <Button variant="ghost" size="sm"
       type="button"
       onClick={() => window.dispatchEvent(new Event("open-cookie-settings"))}
-      className={buttonVariants({ variant: "ghost", size: "sm" }) + " gap-1.5 text-muted-foreground hover:text-foreground"}
+      className="gap-1.5 text-muted-foreground hover:text-foreground"
     >
       <Cookie className="size-3.5" />
       {label}
-    </button>
+    </Button>
   );
 }

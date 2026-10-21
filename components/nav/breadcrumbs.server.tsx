@@ -37,7 +37,9 @@ export function Breadcrumbs({ lang, trail }: { lang: string; trail: Crumb[] }) {
 
   const schema = buildBreadcrumbSchema(
     getAppConfig(),
-    items.filter(c => c.href).map(c => ({ name: c.label, url: c.href as string })),
+    // 431 (✗ 2026-10-07): здесь стоял `filter(c => c.href)`, и текущая страница выпадала — на /ru/privacy в разметке был один
+    // пункт, сам сайт. Последний пункт входит без адреса, как и обещает комментарий выше.
+    items.map((c, i) => ({ name: c.label, url: i === items.length - 1 ? undefined : c.href })),
   )
 
   return (

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Small } from "@/components/ui/typography"
-import { useVoiceRecorder, VOICE_BAR } from "@/_tools/voice-input/client/use-voice-recorder"
+import { useVoiceRecorder, VOICE_BAR, type AllVoiceStrings } from "@/_tools/tool-voice-input/client/use-voice-recorder"
 import { MicIcon } from "./mic-icon"
 
 // УПРАВЛЯЮЩИЙ ЭЛЕМЕНТ С ГОЛОСОМ — поле, микрофон, полоса, расшифровка (32-8).
@@ -48,7 +48,8 @@ export function VoiceControl({
   type = "text",
   inputMode,
   voice = true,
-  apiUrl = "/api/transcribe",
+  apiUrl = "/api/tools/tool-voice-input",
+  strings,
 }: {
   id: string
   variant?: VoiceControlVariant
@@ -80,6 +81,8 @@ export function VoiceControl({
    */
   voice?: boolean
   apiUrl?: string
+  /** Слова голоса на языке страницы — от сервера (`voiceStrings(lang)`); клиент словарь не импортирует (422). */
+  strings: AllVoiceStrings
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const areaRef = useRef<HTMLTextAreaElement>(null)
@@ -90,6 +93,7 @@ export function VoiceControl({
     lang,
     disabled: disabled || readOnly,
     apiUrl,
+    strings,
   })
   const L = v.strings
 
@@ -122,7 +126,7 @@ export function VoiceControl({
   )
 
   return (
-    <div data-voice-control={variant} className="flex w-full flex-col gap-2">
+    <div data-block="rj937" data-voice-control={variant} className="flex w-full flex-col gap-2">
       {variant === "textarea" ? (
         <>
           <Textarea
@@ -145,7 +149,7 @@ export function VoiceControl({
         // элемента срезала бы ему скругления справа, и заблокированное поле
         // выглядело бы обрубленным без всякой причины.
         withVoice ? (
-          <ButtonGroup className="w-full">
+          <ButtonGroup data-block="dgaa3" className="w-full">
             <Input
               id={id}
               ref={inputRef}
@@ -180,14 +184,14 @@ export function VoiceControl({
 
       {/* Одно место, три состояния, взаимно исключающие друг друга. */}
       {v.recording ? (
-        <div
+        <div data-block="kdpva"
           data-voice-bar
           ref={el => {
             if (el) v.setBarCapacity(Math.floor(el.clientWidth / (VOICE_BAR.width + VOICE_BAR.gap)))
           }}
           className="relative h-12 w-full overflow-hidden rounded-lg border border-border bg-muted/40"
         >
-          <div className="absolute inset-0 flex items-center" style={{ gap: `${VOICE_BAR.gap}px`, paddingInline: 4 }}>
+          <div data-block="d1xjd" className="absolute inset-0 flex items-center" style={{ gap: `${VOICE_BAR.gap}px`, paddingInline: 4 }}>
             {v.bars.map((h, i) => (
               <span
                 key={i}
@@ -201,7 +205,7 @@ export function VoiceControl({
           </span>
         </div>
       ) : v.draft !== null ? (
-        <div data-voice-draft className="flex w-full flex-col gap-2">
+        <div data-block="eye7b" data-voice-draft className="flex w-full flex-col gap-2">
           <Small>{L.draftTitle}</Small>
           <Textarea
             value={v.draft}
@@ -209,7 +213,7 @@ export function VoiceControl({
             rows={Math.min(8, Math.max(2, v.draft.split("\n").length + 1))}
             className="text-[length:var(--fs-body)] md:text-[length:var(--fs-body)]"
           />
-          <div className="flex items-center gap-2">
+          <div data-block="ehgvh" className="flex items-center gap-2">
             <Button type="button" size="sm" onClick={v.accept} disabled={!v.draft.trim()} data-voice-accept>
               {L.accept}
             </Button>

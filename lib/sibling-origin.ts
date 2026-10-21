@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server"
+import { nodeCoreOrigin } from "@/lib/own-site"
 
 // «СВОЙ» ИСТОЧНИК ДЛЯ ДВЕРЕЙ, КОТОРЫЕ ЗОВУТ СОСЕДНИЕ ЭЛЕМЕНТЫ УЗЛА ИЗ БРАУЗЕРА (шаги 312, 314-2).
 //
@@ -24,6 +25,8 @@ export function siblingOrigin(req: NextRequest): string | null {
   try { url = new URL(origin) } catch { return null }
   if (LOCAL.has(host)) return LOCAL.has(url.hostname) ? url.origin : null
   if (url.protocol !== "https:") return null
+  // 324-6: ядро своего узла — своё на любом главном адресе элемента (свой домен — чужая для ядра зона).
+  if (url.origin === nodeCoreOrigin()) return url.origin
   const zone = zoneOf(host)
   return url.hostname === zone || url.hostname.endsWith(`.${zone}`) ? url.origin : null
 }

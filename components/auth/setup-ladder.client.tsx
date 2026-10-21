@@ -59,7 +59,7 @@ export function RouteLine({ items, hint }: { items: { title: string; text: strin
             <li key={it.title} className="flex shrink-0 items-center">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button
+                  <Button variant="bare" size="bare"
                     type="button"
                     onClick={() => setPicked(picked === i ? null : i)}
                     aria-pressed={picked === i}
@@ -71,7 +71,7 @@ export function RouteLine({ items, hint }: { items: { title: string; text: strin
                     }`}
                   >
                     {i + 1}
-                  </button>
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="max-w-64">
                   <span className="block font-medium">{it.title}</span>

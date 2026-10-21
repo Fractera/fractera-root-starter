@@ -18,7 +18,7 @@ import { isIpHost, apexFrom } from "./site-urls";
 
 // Public base URL of the Auth service as the BROWSER must reach it.
 export function authBase(): string {
-  // 🔒 СЕРВЕРНАЯ ВЕТКА КЛИЕНТСКОГО МОДУЛЯ (257-6). Реестр `AGI-ITEMS-REGISTRY/agi-items.json`
+  // 🔒 СЕРВЕРНАЯ ВЕТКА КЛИЕНТСКОГО МОДУЛЯ (257-6). Реестр `WEB4-ITEMS-REGISTRY/web4-items.json`
   // здесь не читается намеренно: файл с "use client" уезжает в браузер, а с ним
   // уехал бы и `node:fs`. Адрес приходит переменной, которую пишет установщик,
   // взяв её из того же реестра — производное, а не вторая копия.
@@ -84,7 +84,29 @@ export function designBase(): string {
 // регистрацию, когда пользователей ещё нет (первый станет архитектором), и сама
 // подскажет «впервые здесь?» устройству, с которого ещё не входили.
 export function signInRedirectUrl(callbackUrl: string, requireRole: "user" | "architect"): string {
-  const url = new URL(`${authBase()}/login`);
+  // 🔒 328-3: СОБСТВЕННЫЙ ДОМЕН ЭЛЕМЕНТА — ВХОД ЧЕРЕЗ ЦЕНТР УЗЛА. `auth.<этот домен>` не существует, а кука центра сюда
+  // не дойдёт; поэтому центр (`NEXT_PUBLIC_AUTH_URL` — адрес службы входа узла) выдаёт одноразовый код, и он возвращается
+  // в дверь этого сайта `/api/auth/callback` вместе с путём страницы. Своя зона узла и машина — прежний путь ниже.
+  const center = process.env.NEXT_PUBLIC_AUTH_URL?.trim();
+  if (typeof window !== "undefined" && center) {
+    const centerZone = new URL(center).hostname.replace(/^auth\./, "");
+    const here = window.location.hostname;
+    if (!isIpHost(here) && here !== centerZone && !here.endsWith(`.${centerZone}`)) {
+      let next = "/";
+      try {
+        const u = new URL(callbackUrl, window.location.origin);
+        u.searchParams.set("signed-in", "1");
+        next = `${u.pathname}${u.search}`;
+      } catch { /* не адрес — главная */ }
+      const ret = `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(next)}`;
+      return `${center}/api/auth/sso?return=${encodeURIComponent(ret)}&requireRole=${requireRole}`;
+    }
+  }
+  // 328 (долг): на машине узла (localhost, голый IP) `authBase()` строит `<хост>:3001` — порт серверной линии, а служба входа
+  // узла стоит на своём порту из реестра. Здесь ссылка ведёт на собственный `/login` сайта: прокси элемента знает и вход
+  // подключённого домена, и порт службы из реестра (AUTH_FORM_PATHS) — порт в браузере не угадывается.
+  const onMachine = typeof window !== "undefined" && isIpHost(window.location.hostname);
+  const url = new URL(`${onMachine ? window.location.origin : authBase()}/login`);
   // Метка `signed-in` — та же, что ставит прокси (260-3): вернувшись, человек увидит
   // плашку «вы вошли» и на этом пути тоже.
   let back = callbackUrl;

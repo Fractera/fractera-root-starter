@@ -362,6 +362,7 @@ const SCHEMA = `
     payload    TEXT NOT NULL,
     updated_at TEXT NOT NULL
   );
+  -- 🪦 Страницы отзывов (шаг узла 518) убраны из эталонного шаблона: владелец 2026-10-19, «Публичные отзывы в шаблоне».
 `
 
 // The architecture three streams (projects / pages / endpoints) and their tasks

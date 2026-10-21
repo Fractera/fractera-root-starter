@@ -1,46 +1,20 @@
-# (protectedLayer) — pages you must be signed in to open
+# `(protectedLayer)` — four protected branches
 
-**Declared node.** This folder is a route group: the parentheses mean it groups files without appearing
-in any URL. `app/[lang]/(protectedLayer)/(account)/dashboard` is served at `/{lang}/dashboard`.
+Not a route of its own: a route group. `layout.tsx` closes the whole layer to search engines. Inside — four branches, one
+per category of roles (`lib/roles.ts` → `PROTECTED_GROUP_ROLES`): `account/`, `staff/`, `finance/`, `admin/`. Each
+branch has its own lock (`<branch>/layout.tsx`); inside, a folder named after a role holds that role's pages and locks
+them to the role and every role that inherits it (`lib/roles.ts` → `ROLE_PARENTS`, node step 402); `meta.roles` adds roles. The architect passes
+every lock.
 
-## What makes a page belong here
+## The rule of the frame
 
-Two conditions, both required — either one alone is not enough:
+This element is built on Next 16.2 and grows only inside its frame (`CLAUDE.md`, section «The frame»). A branch has
+code only at its root: `layout.tsx` + `page.tsx`, and one `[...slug]/page.tsx` that draws every child. **A new page is a
+folder of data in `_pages/`, never a new `page.tsx`** — the build grows with the number of route files, not pages
+(measured: 300 page files 1252 s, the same pages through one template 98 s). `scripts/check-routes.mjs` fails the build
+on any route file outside its closed list. Skill: `.claude/skills/build-skills/skills/use-page-tree`.
 
-1. **The visitor is signed in.**
-2. **The visitor holds the role the page names.**
-
-If either fails, the page is not rendered with an apology inside it: the visitor is redirected to the
-sign-in form with the address to come back to, and an interactive toast says which roles the page needs.
-
-Everything else — a page anyone may open, with or without an account — belongs to the **public layer**
-(`app/[lang]/<page>`), is prerendered and indexed, and follows the skill `use-static-pages`.
-
-## The shape of a protected page — static shell, dynamic centre
-
-A protected page is **not** a dynamic page. It is a static page with dynamic holes.
-
-**Static, prerendered, part of the build:** the heading, the description, section titles, explanatory
-prose, empty states, the frame at every nesting depth. These arrive as HTML with no query behind them,
-so the page is addressable instantly and stays readable when the data service is slow or down.
-
-**Dynamic, fetched at request time:** the rows — the actual substance. They live inside a container that
-renders a **skeleton** until the data arrives, and the data comes from an authenticated `/api/*` route,
-never baked into the page.
-
-The two consequences worth stating out loud:
-
-- **A static page never calls authorization inside itself.** A public page that asks the auth service on
-  render dies when that service dies, and pays a round trip on every visit for a question it does not
-  need answered.
-- **A dynamic route does not license a dynamic page.** `/[id]` resolves per request; the shell around it
-  is still built ahead of time.
-
-## Why route groups and not folders in the URL
-
-The group name is architecture, not navigation. `(account)`, `(staff)`, `(finance)`, `(admin)` say who a
-page is for — a fact the code needs and the visitor does not. Putting it in the URL would leak the
-project's internal role model to the outside and freeze it: renaming a group would break every link.
-
-Each subgroup carries its own `README.md` naming the roles it serves. Read it before adding a page
-there; if no group fits, say so instead of stretching one — a wrong group is a wrong door.
+Pages are static: the build draws only the roots; a child is drawn on its first visit and refreshed every five minutes
+(`revalidate = 300`). Texts are JSON read at run time (`lib/page-tree.ts`, `ELEMENT_DIR`): a corrected paragraph shows
+up within five minutes without a rebuild — or at once after `npm run pages:refresh`, which the agent runs after every
+text change before telling the person the change is live. Every page has `en.json` (required) and `ru.json`; no visible string in code.

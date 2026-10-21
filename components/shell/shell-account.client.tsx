@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils"
 import type { ShellLink, ShellSide } from "./shell-types"
 import { useShellMe } from "./shell-me.client"
 import { isTemporaryHostname } from "./temporary-host"
-import { ArchitectAttention, AttentionDot, hasAttention, useAttention, type AttentionWords } from "./shell-attention.client"
 
 // ВХОД И КАБИНЕТ ОБОЛОЧКИ. Перенесено из сайта (`components/menu/account/*`) без изменения вида. Двери входа
 // (`meUrl`, `loginHref`, `logoutHref`) — свои у каждой поверхности: у сайта и ядра `/api/me`, `/login`,
@@ -22,31 +21,23 @@ import { ArchitectAttention, AttentionDot, hasAttention, useAttention, type Atte
 
 type Labels = { signIn: string; account: string; signOut: string }
 
-function AccountDrawer({ side, labels, email, roles = [], links, logoutHref, attentionUrl, attentionWords }: {
+function AccountDrawer({ side, labels, email, roles = [], links, logoutHref }: {
   side: ShellSide
   labels: Labels
   email?: string
   roles?: string[]
   links: ShellLink[]
   logoutHref: string
-  attentionUrl?: string
-  attentionWords?: AttentionWords
 }) {
   const [open, setOpen] = useState(false)
   // Пункт со списком ролей виден только тому, у кого есть хоть одна из них; замок — на самой странице.
   const items = links.filter((l) => !l.roles || l.roles.some((r) => roles.includes(r)))
-  // 356-1 (только ядро передаёт адрес): что ждёт архитектора — терминалы и готовые предпросмотры; точка на кнопке и путь внутри.
-  const isArchitect = roles.includes("architect") || roles.includes("admin")
-  const { attention, refresh } = useAttention(isArchitect ? attentionUrl : undefined)
-  const waiting = hasAttention(attention) && !!attentionWords
-  const openDrawer = () => { setOpen(true); refresh() }
 
   return (
     <>
       {/* md и уже — только значок (278); подпись остаётся доступным именем на любой ширине. */}
-      <Button variant="ghost" size="sm" onClick={openDrawer} aria-label={labels.account} title={labels.account} className="relative">
+      <Button variant="ghost" size="sm" onClick={() => setOpen(true)} aria-label={labels.account} title={labels.account}>
         <User /><span className="hidden lg:inline">{labels.account}</span>
-        {waiting && <AttentionDot className="absolute right-0.5 top-0.5" />}
       </Button>
 
       <Sheet open={open} onOpenChange={setOpen}>
@@ -58,9 +49,7 @@ function AccountDrawer({ side, labels, email, roles = [], links, logoutHref, att
           <div className="flex-1 overflow-y-auto px-4 py-4">
             {items.length > 0 && (
               <nav className="flex flex-col gap-0.5">
-                {items.map((l) => waiting && attention && attentionWords && /\/architect\/?$/.test(l.href) ? (
-                  <ArchitectAttention key={l.href} href={l.href} label={l.label} attention={attention} words={attentionWords} onGo={() => setOpen(false)} />
-                ) : (
+                {items.map((l) => (
                   <Link
                     key={l.href}
                     href={l.href}
@@ -96,15 +85,13 @@ function AccountDrawer({ side, labels, email, roles = [], links, logoutHref, att
   )
 }
 
-export function AccountButton({ side, labels, links, meUrl, loginHref, logoutHref, attentionUrl, attentionWords }: {
+export function AccountButton({ side, labels, links, meUrl, loginHref, logoutHref }: {
   side: ShellSide
   labels: Labels
   links: ShellLink[]
   meUrl: string
   loginHref: string
   logoutHref: string
-  attentionUrl?: string
-  attentionWords?: AttentionWords
 }) {
   const me = useShellMe(meUrl)
 
@@ -116,7 +103,7 @@ export function AccountButton({ side, labels, links, meUrl, loginHref, logoutHre
 
   if (temporaryHost && !(me && me.userId)) return null
   if (me && me.userId) {
-    return <AccountDrawer side={side} labels={labels} email={me.email} roles={me.roles} links={links} logoutHref={logoutHref} attentionUrl={attentionUrl} attentionWords={attentionWords} />
+    return <AccountDrawer side={side} labels={labels} email={me.email} roles={me.roles} links={links} logoutHref={logoutHref} />
   }
   return (
     // 293: как у «Личного кабинета» (278) — на md и уже только значок, подпись с lg; остаётся доступным именем.

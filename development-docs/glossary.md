@@ -1,0 +1,56 @@
+# Glossary
+
+One place where a word means one thing, so `CLAUDE.md`, a skill and a development document cannot define it differently.
+The person speaks by voice and in their own language: their word goes in the second column, verbatim in quotes.
+
+- A word of the person, or a term of `CLAUDE.md` or a skill, that can be read two ways — open this file before acting on it.
+- A term used by two or more places (two skills, a skill and `CLAUDE.md`) — it belongs here, added in the same commit that
+  starts using it. A term used in one place is explained there.
+- A term changes meaning — rewrite its row; the old meaning goes to `cancelled.md` with the date and why.
+
+## The element and where it lives
+
+| Term | The person may say | What it means |
+|---|---|---|
+| **element** | «элемент», «AGI ITEM», «айтем», «микросервис» | One self-contained thing in the node with its own folder, port, address, repository and agent. To the node it is a microservice that answers its neighbours and asks them for help; to a person it is a whole project — a site, an app, an agent or a service — that can be opened, developed, shared and sold. This element is one. |
+| **node** | «узел», «нода» | Every element on one person's computer together with the core. It belongs to the person and works without Fractera. |
+| **core** | «ядро» | The node's centre: the registry of elements, discovery, install, the architect's pages (the element's menu is drawn by the core). It is not an element and is not replaced. |
+| **neighbour** | «сосед» | Another element of the same node. |
+| **live site** | «живой сайт», «Preview» | The element's running build as a visitor sees it, shown on the core's page of the element. |
+| **Preview & Deploy** | «предпросмотр», «развёртывание», «Принять» | A new version built next to the running one; «Accept» switches to it, «Reject» drops it. Skill `deploy-element`. |
+
+## Two processes — name which one before any task
+
+| Term | The person may say | What it means |
+|---|---|---|
+| **build process** | «строительный процесс», «строительство» | Everything that changes the element as a thing: code, design, texts, deploy, a new ability, and offering or selling the whole element. Your **Builder** nature (`CLAUDE.md`, «Two natures»). **What follows:** git changes — a commit, a push to GitHub, a rebuild («Preview & Deploy»); the answer is the full form — the three confirming lines, the plan, the person's «yes» (`.claude/modes/build.md`, «Confirm the request first»). In the core's menu: «Build» (with «Inside the node (i2i)» and «Exchange with Fractera (f2f)») and «Product design». |
+| **working process** | «рабочий процесс», «работа элемента» | What the running element does: its work skills, reminders and schedules, calls from neighbours and outside agents, to whom it gives them, at what price and limit. Your **Worker** nature. **What follows:** only data changes (`data/`, outside git) — no code, no commit, no push, no rebuild; the answer is one or two lines, like any Claude Code agent, no restatement and no «yes?». The test: **will git change after this?** Yes — it is the build process. Owner of the node, 2026-10-12: «автоматизация рабочего процесса не должна приводить к сборке проекта». In the core's menu: «A2A» and «Process». |
+
+## Talking to others
+
+| Term | The person may say | What it means |
+|---|---|---|
+| **H2A** | «эйч-ту-эй», «человек и агент» | A person and their own agent: Telegram, the core's native chat, the terminal. A file they send is saved and passed on as a link. |
+| **i2i** | «ай-ту-ай», «элемент-элемент» | Elements of ONE node and the core: their agents meet over the A2A wire only to agree an API; then the work runs over that API with no model. Build process; tabs in the core's «Build → Inside the node (i2i)». |
+| **a2a** | «а-два-а», «агент-агент» | This element working with agents of other nodes through Lagrix — for them or ordering from them, in USDC or free — over Google's A2A protocol, exactly like an agent of any other framework, no advantage, no handicap; never development. Working process; the core's «A2A». |
+| **f2f** | «эф-ту-эф» | Whole elements exchanged with other Fractera projects through Lagrix: the same discovery plus the technical card a build needs. Build process; the core's «Build → Exchange with Fractera (f2f)». |
+| **H2H** | «эйч-ту-эйч», «человек и человек» | People through their agents; the other side's agent checks the request first (Lagrix document 21). Text; files as links. |
+| **passport** | «паспорт», «описание о себе» | `OWN-SERVICE-PROPS/` — what the element tells the outside about itself; its main door. Skill `describe-element`. |
+| **A2A card** | «визитка» | The standard card served at `/.well-known/agent-card.json`, built from `OWN-SERVICE-PROPS/A2A-CARD.json` plus the passport. |
+| **skill (of the card)** | «навык», «способность» | One thing the element can do for others, a row of the card's `skills`. Not the same as an agent skill in `.claude/skills/`. |
+| **HTTP door** | «дверь», «http-door» | A route other elements call over plain HTTP, not over A2A; in the card such a skill carries the tag `http-door`. |
+| **capability card** | «карточка возможностей», «образец», formerly «витрина» | What the element does for other agents and on what terms — a description, the consultation price, the usage price, the developer share — in the passport field `payments.web3["a2a-card"].<name>` (node step 551-4), set on the core's «Working process → A2A: your work → Capability cards». Today one sample, `sample`; the network does not apply it yet. The former showcase file is gone. |
+| **catalog** | «каталог» | What an element can give away — blocks, sections — through find · get · contribute. On the core's page «Catalog» also lists the node's elements. |
+| **node key** | «ключ узла» | The key elements of one node use to call each other; an outside agent does not have it. |
+| **order** | «заказ» | A job the element did for an agent of another node (a2a) — working process, kept by skill `order-summary`, never in `development-docs/`. |
+
+## Building records
+
+| Term | The person may say | What it means |
+|---|---|---|
+| **step · substep** | «шаг», «подшаг» | A unit of building with its own number (this element's own, from 1); a substep is one observable result with its checks. Skill `use-development-docs`. |
+| **intake** | «приёмная», «заявка» | `pre-steps/` — building requests not started at once, recorded verbatim. |
+| **proof mark** | «метка доказательства», «PROVEN» | A note in `CLAUDE.md` or a skill that a part was proven live, with the report in `proofs/`. |
+| **backlog** | «бэклог», «долг» | `backlog.md` — built but not explained, built halfway, or promised. |
+| **cancelled** | «отменённое», «откати» | `cancelled.md` — what was dropped or rolled back, by whose word and what replaced it. |
+| **report** | «отчёт», «разбор» | `reports/` — `errors-…` explains one failure, `feature-…` describes a finished capability. |

@@ -142,7 +142,12 @@ self.addEventListener("fetch", (event) => {
       const attempts = online ? 4 : 1;
       for (let i = 0; i < attempts; i++) {
         try {
-          const res = await fetch(req);
+          /* 🔒 ВСЕГДА СВЕРЯТЬСЯ С СЕРВЕРОМ (владелец 2026-09-30, замер в Chrome): обычный fetch идёт через HTTP-кеш браузера,
+           * а Next отдаёт HTML с `s-maxage=300, stale-while-revalidate=…` — для браузера это «свежесть 0, старое можно отдавать
+           * почти год, обновляясь в фоне». Chrome так и делал: после каждой публикации вернувшийся посетитель один раз видел
+           * ПРЕДЫДУЩУЮ версию. `no-cache` — сверка с сервером на каждый переход. `redirect: "manual"`: навигации нельзя вернуть
+           * ответ, прошедший переадресацию (браузер сам последует за opaqueredirect). */
+          const res = await fetch(req.url, { cache: "no-cache", credentials: "same-origin", redirect: "manual" });
           if (res.ok) {
             const cache = await caches.open(PAGES);
             cache.put(req, res.clone());

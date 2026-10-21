@@ -2,16 +2,8 @@ import type { MetadataRoute } from "next"
 import { brand } from "@/lib/brand"
 import { SUPPORTED_LANGUAGES } from "@/config/translations/translations.config"
 import { urlFor } from "@/lib/seo/alternates"
-import { translatedLanguages } from "@/lib/seo/translation-state"
-import { data as homeData } from "@/app/[lang]/(publicLayer)/_data"
-import { data as agiItemData } from "@/app/[lang]/(publicLayer)/(rootPages)/agi-item/_data"
-import { data as architectureData } from "@/app/[lang]/(publicLayer)/(rootPages)/m2m/_data"
-import { data as hostData } from "@/app/[lang]/(publicLayer)/(rootPages)/host/_data"
-import { data as itemsData } from "@/app/[lang]/(publicLayer)/(rootPages)/items/_data"
-import { data as privacyData } from "@/app/[lang]/(publicLayer)/(footerPages)/privacy/_data"
-import { data as termsData } from "@/app/[lang]/(publicLayer)/(footerPages)/terms/_data"
-import { data as cookiesData } from "@/app/[lang]/(publicLayer)/(footerPages)/cookies/_data"
-import { data as accessibilityData } from "@/app/[lang]/(publicLayer)/(footerPages)/accessibility/_data"
+import { indexableLanguages } from "@/lib/seo/translation-state"
+import { branchRoot, branchChildren } from "@/lib/page-tree"
 
 // ГЛАВНАЯ КАРТА САЙТА — страницы, множество которых конечно и авторское.
 //
@@ -20,7 +12,7 @@ import { data as accessibilityData } from "@/app/[lang]/(publicLayer)/(footerPag
 // множество росло в рантайме и умножалось на языки, а предел файла — 50 000
 // адресов. Предмета больше нет.
 
-// СТРАНИЦЫ ПОДВАЛА — `app/[lang]/(publicLayer)/(footerPages)/*`.
+// СТРАНИЦЫ ПОДВАЛА — ныне дети публичной ветки `app/[lang]/(publicLayer)/_pages/*` (314-2); ниже — история правила.
 //
 // 🔒 ИХ ЗДЕСЬ НЕ БЫЛО ВОВСЕ (найдено 2026-08-19, при заведении «Доступности»).
 // Тот же дефект, что был у блога: страницы статические, переведённые, с
@@ -43,21 +35,13 @@ import { data as accessibilityData } from "@/app/[lang]/(publicLayer)/(footerPag
 // каких языках у страницы есть СВОЙ текст, — а это знают только её данные. Голый
 // путь заставлял карту догадываться, и она догадывалась неверно: печатала каждый
 // включённый язык подряд, обещая поисковику страницы, помеченные `noindex`.
-const ROOT_PAGES = [
-  { sub: "/agi-item", data: agiItemData },
-  { sub: "/m2m", data: architectureData },
-  { sub: "/host", data: hostData },
-  { sub: "/items", data: itemsData },
-] as const
+// 314-2: страницы содержимого root из шаблона убраны; разделы элемента добавляются сюда своими строками.
+// 314-2: страницы публичной ветки — из дерева данных (`lib/page-tree.ts`): корень и дети `(publicLayer)/_pages/<slug>/`.
+// Списка руками нет — новая папка страницы попадает в карту сама.
 
-const FOOTER_PAGES = [
-  { sub: "/privacy", data: privacyData },
-  { sub: "/terms", data: termsData },
-  { sub: "/cookies", data: cookiesData },
-  { sub: "/accessibility", data: accessibilityData },
-] as const
+export const revalidate = 300
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const site = brand().siteUrl
   if (!site) return []
 
@@ -84,44 +68,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 🪦 БЛОГ УДАЛЁН ИЗ ПРОЕКТА (229-2, 2026-09-18, по слову владельца). Здесь
   // стоял перечень раздела /blog и всех его постов — вместе с разделом он
   // потерял предмет.
-  for (const lang of translatedLanguages(homeData)) {
+  const home = branchRoot("(publicLayer)")
+  if (home) for (const lang of indexableLanguages(home)) {
     out.push({ url: urlFor(lang, ""), changeFrequency: "daily", priority: 1 })
   }
 
-  // Разделы верхнего меню: то, ради чего на сайт приходят. `weekly` и 0.8 —
-  // между главной (1) и справочными документами (0.3).
-  for (const { sub, data } of ROOT_PAGES) {
-    for (const lang of translatedLanguages(data)) {
-      out.push({ url: urlFor(lang, sub), changeFrequency: "weekly", priority: 0.8 })
+  for (const page of branchChildren("(publicLayer)")) {
+    for (const lang of indexableLanguages(page)) {
+      out.push({ url: urlFor(lang, `/${page.slug}`), changeFrequency: "weekly", priority: 0.5 })
     }
   }
 
-  // Правовые страницы: приоритет ниже разделов, потому что это справочные
-  // документы, а не то, ради чего приходят. Частота — `yearly`: их текст
-  // меняется редко, и обещать поисковику иное значит тратить его обходы зря.
-  for (const { sub, data } of FOOTER_PAGES) {
-    for (const lang of translatedLanguages(data)) {
-      out.push({ url: urlFor(lang, sub), changeFrequency: "yearly", priority: 0.3 })
-    }
-  }
-
-  // 🔒 СЛОЙ АРХИТЕКТОРА — ТОЛЬКО КОГДА ОН ОТКРЫТ, И РЕШАЕТ ЭТО ОДИН
-  // ПЕРЕКЛЮЧАТЕЛЬ (255, `_lib/collection-visibility.ts`): с 256-2 он отвечает
-  // «да» на витрине `fractera.ai` и «нет» везде ещё.
-  //
-  // 🛑 ПОЧЕМУ НЕЛЬЗЯ ПЕРЕЧИСЛИТЬ ИХ «НА БУДУЩЕЕ»: закрытая страница в карте
-  // сайта есть обещание поисковику того, чего он не получит — `proxy.ts`
-  // отвечает чужому 404. Набор адресов, объявленных роботу и недоступных
-  // человеку, и есть определение дорвея, а ярлык выдаётся САЙТУ ЦЕЛИКОМ, а не
-  // одной странице.
-  //
-  // Адреса приходят из того же дерева, что строит меню, — карта и меню не могут
-  // разойтись, потому что источник у них один. Языки — из данных каждой страницы,
-  // по тому же правилу, что и у публичных.
-  // The architect pages are not part of this site (280): they live in the node's core on its
-  // own address, and a sitemap names only the pages this host serves.
-  // В одноязычном режиме `urlFor` для каждого языка даёт один и тот же адрес — но
-  // язык там ровно один, так что дубликатов не возникает. Страховка на случай
-  // будущей правки: карта обязана быть множеством, а не списком.
   return out.filter((row, i) => out.findIndex(r => r.url === row.url) === i)
 }

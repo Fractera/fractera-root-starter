@@ -1,17 +1,8 @@
 import { blocksToMarkdown, faqToMarkdown } from './blocks-to-markdown'
 import { urlFor, mdUrlFor } from '@/lib/seo/alternates'
 import { getAppConfig, metaForLang } from '@/config/app-config'
-import { footerPage } from '@/lib/pages/footer-page'
-import { data as privacyData } from '@/app/[lang]/(publicLayer)/(footerPages)/privacy/_data'
-import { data as termsData } from '@/app/[lang]/(publicLayer)/(footerPages)/terms/_data'
-import { data as cookiesData } from '@/app/[lang]/(publicLayer)/(footerPages)/cookies/_data'
-import { data as architectureData } from '@/app/[lang]/(publicLayer)/(rootPages)/m2m/_data'
-import { data as hostData } from '@/app/[lang]/(publicLayer)/(rootPages)/host/_data'
-import { data as itemsData } from '@/app/[lang]/(publicLayer)/(rootPages)/items/_data'
-import { homePage as agiItemPage, homeLead as agiItemLead } from '@/app/[lang]/(publicLayer)/(rootPages)/agi-item/_data'
-import { homePage as corePage, homeLead as coreLead } from '@/app/[lang]/(publicLayer)/(rootPages)/core/_data'
-import { homePage as web3Page, homeLead as web3Lead } from '@/app/[lang]/(publicLayer)/(rootPages)/web3/_data'
-import { data as accessibilityData } from '@/app/[lang]/(publicLayer)/(footerPages)/accessibility/_data'
+import { branchChildren, branchRoot, wordsIn } from '@/lib/page-tree'
+import { WIDGET_MARKDOWN } from '@/app/[lang]/(publicLayer)/_widgets/markdown'
 
 // ПЕРЕЧЕНЬ ПУБЛИЧНЫХ ПОВЕРХНОСТЕЙ — ОДИН НА ВЕСЬ AIO (шаг 505).
 //
@@ -58,92 +49,43 @@ export function publicSurfaces(lang: string): Surface[] {
       title: home.siteName,
       description: home.description,
       section: 'main',
-      // У главной нет собственного текста в блоках: её содержимое — это
-      // идентичность проекта из настроек. Честнее отдать её как описание с
-      // перечнем разделов, чем выдумать текст, которого на странице нет.
-      // 🔒 БЕЗ СЛУЖЕБНЫХ ПОДПИСЕЙ НА ЧУЖОМ ЯЗЫКЕ (шаг 507). Здесь стояла строка
-      // «- Сайт: <адрес>», и английская главная отдавала машинному читателю
-      // русское слово. Словаря у этой поверхности нет и заводить его не за чем:
-      // адрес сайта — не подпись, а ссылка, и она уже стоит в карте `llms.txt`.
-      body: () =>
-        [`# ${home.siteName}`, '', `> ${home.description}`, ...(cfg.url ? ['', cfg.url] : [])].join('\n'),
+      // 428: главная — такая же страница из блоков, как остальные; текст её виджета (лендинг) приходит через
+      // `WIDGET_MARKDOWN`. 🪦 Здесь было «у главной нет собственного текста в блоках» — отдавалось 159 байт по-английски
+      // при ~16 тыс. знаков на странице. Нет данных главной — прежний минимум: имя и описание проекта.
+      body: () => {
+        const root = branchRoot('(publicLayer)')
+        const blocks = root ? wordsIn(root, lang).blocks ?? [] : []
+        const text = blocksToMarkdown(blocks, home.siteName, widgetText(lang))
+        return text
+          ? text
+          : [`# ${home.siteName}`, '', `> ${home.description}`, ...(cfg.url ? ['', cfg.url] : [])].join('\n')
+      },
     },
   ]
 
-  // AGI ITEM — рассказ о продукте, переехавший с корня на свой адрес
-  // (2026-09-20, решение владельца). Собран языковыми ячейками ГЛАВНОЙ, а не
-  // правовой страницы, поэтому идёт своим блоком, а не строкой в цикл ниже:
-  // подогнать его под чужую форму значило бы соврать о том, как он устроен.
-  {
-    const cell = agiItemPage(lang)
-    surfaces.push({
-      subPath: '/agi-item',
-      title: cell.title,
-      description: cell.description,
-      section: 'main',
-      body: () =>
-        [
-          `# ${cell.title}`,
-          '',
-          `> ${cell.description}`,
-          '',
-          blocksToMarkdown([...agiItemLead(lang), ...cell.blocks], home.siteName),
-        ].join('\n').trim(),
-    })
-  }
-
-  // Core и WEB3 (261) — страницы-копии главной и AGI до собственного текста. Та же
-  // форма, что у AGI ITEM: ячейки вида главной, лид перед блоками.
-  for (const [sub, resolve, lead] of [
-    ['/core', corePage, coreLead],
-    ['/web3', web3Page, web3Lead],
-  ] as const) {
-    const cell = resolve(lang)
-    surfaces.push({
-      subPath: sub,
-      title: cell.title,
-      description: cell.description,
-      section: 'main',
-      body: () =>
-        [`# ${cell.title}`, '', `> ${cell.description}`, '', blocksToMarkdown([...lead(lang), ...cell.blocks], home.siteName)].join('\n').trim(),
-    })
-  }
-
+  // 🪦 СТРАНИЦЫ СОДЕРЖИМОГО САЙТА ROOT (web4-item, core, web3, m2m, host, items) УБРАНЫ ИЗ ШАБЛОНА ЭЛЕМЕНТА (314-2):
+  // шаблон несёт архитектуру, а не продукт. Свой раздел элемент добавляет сюда своей строкой.
   // 🪦 РАЗДЕЛ /blog И ЕГО ПОСТЫ УДАЛЕНЫ (229-2, 2026-09-18).
 
-  for (const [data, sub] of [
-    [privacyData, '/privacy'],
-    [termsData, '/terms'],
-    [cookiesData, '/cookies'],
-    // Заявление о доступности — документ того же рода, что правовые: короткий
-    // текст о свойствах сайта, который читатель ищет в подвале. Раздел карты у
-    // него 'legal' по той же причине.
-    [accessibilityData, '/accessibility'],
-    // «О нас» собрана теми же языковыми ячейками, что правовые страницы, поэтому
-    // идёт тем же циклом. Раздел карты — 'main', а не 'legal': это рассказ о
-    // компании, за которым приходят, а не справочный документ, и в списке
-    // правовых машинный читатель искал бы его последним.
-    // Архитектура живёт в той же папке и по тем же законам, что правовые
-    // страницы, поэтому идёт тем же циклом. Раздел карты у неё, однако, 'main':
-    // это описание продукта, а не документ, и в списке правовых читатель искал бы
-    // его последним.
-    [architectureData, '/m2m'],
-    // Host (261-7) — лендинг развёртывания, собран теми же ячейками, раздел 'main'.
-    [hostData, '/host'],
-    [itemsData, '/items'],
-  ] as const) {
-    const page = footerPage(data as never, lang)
+  // 314-2: дети публичной ветки — из дерева данных; новая папка страницы попадает в карту для ИИ сама.
+  for (const child of branchChildren('(publicLayer)')) {
+    const page = wordsIn(child, lang)
     surfaces.push({
-      subPath: sub,
-      title: page.title,
-      description: page.description,
-      section: sub === '/m2m' || sub === '/host' || sub === '/items' ? 'main' : 'legal',
+      subPath: `/${child.slug}`,
+      title: page.title.split("%SITE%").join(home.siteName),
+      description: page.description.split("%SITE%").join(home.siteName),
+      section: 'legal',
       body: () =>
-        [`# ${page.title}`, '', `> ${page.description}`, '', blocksToMarkdown(page.blocks, home.siteName)].join('\n').trim(),
+        [`# ${page.title.split("%SITE%").join(home.siteName)}`, "", `> ${page.description.split("%SITE%").join(home.siteName)}`, '', blocksToMarkdown(page.blocks, home.siteName, widgetText(lang))].join('\n').trim(),
     })
   }
 
   return surfaces
+}
+
+/** Текст виджета ветки на языке страницы; неизвестный виджет — пусто (сторож `check:aio` не даёт ему появиться). */
+function widgetText(lang: string) {
+  return (kind: string) => WIDGET_MARKDOWN[kind]?.(lang) ?? ''
 }
 
 export function surfaceFor(lang: string, subPath: string): Surface | undefined {

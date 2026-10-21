@@ -1,4 +1,4 @@
-import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from '@/config/translations/translations.config'
+import { DEFAULT_LANGUAGE, INDEXED_LANGUAGES, SUPPORTED_LANGUAGES } from '@/config/translations/translations.config'
 
 // ЕСТЬ ЛИ У СТРАНИЦЫ СОБСТВЕННЫЙ ПЕРЕВОД — ОДИН ОТВЕТ НА ВЕСЬ ПРОЕКТ (256-5).
 //
@@ -58,4 +58,32 @@ export function isTranslated(lang: string, page: TranslatedPage): boolean {
  */
 export function translatedLanguages(page: TranslatedPage): string[] {
   return SUPPORTED_LANGUAGES.filter(lang => isTranslated(lang, page))
+}
+
+// ── Открыт ли язык поисковику (шаг 340) ─────────────────────────────────────
+//
+// 🔒 ИНДЕКСИРУЕТСЯ ТОЛЬКО ТО, ЧТО И ОТКРЫТО, И ПЕРЕВЕДЕНО. Два замка, и ни один не снимает другой: открытый язык без
+// своего текста — копия основы (256); переведённый, но не открытый — решение человека «пока не показывать поисковику»
+// (340). Три сигнала пьют отсюда: мета-тег robots страницы, набор hreflang и карта сайта. `robots.txt` языки НЕ запрещает:
+// «For the noindex rule to be effective, the page… must not be blocked by a robots.txt file» (Google, block-indexing).
+
+/** Открыт ли язык поисковику и есть ли у страницы свой текст на нём. */
+export function isIndexable(lang: string, page: TranslatedPage): boolean {
+  return INDEXED_LANGUAGES.includes(lang) && isTranslated(lang, page)
+}
+
+/** Языки, которые страница предлагает поисковику: взаимный набор hreflang и строки карты. */
+export function indexableLanguages(page: TranslatedPage): string[] {
+  return SUPPORTED_LANGUAGES.filter(lang => isIndexable(lang, page))
+}
+
+/**
+ * Набор hreflang, который печатает версия страницы на языке `lang`.
+ *
+ * 🔒 ЗАКРЫТАЯ ВЕРСИЯ НЕ ОБЪЯВЛЯЕТ ПЕРЕВОДОВ. Её набор поисковик не учитывает (noindex), а открытые версии её не называют —
+ * значит её ссылки односторонние по построению. Замер 340-1 на aifa.dev: `/fr` с `noindex` печатал `x-default,en,ru`.
+ * Пустой список → `buildAlternates` оставляет только canonical.
+ */
+export function alternatesLanguages(lang: string, page: TranslatedPage): string[] {
+  return isIndexable(lang, page) ? indexableLanguages(page) : []
 }

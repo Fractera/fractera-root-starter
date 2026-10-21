@@ -6,6 +6,9 @@ import { toast } from "sonner"
 import { AppDialog } from "@/components/dialog/app-dialog.client"
 import type { AppDialogUi } from "@/components/dialog/app-dialog.i18n"
 import { pageRequestWords } from "@/lib/pages/page-request.words"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 
 // ЗАЯВКА В ПРИЁМНУЮ ПРОЕКТА (шаг 61, 2026-08-30; поднят и обобщён 69, 2026-08-31).
 //
@@ -148,7 +151,7 @@ type Props = {
    */
   tool?: boolean
   /**
-   * Какой именно инструмент правим — `_tools/code-view`.
+   * Какой именно инструмент правим — его имя (например `code-view`).
    *
    * 🔒 ЕГО НАЛИЧИЕ И ЕСТЬ РАЗНИЦА МЕЖДУ «ПРАВКОЙ» И «НОВЫМ», ровно как у блоков:
    * там код образца отличает карандаш от кнопки создания. Один и тот же признак
@@ -240,7 +243,7 @@ export function PreStepRequest({ ui, blockUi, dialogUi, code, kind, kindTitle, p
     <>
       {isPage || isCreate || (isTool && !isToolEdit) ? (
 
-        <button
+        <Button variant="bare" size="bare"
           type="button"
           data-create-block={isCreate ? kind : undefined}
           data-request-page={isPage ? pageSlug : undefined}
@@ -250,9 +253,9 @@ export function PreStepRequest({ ui, blockUi, dialogUi, code, kind, kindTitle, p
         >
           <Plus size={16} aria-hidden />
           {isTool ? (toolUi?.createLabel ?? "") : isPage ? w.label : (blockUi?.createLabel ?? "")}
-        </button>
+        </Button>
       ) : (
-        <button
+        <Button variant="bare" size="bare"
           type="button"
           data-edit-block={isToolEdit ? undefined : code}
           data-edit-tool={isToolEdit ? toolId : undefined}
@@ -262,7 +265,7 @@ export function PreStepRequest({ ui, blockUi, dialogUi, code, kind, kindTitle, p
           className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
         >
           <Pencil size={12} aria-hidden />
-        </button>
+        </Button>
       )}
 
       <AppDialog
@@ -274,21 +277,21 @@ export function PreStepRequest({ ui, blockUi, dialogUi, code, kind, kindTitle, p
         description={isToolEdit ? (toolUi?.editLead ?? "") : isTool ? (toolUi?.createLead ?? "") : isPage ? w.lead : isCreate ? (blockUi?.createLead ?? "") : (blockUi?.editLead ?? "")}
         footer={
           <>
-            <button
+            <Button variant="bare" size="bare"
               type="button"
               onClick={() => setOpen(false)}
               className="rounded-md border border-border px-4 py-2 text-[length:var(--fs-small)] text-muted-foreground transition-colors hover:text-foreground"
             >
               {u.cancel}
-            </button>
-            <button
+            </Button>
+            <Button variant="bare" size="bare"
               type="button"
               onClick={send}
               disabled={!text.trim() || busy}
               className="rounded-md bg-primary px-4 py-2 text-[length:var(--fs-small)] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {busy ? u.sending : u.send}
-            </button>
+            </Button>
           </>
         }
       >
@@ -296,9 +299,9 @@ export function PreStepRequest({ ui, blockUi, dialogUi, code, kind, kindTitle, p
             человек прокручивает длинное описание: уехавшая за край кнопка
             «Отправить» — это и была жалоба владельца. */}
         <div className="flex flex-col gap-4">
-            <label className="flex flex-col gap-1.5">
+            <Label className="flex flex-col gap-1.5">
               <span className="text-[length:var(--fs-small)] font-medium text-foreground">{u.whatLabel}</span>
-              <textarea
+              <Textarea
                 value={text}
                 onChange={e => setText(e.target.value)}
                 rows={5}
@@ -306,17 +309,17 @@ export function PreStepRequest({ ui, blockUi, dialogUi, code, kind, kindTitle, p
                 placeholder={u.whatPlaceholder}
                 className="w-full resize-y rounded-md border border-border bg-background px-3 py-2 text-[length:var(--fs-small)] leading-relaxed outline-none focus:border-primary/50"
               />
-            </label>
+            </Label>
 
             {/* Второе поле и подсказка о стилях — только у варианта Б. Роль
                 НЕОБЯЗАТЕЛЬНА: человек часто знает, ЧТО хочет видеть, и не знает,
                 где вид сломается. Обязательное поле заставило бы выдумывать. */}
             {isCreate && (
               <>
-                <label className="flex flex-col gap-1.5">
+                <Label className="flex flex-col gap-1.5">
                   <span className="text-[length:var(--fs-small)] font-medium text-foreground">{(blockUi?.roleLabel ?? "")}</span>
                   <span className="text-[length:var(--fs-small)] text-muted-foreground">{(blockUi?.roleHint ?? "")}</span>
-                  <textarea
+                  <Textarea
                     value={role}
                     onChange={e => setRole(e.target.value)}
                     rows={3}
@@ -324,7 +327,7 @@ export function PreStepRequest({ ui, blockUi, dialogUi, code, kind, kindTitle, p
                     placeholder={(blockUi?.rolePlaceholder ?? "")}
                     className="w-full resize-y rounded-md border border-border bg-background px-3 py-2 text-[length:var(--fs-small)] leading-relaxed outline-none focus:border-primary/50"
                   />
-                </label>
+                </Label>
 
                 {/* 🔒 ПОДСКАЗКА, А НЕ ПОЛЕ. Ссылку или CSS человек кладёт в то же
                     описание. Отдельное поле «стили» обещало бы, что их кто-то
@@ -351,10 +354,10 @@ export function PreStepRequest({ ui, blockUi, dialogUi, code, kind, kindTitle, p
                 карточка строкой «Уже применяется». Тот же порядок у блоков:
                 карандаш спрашивает одно, кнопка создания — два. */}
             {isTool && !isToolEdit && (
-              <label className="flex flex-col gap-1.5">
+              <Label className="flex flex-col gap-1.5">
                 <span className="text-[length:var(--fs-small)] font-medium text-foreground">{(toolUi?.whereLabel ?? "")}</span>
                 <span className="text-[length:var(--fs-small)] text-muted-foreground">{(toolUi?.whereHint ?? "")}</span>
-                <textarea
+                <Textarea
                   value={role}
                   onChange={e => setRole(e.target.value)}
                   rows={3}
@@ -362,7 +365,7 @@ export function PreStepRequest({ ui, blockUi, dialogUi, code, kind, kindTitle, p
                   placeholder={(toolUi?.wherePlaceholder ?? "")}
                   className="w-full resize-y rounded-md border border-border bg-background px-3 py-2 text-[length:var(--fs-small)] leading-relaxed outline-none focus:border-primary/50"
                 />
-              </label>
+              </Label>
             )}
         </div>
       </AppDialog>

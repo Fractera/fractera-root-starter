@@ -44,16 +44,17 @@ export function CookieBanner({
       <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-6 py-5 sm:flex-row sm:items-center">
         <p className="text-sm leading-relaxed text-muted-foreground">
           {before}
-          <Link href={`/${lang}/legal/cookies`} className="text-foreground underline hover:no-underline">
+          <Link href={`/${lang}/cookies`} className="text-foreground underline hover:no-underline">
             {strings.policyLinkLabel}
           </Link>
           {after}
         </p>
+        {/* «Reject» looks exactly like «Accept» (node step 450, AEPD cookie guide 2023: same level, same visibility). */}
         <div className="flex shrink-0 gap-3">
           <Button type="button" onClick={() => consent("accepted")}>
             {strings.accept}
           </Button>
-          <Button type="button" variant="outline" onClick={() => consent("rejected")}>
+          <Button type="button" onClick={() => consent("rejected")}>
             {strings.reject}
           </Button>
         </div>

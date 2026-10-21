@@ -20,7 +20,7 @@ export function listenerUrl(): string | null {
 export type SubscribeResult = { ok: true; url: string } | { ok: false; reason: string; detail?: string }
 
 /** Подписаться на сигнал CONFIG. Зовётся при каждом старте: один адрес — одна запись у CONFIG. */
-export async function subscribeToConfig(who = "root"): Promise<SubscribeResult> {
+export async function subscribeToConfig(who: string): Promise<SubscribeResult> {
   const base = process.env.CONFIG_SERVICE_URL?.trim().replace(/\/+$/, "")
   const key = process.env.SETTINGS_SECRET?.trim()
   const url = listenerUrl()

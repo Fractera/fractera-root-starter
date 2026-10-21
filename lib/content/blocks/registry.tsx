@@ -1,57 +1,29 @@
 import type { ReactNode } from 'react'
+import { PageBody, type BlockSet } from '@/components/blocks/page-body'
+import { SectionHead } from '@/components/blocks/block-section-head'
+import { HeroCentered } from '@/components/blocks/block-hero-centered'
+import { WarningCard } from '@/components/blocks/block-warning-card'
+import { Faq } from '@/components/blocks/block-faq'
 import type { Block } from './types'
-import type { PostBodyUi } from '@/lib/content/post-body-ui'
-import type { SectionCtx } from '@/sections/contract'
-import { SECTIONS } from '@/sections'
+import { TEXT_SET } from '@/lib/content/text-set'
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Диспетчер блоков. С шага 508 он НЕ содержит ни одного рендерера: рисование
-// живёт в `sections/blocks/<вид>.server.tsx`, один вид — один файл, а здесь
-// осталась только раздача блока тому, кто его рисует.
+// НАБОР БЛОКОВ ЭТОГО ЭЛЕМЕНТА И ОТРИСОВКА СТРАНИЦЫ (шаг 314-2).
 //
-// 🔒 ЗАЧЕМ ПЕРЕЕХАЛО — ЛИМИТ В 200 СТРОК. Здесь было 263 строки кода:
-// шестнадцать маленьких компонентов, слипшихся в один файл, потому что им негде
-// было лежать порознь. Теперь каждый занимает 10–57 строк, и лимит перестаёт
-// быть требованием, которое надо помнить: он становится следствием того, как
-// лежит код. Заодно правка одного вида перестала задевать пятнадцать соседних.
-//
-// 🔒 ЧТО ОСТАЛОСЬ ЗДЕСЬ И ПОЧЕМУ. Обход блоков, ключи и рекурсия контейнеров —
-// это механизм, а не оформление. Отдай его секциям — и каждая заново училась бы
-// нумеровать ключи.
-//
-// Внешние имена (`renderBlock`, `renderBlocks`, `BlockRenderCtx`) сохранены
-// дословно: переезд не имеет права задеть тех, кто ими пользуется.
-// ─────────────────────────────────────────────────────────────────────────────
+// 🔒 РИСУЕТ ФАБРИКА `page-body` ИЗ «БЛОКОВ», А НЕ СВОЙ КАТАЛОГ. Здесь только набор — какие блоки стоят в проекте. Новый
+// блок: `npx shadcn add @fractera/<имя>` → строка в наборе → вид в `types.ts`. Вид без строки — ошибка сборки
+// с командой установки, а не пустое место на странице.
+// 🪦 Прежняя отрисовка через `sections/` (62 вида) удалена вместе с каталогом.
 
-/** Совместимое имя контекста; форма объявлена договором секции. */
-export type BlockRenderCtx = SectionCtx
-
-/**
- * Нарисовать один блок.
- *
- * 🔒 БЕЗ ПРОВЕРКИ НА ОТСУТСТВИЕ, И ЭТО НЕ УПУЩЕНИЕ. Набор объявлен полным
- * (`SectionSet` требует все виды), поэтому вид без рендерера не доживает до
- * рантайма: проект не собирается. Здесь стояла защита на случай непокрытого
- * вида — она обслуживала сценарий частичных наборов, снесённый вместе с
- * многодизайновостью, и теперь описывала бы состояние, которое типы делают
- * невозможным.
- */
-export function renderBlock(block: Block, ctx: BlockRenderCtx): ReactNode {
-  const render = SECTIONS[block.kind] as (b: Block, c: BlockRenderCtx) => ReactNode
-  return render(block, ctx)
+export const BLOCK_SET: BlockSet = {
+  'block-section-head': SectionHead,
+  'block-hero-centered': HeroCentered,
+  'block-warning-card': WarningCard,
+  'block-faq': Faq,
 }
 
-/**
- * Нарисовать список блоков по порядку. `keyPrefix` держит ключи уникальными
- * между уровнями вложенности (верхний уровень — `blk`).
- */
-export function renderBlocks(
-  blocks: Block[],
-  lang: string,
-  ui: PostBodyUi,
-  keyPrefix = 'blk',
-): ReactNode[] {
-  return blocks.map((b, i) =>
-    renderBlock(b, { lang, ui, key: `${keyPrefix}-${i}`, renderBlocks }),
-  )
+/** Нарисовать список блоков по порядку; `keyPrefix` держит ключи уникальными между вызовами на одной странице. */
+/** 423: страница — последовательность трёх видов: `block-*` (набор выше), `text-*` (типографика элемента), `widget-*` (виджеты
+ *  ветки — `widgets`, уже привязанные к языку). Незнакомое имя — громкая ошибка фабрики, а не пустое место. */
+export function renderBlocks(blocks: (Block | { kind: 'block-faq'; title: string; items: { q: string; a: string }[] })[], keyPrefix = 'blk', widgets?: BlockSet): ReactNode {
+  return <PageBody key={keyPrefix} blocks={blocks} set={{ ...BLOCK_SET, ...TEXT_SET, ...(widgets ?? {}) }} />
 }

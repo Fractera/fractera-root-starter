@@ -107,9 +107,9 @@ export const getAppConfig = cache((): AppConfig => {
     const own = projectSettingsPatch("app") ?? JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
     const merged = deepMerge(DEFAULT_APP_CONFIG, own);
     const cfg = normalize(validateConfig(appConfigSchema, merged, DEFAULT_APP_CONFIG, "APP-CONFIG"));
-    // 396: адрес, выданный узлом, сильнее `url` настроек — canonical, sitemap, hreflang, robots, og.
-    const nodeAddress = ownSiteUrl();
-    return nodeAddress ? { ...cfg, url: nodeAddress, seo: { ...cfg.seo, canonicalBase: nodeAddress } } : cfg;
+    // 324-5: главный адрес, выданный узлом этому элементу, сильнее `url` проекта — canonical, sitemap, hreflang, og.
+    const mainAddress = ownSiteUrl();
+    return mainAddress ? { ...cfg, url: mainAddress, seo: { ...cfg.seo, canonicalBase: mainAddress } } : cfg;
   } catch {
     return DEFAULT_APP_CONFIG;
   }

@@ -93,7 +93,7 @@ export function buildFAQSchema(faqs: Array<{ question: string; answer: string }>
   };
 }
 
-export function buildBreadcrumbSchema(cfg: AppConfig, items: Array<{ name: string; url: string }>): Schema {
+export function buildBreadcrumbSchema(cfg: AppConfig, items: Array<{ name: string; url?: string }>): Schema {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -101,7 +101,8 @@ export function buildBreadcrumbSchema(cfg: AppConfig, items: Array<{ name: strin
       "@type": "ListItem",
       position: i + 1,
       name: it.name,
-      item: absUrl(it.url, cfg.url),
+      // 431: последний пункт — текущая страница, без `item` (так разрешает schema.org и Google).
+      ...(it.url ? { item: absUrl(it.url, cfg.url) } : {}),
     })),
   };
 }

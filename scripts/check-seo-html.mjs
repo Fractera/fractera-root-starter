@@ -245,10 +245,63 @@ for (const [route, group] of byRoute) {
   }
 }
 
+// ── Закон 340: поисковику — только открытые языки ─────────────────────────
+//
+// 🔒 ЛЮДЯМ ВИДНЫ ВСЕ ВКЛЮЧЁННЫЕ ЯЗЫКИ, ПОИСКОВИКУ — ТОЛЬКО ОТКРЫТЫЕ: английский, язык по умолчанию и разблокированные
+// человеком (`NEXT_PUBLIC_INDEXED_LANGUAGES`). Тот же расчёт, что `INDEXED_LANGUAGES` в `translations.config.ts`: два
+// расчёта одного набора — это два ответа на один вопрос, поэтому формула повторена дословно и сторож краснеет порчей.
+// Слова владельца 2026-09-30: «запускать проект продакшн рекомендуется только на одном или двух языках… английский язык
+// плюс язык по дефолту»; «Также создай seo сторожа».
+const DEFAULT = (envValue("NEXT_PUBLIC_DEFAULT_LOCALE") || "en").toLowerCase()
+const UNLOCKED = envValue("NEXT_PUBLIC_INDEXED_LANGUAGES").split(",").map(s => s.trim().toLowerCase()).filter(Boolean)
+const OPEN = LANGS.filter(l => l === "en" || l === DEFAULT || UNLOCKED.includes(l))
+
+for (const p of pages) {
+  // ПРАВИЛО 9 — страница закрытого языка не индексируется.
+  if (!OPEN.includes(p.lang) && indexable(p) && !(IS_SHOWCASE && p.isArchitect)) {
+    fail(p.file, "closed-language-indexed", `язык «${p.lang}» закрыт для поисковика, а страница объявлена индексируемой: ${p.robots}`)
+  }
+  // ПРАВИЛО 10 — закрытая версия не объявляет переводов: её hreflang односторонний по построению (замер 340-1, aifa.dev/fr).
+  if (!indexable(p) && p.alts.some(a => a.lang !== p.lang)) {
+    fail(p.file, "noindex-with-hreflang", `страница с noindex объявляет переводы: ${p.alts.map(a => a.lang).join(",")}`)
+  }
+  // ПРАВИЛО 11 — hreflang не называет закрытый язык.
+  for (const a of p.alts) {
+    if (a.lang !== "x-default" && !OPEN.includes(a.lang)) {
+      fail(p.file, "hreflang-closed-language", `hreflang называет закрытый для поисковика язык «${a.lang}»`)
+    }
+  }
+}
+
+// ПРАВИЛО 12 — карта сайта не зовёт на закрытые языки. Карта может строиться при запросе, а не в сборке — тогда её здесь
+// нет, и это называется строкой, а не молчанием (живую карту меряет `npm run check:index`).
+const sitemapBody = ["sitemap.xml.body", "sitemap.xml"].map(n => join(BUILD, n)).find(existsSync)
+if (sitemapBody && SITE) {
+  for (const m of readFileSync(sitemapBody, "utf8").matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)) {
+    const seg = m[1].slice(SITE.length).split("/")[1] ?? ""
+    if (LANGS.includes(seg) && !OPEN.includes(seg)) fail("sitemap.xml", "sitemap-closed-language", `карта зовёт на закрытый язык: ${m[1]}`)
+  }
+} else if (!sitemapBody) {
+  console.log("карта сайта в сборке не найдена — правило 12 проверяется на живом сайте: npm run check:index")
+}
+
+// ПРАВИЛО 13 — robots.txt не запрещает язык. «For the noindex rule to be effective, the page… must not be blocked by a
+// robots.txt file» (Google, block-indexing): запрет спрятал бы noindex, и закрытые страницы могли бы остаться в индексе.
+const robotsBody = join(BUILD, "robots.txt.body")
+if (existsSync(robotsBody)) {
+  for (const line of readFileSync(robotsBody, "utf8").split(/\r?\n/)) {
+    const d = (line.match(/^\s*disallow:\s*(\S+)/i) ?? [])[1]
+    const seg = d?.replace(/\*$/, "").replace(/\/$/, "").split("/")
+    if (seg && seg.length === 2 && LANGS.includes(seg[1])) {
+      fail("robots.txt", "robots-blocks-language", `robots.txt запрещает язык целиком (${d}) — его noindex не прочтётся`)
+    }
+  }
+}
+
 // ── Итог ───────────────────────────────────────────────────────────────────
 const shown = pages.length
 const live = pages.filter(indexable).length
-console.log(`страниц в сборке: ${shown}, индексируемых: ${live}, языков: ${LANGS.join(",") || "—"}`)
+console.log(`страниц в сборке: ${shown}, индексируемых: ${live}, языков: ${LANGS.join(",") || "—"}, открыто поисковику: ${OPEN.join(",") || "—"}`)
 console.log(`адрес сайта: ${SITE || "(не задан)"}${IS_SHOWCASE ? " — ВИТРИНА" : ""}`)
 
 if (!errors.length) {

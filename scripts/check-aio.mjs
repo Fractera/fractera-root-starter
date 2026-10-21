@@ -70,7 +70,8 @@ const mdRoutes = walkDirs(LANG_DIR, "index.md");
 // markdown-версии прилетело странице настроек: по модели гейта всё, что не
 // `(protectedLayer)`, публично. Карта для ИИ — приглашение прочитать; страница за
 // замком роли в неё не попадает, и markdown-двойник ей не нужен.
-const CLOSED_LAYERS = ["(protectedLayer)", "(architectLayer)"];
+// 314-2: гостевая группа закрыта от поиска и требует сессии (гостевой вход) — карта для ИИ её не приглашает.
+const CLOSED_LAYERS = ["(protectedLayer)", "(architectLayer)", "(guestLayer)"];
 const isClosed = p => CLOSED_LAYERS.some(m => p.includes(m));
 
 const pageDirs = walkPages(LANG_DIR).filter(d => !isClosed(rel(d)));
@@ -116,7 +117,42 @@ if (llmsLib && !/llmstxt\.org/.test(llmsLib)) {
   warnings.push("lib/aio/llms.ts: не сослался на первоисточник спецификации");
 }
 
-console.log(`публичных страниц: ${pageDirs.length} · markdown-маршрутов: ${mdRoutes.length}`);
+// 6 — текст виджетов в машинной копии (узел, шаг 428). Виджет публичной ветки рисует слова, которых нет в блоках страницы
+// (лендинг — ~22 тыс. знаков), и без `markdown.ts` они не доходят ни до `index.md`, ни до `llms-full.txt`: главная отдавала
+// 159 байт. Исключение — строка `@machine-text none: <причина>` в `index.tsx` виджета (печатается предупреждением).
+let widgetCount = 0;
+for (const wdir of walkDirs(LANG_DIR, "_widgets").filter(d => !isClosed(rel(d)))) {
+  const names = [];
+  for (const nature of ["static", "dynamic"]) {
+    const base = path.join(wdir, nature);
+    if (!fs.existsSync(base)) continue;
+    for (const e of fs.readdirSync(base, { withFileTypes: true })) {
+      if (!e.isDirectory() || !e.name.startsWith("widget-")) continue;
+      widgetCount++;
+      const dir = path.join(base, e.name);
+      const none = read(path.join(dir, "index.tsx")).match(/@machine-text none:\s*(.+)/);
+      names.push({ name: e.name, exempt: !!none });
+      if (fs.existsSync(path.join(dir, "markdown.ts"))) continue;
+      if (none) warnings.push(`${rel(dir)}: без текста для машин — ${none[1].trim()}`);
+      else errors.push(`${rel(dir)}: публичный виджет без markdown.ts — его слова не попадут в index.md и llms-full.txt (навык use-machine-copy)`);
+    }
+  }
+  if (!names.length) continue;
+  const registry = read(path.join(wdir, "markdown.ts"));
+  if (!registry) {
+    errors.push(`${rel(wdir)}: нет markdown.ts — реестра текста виджетов ветки (пара к index.tsx)`);
+    continue;
+  }
+  const widgets = read(path.join(wdir, "index.tsx"));
+  const named = (src, n) => src.includes(`'${n}'`) || src.includes(`"${n}"`);
+  for (const { name, exempt } of names) {
+    if (!exempt && named(widgets, name) && !named(registry, name)) {
+      errors.push(`${rel(wdir)}/markdown.ts: виджет ${name} есть в index.tsx, но не в WIDGET_MARKDOWN — сборщик копии его не позовёт`);
+    }
+  }
+}
+
+console.log(`публичных страниц: ${pageDirs.length} · markdown-маршрутов: ${mdRoutes.length} · публичных виджетов: ${widgetCount}`);
 for (const w of warnings) console.log(`  предупреждение: ${w}`);
 for (const e of errors) console.log(`  ОШИБКА: ${e}`);
 

@@ -69,6 +69,37 @@ export const PROTECTED_GROUP_ROLES = {
 
 export type ProtectedGroup = keyof typeof PROTECTED_GROUP_ROLES
 
+// ── Inheritance of roles (node step 402, owner 2026-10-05: «роли наследуются», hierarchy — «Подтвердить») ──────────────
+//
+// A child role sees everything its parent sees: a page in the folder `_pages/buyer/` is open to `buyer` and to `vip_user`.
+// One table, one parent per role, inheritance only inside one branch. Without it a page shared by two roles had to be
+// copied, and the copies drift. A role missing here has no parent and sees only its own pages.
+export const ROLE_PARENTS: Partial<Record<AppRole, AppRole>> = {
+  buyer: 'user',
+  vip_user: 'buyer',
+  subscriber_lite: 'user',
+  subscriber_standard: 'subscriber_lite',
+  subscriber_max: 'subscriber_standard',
+  senior_manager: 'manager',
+}
+
+/** The role and all its ancestors. 🛑 A cycle in `ROLE_PARENTS` throws — at the first page render, so the build fails. */
+function lineage(role: AppRole): AppRole[] {
+  const out: AppRole[] = [role]
+  for (let p = ROLE_PARENTS[role]; p; p = ROLE_PARENTS[p]) {
+    if (out.includes(p)) throw new Error(`lib/roles.ts ROLE_PARENTS: cycle through «${p}» (${out.join(' → ')})`)
+    out.push(p)
+  }
+  return out
+}
+for (const r of ALL_ROLES) lineage(r)
+
+/** Every role that sees the pages of `role`: the role itself and all roles that inherit it. Unknown name — just itself. */
+export function rolesThatSee(role: string): string[] {
+  if (!(ALL_ROLES as readonly string[]).includes(role)) return [role]
+  return ALL_ROLES.filter((r) => lineage(r).includes(role as AppRole))
+}
+
 // ── Слой архитектора (шаг 31-1, 2026-08-28) ─────────────────────────────────
 //
 // Пятая группа маршрутов, и она НЕ подгруппа защищённого слоя. Разделяющий

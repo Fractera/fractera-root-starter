@@ -21,6 +21,7 @@ export function EmptyState({
   hint,
   action,
   className,
+  ...rest
 }: {
   /** Что произошло — одна короткая строка. */
   title: ReactNode
@@ -29,9 +30,12 @@ export function EmptyState({
   /** Кнопка или ссылка — единственное действие, которое здесь уместно. */
   action?: ReactNode
   className?: string
+  /** 425: адрес подсветки (`data-block`) и прочие атрибуты корня — доходят до DOM. */
+  [attr: `data-${string}`]: string | undefined
 }) {
   return (
     <div
+      {...rest}
       className={cn(
         "flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border px-6 py-16 text-center",
         className,

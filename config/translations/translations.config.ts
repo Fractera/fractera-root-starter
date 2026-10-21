@@ -97,6 +97,29 @@ export const DEFAULT_LANGUAGE: SupportedLanguage = (() => {
   return envLang as SupportedLanguage;
 })();
 
+/**
+ * Languages OPEN TO SEARCH ENGINES (node step 340) — a subset of the enabled ones.
+ *
+ * 🔒 PEOPLE SEE EVERY ENABLED LANGUAGE; A SEARCH ENGINE SEES ONLY THESE. The owner's launch strategy (2026-09-30): production
+ * starts on English plus the site's default language; more regions are unlocked one at a time, by hand, at the person's own
+ * risk, on the page «Site settings → Languages». Google's spam policy «scaled content abuse» names mass automated
+ * translation of little value — «exclude it from Search» is its own advice
+ * (developers.google.com/search/docs/essentials/spam-policies).
+ *
+ * The node's installer writes `NEXT_PUBLIC_INDEXED_LANGUAGES` from APP-CONFIG `languages.indexed`, like the enabled set; it is
+ * baked at build, so every page of one build answers from the same set and hreflang stays reciprocal. English and the
+ * default language are always in it; the variable adds the unlocked ones. A code outside the enabled set is dropped: it
+ * has no address.
+ */
+export const INDEXED_LANGUAGES: readonly string[] = (() => {
+  const fromEnv = (process.env.NEXT_PUBLIC_INDEXED_LANGUAGES ?? "")
+    .split(",")
+    .map((l) => l.trim().toLowerCase())
+    .filter(Boolean);
+  // English and the default language are always open (the owner: «marked as unlocked»); the list adds the rest.
+  return SUPPORTED_LANGUAGES.filter((l) => l === "en" || l === DEFAULT_LANGUAGE || fromEnv.includes(l));
+})();
+
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================

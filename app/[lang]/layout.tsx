@@ -9,8 +9,13 @@ import { buildDesignCss } from "@/lib/design-css";
 import { DrawerProvider } from "@/providers/drawer-provider.client";
 import { TopMenu } from "@/components/menu/top/top-menu.server";
 import { FooterMenu } from "@/components/menu/footer/footer-menu.server";
+import { StarterBanner } from "@/components/shell/starter-banner.client";
+import { starterBannerStrings } from "@/components/shell/starter-banner.i18n";
+import { ownId } from "@/lib/own-id";
 import { DrawerMenu } from "@/components/menu/drawer/drawer-menu.server";
 import { ViewportBadge } from "@/components/dev/viewport-badge.client";
+import { viewportBadgeWords } from "@/components/dev/viewport-badge.i18n";
+import { designSkill } from "@/lib/design-skill";
 import { bodyFontClass } from "@/lib/fonts";
 import { getAppConfig } from "@/config/app-config";
 import { constructMetadata } from "@/lib/construct-metadata";
@@ -22,12 +27,16 @@ import { bannerUi } from "./_components/cookie-banner/cookie-banner.i18n";
 import { featureOn } from "@/config/platform-config";
 import { RegisterServiceWorker } from "@/components/pwa/register-sw.client";
 import { InstallPrompt } from "@/components/pwa/install-prompt.client";
-import { StarterBanner } from "./(publicLayer)/_components/starter-banner.client";
-import { starterBannerStrings } from "./(publicLayer)/_components/starter-banner.i18n";
 import { installUi } from "@/components/pwa/install-prompt.i18n";
 import { IosSplash } from "@/components/pwa/ios-splash";
 import { SignInNotice, SIGN_IN_TOASTER } from "@/components/auth/sign-in-notice.client";
 import { signInNoticeStrings } from "@/components/auth/sign-in-notice.i18n";
+import { BlockHighlight } from "@/components/block-highlight/block-highlight.client";
+import { blockHighlightWords } from "@/components/block-highlight/block-highlight.i18n";
+import { TaskReport } from "@/components/task-report/task-report.client";
+import { appDialogUi } from "@/components/dialog/app-dialog.i18n";
+import { taskReportWords } from "@/components/task-report/task-report.i18n";
+import { needsCookieBanner } from "@/lib/policy-tools";
 
 // Root layout for the localized public surface (step 131). This zone OWNS <html>/
 // <body> — the language comes from the [lang] route param (known at build), NOT from
@@ -87,7 +96,9 @@ export default async function LangLayout({
   // Слова баннера: СВОИ на 82 языках, поверх них — то, что владелец изменил в
   // панели. Порядок именно такой: пустая настройка не имеет права оставить
   // баннер без текста, а он делит сообщение по метке ссылки и упал бы.
-  const bannerOn = featureOn("cookieBanner");
+  // Analytics on → the banner is on too (owner 2026-10-11: «if need cookie banner for it, you must activate it in start add
+  // GA»): Google Analytics sets cookies, so a visitor is asked first. Search Console needs no banner — it is a meta tag.
+  const bannerOn = featureOn("cookieBanner") || needsCookieBanner(cfg);
   // Копия сайта на устройстве посетителя — решение владельца, а не наше
   // умолчание (2026-08-13). Выключенный режим не просто «не регистрируем»: он
   // СНИМАЕТ воркер и стирает кеши у тех, кому он уже достался.
@@ -142,7 +153,9 @@ export default async function LangLayout({
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
             <Script id="ga-init" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}
+              {/* Consent Mode v2: denied until the visitor accepts in the banner; an earlier choice (localStorage
+                  `fractera-cookie-consent`, written by the banner) is applied before the first hit. */}
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}var c=null;try{c=localStorage.getItem('fractera-cookie-consent')}catch(e){}var g=c==='accepted'?'granted':'denied';gtag('consent','default',{analytics_storage:g,ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','${gaId}');`}
             </Script>
           </>
         )}
@@ -168,7 +181,9 @@ export default async function LangLayout({
 
                 🔒 СТАТИКУ НЕ ЛОМАЕТ: это островок, слушатель прокрутки живёт
                 внутри него, а макет остаётся серверным и ничего не спрашивает. */}
-            <StarterBanner strings={starterBannerStrings(lang)} lang={lang} />
+            {/* 542 (владелец 2026-10-19): жёлтая вывеска стартера — та же, что у root («единственное что мы оставляем это выпадающее
+                жёлтая вывеска»); выезжает сразу, ссылка ведёт на «Подписку Claude Code» этого элемента в ядре. 🪦 314-2 её снимал. */}
+            <StarterBanner strings={starterBannerStrings(lang)} lang={lang} dropOnLoad href={process.env.ARCHITECT_URL && ownId() ? `${process.env.ARCHITECT_URL.replace(/\/+$/, "")}/${lang}/${ownId()}/build/subscription` : undefined} />
             {children}
             <FooterMenu lang={lang} />
             {/* Left & right slide-in drawers (shadcn Sheet), controlled by the same
@@ -187,7 +202,7 @@ export default async function LangLayout({
                 🔒 ПРОВЕРКА ЗДЕСЬ, А НЕ ВНУТРИ ЗНАЧКА: `featureOn` читает конфиг
                 на сервере, а значок — островок. Спроси он сам — конфиг уехал бы
                 в браузер вместе с ним. */}
-            {featureOn("viewportBadge") && <ViewportBadge />}
+            {featureOn("viewportBadge") && <ViewportBadge skill={designSkill()} closeLabel={viewportBadgeWords(lang).close} />}
             {/* Cookie-consent banner (step 305) — on every public page via this layout. Strings are
                 server-provided per language (readBannerConfig, ISR) so anonymous visitors get a fully
                 localized banner without hitting the gated /api. */}
@@ -208,6 +223,10 @@ export default async function LangLayout({
                 браузере. Кнопка появляется, только когда браузер сам сообщил,
                 что сайт устанавливаем. */}
             <InstallPrompt strings={installUi(lang)} />
+            {/* 317-3: подсветка блоков — спит, пока Preview ядра не включит её сообщением (только свой источник). */}
+            <BlockHighlight words={blockHighlightWords(lang)} />
+            {/* 356-2: окно отчёта о задаче — только ?report= на этой машине (предпросмотр); иначе ничего не рисует. */}
+            <TaskReport words={taskReportWords(lang)} dialogUi={appDialogUi(lang)} />
           </DrawerProvider>
         </ThemeProvider>
       </body>

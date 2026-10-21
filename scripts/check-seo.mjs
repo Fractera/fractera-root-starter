@@ -45,7 +45,8 @@ const warnings = [];
 // ✗ Соблазн был противоположный и неверный: дописать `generateMetadata` странице,
 // чтобы гейт замолчал. Это подделало бы ответ — метаданные существовали бы ради
 // проверки, а не ради читателя, которого у закрытой страницы нет.
-const PRIVATE_MARKERS = ["(protectedLayer)", "(architectLayer)"];
+// 314-2: гостевая группа закрыта от поиска и требует сессии (гостевой вход) — не публичная страница.
+const PRIVATE_MARKERS = ["(protectedLayer)", "(architectLayer)", "(guestLayer)"];
 
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -90,7 +91,8 @@ for (const page of pages) {
   const joined = codeOnly(sources.map(s => s.text).join("\n"));
 
   // 1 — метаданные вообще объявлены.
-  if (!/export\s+(async\s+)?function\s+generateMetadata|export\s+const\s+metadata|generateMetadata\s*[,}]/.test(joined)) {
+  // 314-2: корень и ребёнок ветки отдают фабрику из lib/branch-page — `export const generateMetadata = page.generateMetadata`.
+  if (!/export\s+(async\s+)?function\s+generateMetadata|export\s+const\s+metadata|export\s+const\s+generateMetadata\s*=|generateMetadata\s*[,}]/.test(joined)) {
     errors.push(`${relPage}: нет generateMetadata — страница возьмёт метаданные у макета, включая чужой заголовок`);
     continue;
   }
@@ -98,7 +100,8 @@ for (const page of pages) {
   // 2 — альтернативы. Либо прямой вызов, либо страница построена общим сборщиком
   // контента (`createContentPage` / `createContentPost`), который зовёт его сам.
   const hasOwn = /buildAlternates\s*\(/.test(joined);
-  const viaBuilder = /createContentPage|createContentPost/.test(joined);
+  // 314-2: `rootPage` / `childRoute` (lib/branch-page.tsx) строят страницу тем же `createContentPage`.
+  const viaBuilder = /createContentPage|createContentPost|rootPage\s*\(|childRoute\s*\(/.test(joined);
   if (!hasOwn && !viaBuilder) {
     errors.push(`${relPage}: нет alternates — страница не назовёт ни себя оригиналом, ни своих переводов`);
   }

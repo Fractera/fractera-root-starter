@@ -21,7 +21,8 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
 const ROOT = process.cwd();
-const SCAN = ["app", "components", "sections", "services", "lib", "_tools"];
+// 314-2: `sections/` и `_tools/` удалены из шаблона — блоки приходят из «Блоков» в `components/blocks/`.
+const SCAN = ["app", "components", "services", "lib"];
 
 // Разрешено ровно двум: примитиву shadcn и общей обёртке над ним. Всё остальное
 // приложение обязано ходить через `AppDialog`.

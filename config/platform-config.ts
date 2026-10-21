@@ -97,12 +97,24 @@ export const getPlatformConfig = cache((): PlatformConfig => {
   ) as Record<string, unknown>;
 
   const saved = (raw.features ?? {}) as Record<string, unknown>;
+  let fromOwnFile: boolean | null = null;
+  try {
+    const own = JSON.parse(readFileSync(CONFIG_PATH, "utf8")) as { features?: { viewportBadge?: unknown } };
+    if (typeof own.features?.viewportBadge === "boolean") fromOwnFile = own.features.viewportBadge;
+  } catch { /* своего файла нет — решает копия или умолчание */ }
   const features = {} as Record<FeatureKey, boolean>;
   const explicit = {} as Record<FeatureKey, boolean>;
   for (const key of Object.keys(DEFAULTS) as FeatureKey[]) {
     const own = typeof saved[key] === "boolean";
     explicit[key] = own;
     features[key] = own ? (saved[key] as boolean) : DEFAULTS[key];
+  }
+
+  // 333-4: ИНДИКАТОР ШИРИНЫ — ИНСТРУМЕНТ РАЗРАБОТЧИКА ЭТОГО ЭЛЕМЕНТА, А НЕ РЕШЕНИЕ ПРОЕКТА. Его закрывает архитектор кнопкой
+  // (`/api/settings/platform` пишет свой файл); своё значение сильнее копии CONFIG — иначе закрытие не действовало бы при связи.
+  if (fromOwnFile !== null) {
+    features.viewportBadge = fromOwnFile
+    explicit.viewportBadge = true
   }
 
   return {

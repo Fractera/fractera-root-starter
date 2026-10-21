@@ -1,15 +1,9 @@
-import Home, { generateMetadata } from './_components'
+import { rootPage } from '@/lib/branch-page'
+import { WIDGETS } from './_widgets'
 
-// Тонкий маршрут — ровно та же форма, что у поста блога и у правовых страниц
-// (шаг 508). Метаданные строит фабрика во входе: раньше здесь лежала своя
-// `generateMetadata` на 22 строки, то есть у главной был свой способ объявлять
-// канонический адрес и `og:url`. Один способ на все страницы означает, что
-// правило, добавленное однажды, доезжает до каждой.
-//
-// Значения сегмента объявлены здесь литералами: Next разбирает их статически и
-// переэкспорт из объекта не принимает.
+// Корень публичной ветки — главная. Слова — ./_data/{meta,en,ru}.json; дети ветки — ./_pages/<slug>/, их рисует ./[slug].
+const page = rootPage({ segments: ['(publicLayer)'], subPath: '', titleInBody: true, crumbs: false, widgets: WIDGETS })
+
 export const revalidate = 300
-export const dynamicParams = true
-
-export { generateMetadata }
-export default Home
+export const generateMetadata = page.generateMetadata
+export default page.Page

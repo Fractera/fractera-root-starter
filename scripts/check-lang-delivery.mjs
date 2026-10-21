@@ -81,6 +81,9 @@ for (const rel of SRC) {
   for (const m of text.matchAll(/from\s*["']([^"']+)["']/g)) {
     const spec = m[1]
     if (!isDict(spec)) continue
+    // `import type { … }` стирается компилятором и в браузер не уезжает (узел, шаг 422: tool-translations-dialog берёт только тип).
+    const stmt = text.slice(text.lastIndexOf('\n', m.index) + 1, m.index)
+    if (/^\s*import\s+type\b/.test(stmt) || /^\s*import\s+type\b/.test(text.slice(text.lastIndexOf('import', m.index), m.index))) continue
     const line = text.slice(0, m.index).split('\n').length
     const msg = `${rel}:${line}: клиентский файл импортирует словарь «${spec}». ` +
       'Словарь уезжает в браузер ЦЕЛИКОМ, со всеми языками. Строки обязан выбрать ' +
