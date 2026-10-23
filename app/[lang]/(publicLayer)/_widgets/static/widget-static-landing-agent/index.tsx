@@ -250,11 +250,11 @@ export function LandingAgent({ lang }: { lang: string }) {
               <h2 data-block="lm51s" className={s.ticketTitle}>{hood.title}</h2>
               {hood.texts.map((t, i) => <p data-block="zw1b0" key={i} className={s.ticketText}>{t}</p>)}
               {x.ticket && (
-                <dl className={s.ticketFields}>
+                <dl data-block="fr69k" className={s.ticketFields}>
                   {x.ticket.fields.map((fd) => (
                     <div data-block="imdak" key={fd.label}>
-                      <dt>{fd.label}</dt>
-                      <dd>{fd.value}</dd>
+                      <dt data-block="bindk">{fd.label}</dt>
+                      <dd data-block="xzis9">{fd.value}</dd>
                     </div>
                   ))}
                 </dl>
