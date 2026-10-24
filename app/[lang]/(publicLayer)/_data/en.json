@@ -1,11 +1,47 @@
 {
-  "title": "Reference starter template",
-  "description": "The reference starter template of a Fractera element.",
+  "title": "What will you build?",
+  "description": "Describe a project, and the AI agent of your node builds it: a Web4 swarm of A2A agents, a large full-stack app or an app factory.",
   "keywords": "",
   "blocks": [
     {
-      "kind": "widget-static-reference-title",
-      "bid": "rf001"
+      "kind": "widget-static-root-home",
+      "bid": "rh001"
     }
-  ]
+  ],
+  "rootHome": {
+    "pill": "Runs on your Claude subscription",
+    "heading": "What will you build?",
+    "placeholder": "Describe what to build…",
+    "send": "Send",
+    "chosen": "Chosen task",
+    "clear": "Remove the chosen task",
+    "cards": [
+      {
+        "id": "swarm",
+        "title": "Create a Web4 swarm of A2A agents",
+        "text": "The agents of your elements find each other and agents of other nodes, agree on the work and are paid through Lagrix.",
+        "task": "I want to create a Web4 swarm of A2A agents."
+      },
+      {
+        "id": "fullstack",
+        "title": "Create a large full-stack app",
+        "text": "From idea to money 99% faster. Sign-in, data, design and blocks are already in the node, so the agent builds only your product.",
+        "task": "I want to create a large full-stack app."
+      },
+      {
+        "id": "factory",
+        "title": "Create an app factory",
+        "text": "Make your own versions of popular products: the node studies how they work with reverse engineering and builds yours on their ideas.",
+        "task": "I want to create an app factory with my own versions of popular products."
+      }
+    ],
+    "accepted": {
+      "title": "Task accepted",
+      "text": "It waits for your agent in the node. Connect Claude Code, and the agent starts with this task. Or connect Telegram, and the bot asks whether to start it.",
+      "claude": "Connect Claude Code",
+      "telegram": "Connect Telegram"
+    },
+    "notArchitect": "Only the architect of this node can hand a task to its agent. Sign in with the architect account.",
+    "failed": "The node did not take the task. Try again."
+  }
 }

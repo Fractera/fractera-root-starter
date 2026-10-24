@@ -82,6 +82,7 @@ const ALLOWED = new Map([
   ['app/api/settings/platform/route.ts', 'архитектор закрывает индикатор ширины (333-4)'],
   ['app/api/core-origin/route.ts', 'адрес ядра своего узла (324-6)'],
   ['app/api/me/route.ts', 'кто вошёл'],
+  ['app/api/first-task/route.ts', 'первое задание с главной root — архитектор отдаёт его ядру (узел, шаг 587-4; владелец 2026-10-24: «Отправленные сообщения нужно запомнить в каком-то состоянии»)'],
   ['app/api/media-proxy/[...path]/route.ts', 'медиа через узел'],
   ['app/api/media/[id]/file/route.ts', 'файл медиа'],
   ['app/api/media/icons/[setId]/file/[name]/route.ts', 'значки медиа'],

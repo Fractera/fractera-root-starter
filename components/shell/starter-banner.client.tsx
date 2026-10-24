@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { TriangleAlert } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 import type { StarterBannerStrings } from './starter-banner.i18n'
 
 // 587-2 (владелец 2026-10-24, только у root): «add [v] Don't show again-> fix in localstorage». Отметка живёт в браузере человека
@@ -151,10 +152,10 @@ export function StarterBanner({
           <span className="text-sm leading-relaxed text-foreground">{strings.tail}</span>
         ) : null}
         {dismissible && strings.dontShow ? (
-          <label className="ml-2 flex cursor-pointer items-center gap-1.5 text-sm text-muted-foreground" data-starter-banner-dismiss>
+          <Label className="ml-2 flex cursor-pointer items-center gap-1.5 text-sm font-normal text-muted-foreground" data-starter-banner-dismiss>
             <Checkbox onCheckedChange={(v) => { if (v) hideForGood() }} aria-label={strings.dontShow} />
             <span>{strings.dontShow}</span>
-          </label>
+          </Label>
         ) : null}
       </div>
     </div>
