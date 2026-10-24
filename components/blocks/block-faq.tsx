@@ -14,14 +14,14 @@ export function Faq({ blockKey: k = 'faq', title, items }: FaqProps) {
     mainEntity: items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: plain(f.a) } })),
   }
   return (
-    <section data-block="i09gu" aria-labelledby="faq-heading" className="mt-12 border-t border-border pt-10">
+    <section data-block="b0yst" aria-labelledby="faq-heading" className="mt-12 border-t border-border pt-10">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <H2 data-block="x4vuz" id="faq-heading">{title}</H2>
-      <dl data-block="k2uqk" className="mt-6 flex flex-col gap-4">
+      <H2 data-block="g2kk3" id="faq-heading">{title}</H2>
+      <dl data-block="apn7t" className="mt-6 flex flex-col gap-4">
         {items.map((f, i) => (
-          <div data-block="xbexy" key={`${k}-${i}`} className="rounded-2xl border border-border bg-muted/40 p-5">
-            <dt data-block="nispb" className="text-base font-semibold text-foreground">{f.q}</dt>
-            <dd data-block="evsi1" className="mt-2 text-[15px] leading-relaxed text-muted-foreground">{inline(f.a, `${k}-${i}`)}</dd>
+          <div data-block="yswzy" key={`${k}-${i}`} className="rounded-2xl border border-border bg-muted/40 p-5">
+            <dt data-block="p399p" className="text-base font-semibold text-foreground">{f.q}</dt>
+            <dd data-block="xsi4v" className="mt-2 text-[15px] leading-relaxed text-muted-foreground">{inline(f.a, `${k}-${i}`)}</dd>
           </div>
         ))}
       </dl>
