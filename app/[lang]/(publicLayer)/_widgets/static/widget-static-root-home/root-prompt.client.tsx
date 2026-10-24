@@ -225,7 +225,7 @@ export function RootPrompt({ lang, words, voice, links }: {
               </span>
               <span className="text-sm font-semibold text-foreground">{chosen.title}</span>
             </div>
-            <p data-block="mr7p4" className="mt-3 max-w-[72ch] text-sm leading-6 text-foreground">{chosen.more}</p>
+            <p data-block="mr7p4" className="mt-3 text-sm leading-6 text-foreground">{chosen.more}</p>
           </div>
         )
       })() : null}
