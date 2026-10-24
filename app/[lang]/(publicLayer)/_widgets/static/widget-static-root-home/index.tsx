@@ -44,7 +44,7 @@ export function RootHome({ lang }: { lang: string }) {
         >
           {w.heading}
         </H1>
-        <p data-block="pbho2" className={`${RISE} mt-4 max-w-[52ch] text-center text-base text-muted-foreground delay-150 md:text-lg`}>{w.sub}</p>
+        <p data-block="pbho2" className={`${RISE} mt-4 max-w-[68ch] text-center text-base text-muted-foreground delay-150 md:text-lg`}>{w.sub}</p>
         <div data-block="k3m8d" className={`${RISE} mt-10 w-full delay-200`}>
           <RootPrompt
             lang={lang}
