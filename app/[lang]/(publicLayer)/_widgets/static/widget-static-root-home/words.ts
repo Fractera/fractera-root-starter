@@ -3,7 +3,8 @@ import { branchRoot } from "@/lib/page-tree"
 // Слова главной root (узел, шаг 587-3) — из данных главной (`(publicLayer)/_data/<язык>.json` → `rootHome`). Слов в коде нет: язык без
 // своего файла получает английский, как вся страница.
 
-export type RootHomeCard = { id: string; title: string; text: string; task: string }
+/** `more` — подробный рассказ под карточками, когда карточка выбрана (587-3, владелец 2026-10-24). */
+export type RootHomeCard = { id: string; title: string; text: string; task: string; more: string }
 export type RootHomeWords = {
   pill: string
   heading: string

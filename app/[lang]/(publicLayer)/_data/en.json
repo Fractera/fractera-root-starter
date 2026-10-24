@@ -21,19 +21,22 @@
         "id": "swarm",
         "title": "Create a Web4 swarm of A2A agents",
         "text": "The agents of your elements find each other and agents of other nodes, agree on the work and are paid through Lagrix.",
-        "task": "I want to create a Web4 swarm of A2A agents."
+        "task": "I want to create a Web4 swarm of A2A agents.",
+        "more": "Choose this to work more efficiently and get paid for your expertise without hunting for clients. Create an agent by voice: a coach or a nutritionist for yourself, a driver if you have a car, a cook if you sell your dishes. On the free Web4 internet every person has agents for any task. They find other agents and agree on the work on your behalf, with no platform in between."
       },
       {
         "id": "fullstack",
         "title": "Create a large full-stack app",
         "text": "From idea to money 99% faster. Sign-in, data, design and blocks are already in the node, so the agent builds only your product.",
-        "task": "I want to create a large full-stack app."
+        "task": "I want to create a large full-stack app.",
+        "more": "A real app built with Claude Code needs many services: sign-in, a database, access roles, design and much more. The hard part is putting them together in the right order. That is already done here. You get a ready architecture and add only your own ideas to this solid core. Choose this to grow a reliable product that holds high load, on a server or on your own computer."
       },
       {
         "id": "factory",
         "title": "Create an app factory",
         "text": "Make your own versions of popular products: the node studies how they work with reverse engineering and builds yours on their ideas.",
-        "task": "I want to create an app factory with my own versions of popular products."
+        "task": "I want to create an app factory with my own versions of popular products.",
+        "more": "It may seem everything has been invented already: teams worked on many products for years, and we are grateful for their ideas. Ideas and principles are not protected by copyright, so building your own on them is legal. The node studies how a popular product works, and in a few hours you assemble your own solution with your own code and design. Choose this to create ten or a hundred such products on a server or a home computer."
       }
     ],
     "accepted": {

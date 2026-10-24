@@ -53,7 +53,8 @@ export function RootPrompt({ lang, words, voice, links }: {
   links: { claude: string; telegram: string }
 }) {
   const [text, setText] = useState("")
-  const [card, setCard] = useState<string | null>(null)
+  // 587-3 (владелец 2026-10-24): «По умолчанию пусть первая карточка будет подсвечена».
+  const [card, setCard] = useState<string | null>(words.cards[0]?.id ?? null)
   const [state, setState] = useState<State>("idle")
   const areaRef = useRef<HTMLTextAreaElement>(null)
   const v = useVoiceRecorder({ targetRef: areaRef, value: text, onChange: setText, lang, strings: voice })
@@ -205,6 +206,29 @@ export function RootPrompt({ lang, words, voice, links }: {
           )
         })}
       </div>
+      {/* 587-3 (владелец 2026-10-24): «в случае выделения карточки внизу показать контейнер с более подробным рассказом … при нажатии на
+          карточку подсвечивать внизу содержимое этой подсказки». Панель принадлежит выбранной карточке: тот же акцент и свечение,
+          смена карточки — мягкое появление (`key` по карточке), `aria-live` читает новый рассказ. */}
+      {chosen ? (() => {
+        const Icon = CARD_ICONS[chosen.id] ?? Sparkles
+        return (
+          <div
+            key={chosen.id}
+            data-block="mr7p2"
+            data-root-more={chosen.id}
+            aria-live="polite"
+            className="animate-in fade-in slide-in-from-top-1 duration-300 motion-reduce:animate-none rounded-2xl border border-primary/30 bg-primary/5 p-5 shadow-[0_12px_36px_-18px_color-mix(in_oklab,var(--primary)_50%,transparent)] md:p-6"
+          >
+            <div data-block="mr7p3" className="flex items-center gap-2.5">
+              <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                <Icon aria-hidden className="size-4" />
+              </span>
+              <span className="text-sm font-semibold text-foreground">{chosen.title}</span>
+            </div>
+            <p data-block="mr7p4" className="mt-3 max-w-[72ch] text-sm leading-6 text-foreground">{chosen.more}</p>
+          </div>
+        )
+      })() : null}
     </div>
   )
 }
