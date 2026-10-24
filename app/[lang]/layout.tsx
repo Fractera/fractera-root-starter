@@ -11,7 +11,6 @@ import { TopMenu } from "@/components/menu/top/top-menu.server";
 import { FooterMenu } from "@/components/menu/footer/footer-menu.server";
 import { StarterBanner } from "@/components/shell/starter-banner.client";
 import { starterBannerStrings } from "@/components/shell/starter-banner.i18n";
-import { ownId } from "@/lib/own-id";
 import { DrawerMenu } from "@/components/menu/drawer/drawer-menu.server";
 import { ViewportBadge } from "@/components/dev/viewport-badge.client";
 import { viewportBadgeWords } from "@/components/dev/viewport-badge.i18n";
@@ -183,7 +182,9 @@ export default async function LangLayout({
                 внутри него, а макет остаётся серверным и ничего не спрашивает. */}
             {/* 542 (владелец 2026-10-19): жёлтая вывеска стартера — та же, что у root («единственное что мы оставляем это выпадающее
                 жёлтая вывеска»); выезжает сразу, ссылка ведёт на «Подписку Claude Code» этого элемента в ядре. 🪦 314-2 её снимал. */}
-            <StarterBanner strings={starterBannerStrings(lang)} lang={lang} dropOnLoad href={process.env.ARCHITECT_URL && ownId() ? `${process.env.ARCHITECT_URL.replace(/\/+$/, "")}/${lang}/${ownId()}/build/subscription` : undefined} />
+            {/* 587-2 (владелец 2026-10-24, только у root): «update link to : https://architect.throughsongs.com/ru/passport/how-it-works | add
+                [v] Don't show again-> fix in localstorage». Адрес ядра — `ARCHITECT_URL` узла, без рукописного домена. */}
+            <StarterBanner strings={starterBannerStrings(lang)} lang={lang} dropOnLoad dismissible href={process.env.ARCHITECT_URL ? `${process.env.ARCHITECT_URL.replace(/\/+$/, "")}/${lang}/passport/how-it-works` : undefined} />
             {children}
             <FooterMenu lang={lang} />
             {/* Left & right slide-in drawers (shadcn Sheet), controlled by the same
