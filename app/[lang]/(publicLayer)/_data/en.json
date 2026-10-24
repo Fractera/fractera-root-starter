@@ -11,6 +11,7 @@
   "rootHome": {
     "pill": "Runs on your Claude subscription",
     "heading": "What will you build?",
+    "sub": "Describe it in your own words. The agent of your node builds it for you.",
     "placeholder": "Describe what to build…",
     "send": "Send",
     "chosen": "Chosen task",

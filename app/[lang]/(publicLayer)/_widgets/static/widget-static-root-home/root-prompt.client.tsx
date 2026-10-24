@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { CheckCircle2, X } from "lucide-react"
+import { AppWindow, Check, CheckCircle2, Factory, Network, Sparkles, X, type LucideIcon } from "lucide-react"
 import {
   PromptInput,
   PromptInputBody,
@@ -30,6 +30,9 @@ import type { RootHomeWords } from "./words"
 // каждого адреса своё. Таймеров и опроса нет: всё по действию человека и по одному возврату после входа.
 
 const DRAFT_KEY = "fractera:first-task"
+
+// Значок карточки по её id (одно семейство значков проекта — lucide).
+const CARD_ICONS: Record<string, LucideIcon> = { swarm: Network, fullstack: AppWindow, factory: Factory }
 
 type State = "idle" | "sending" | "accepted" | "not-architect" | "failed"
 
@@ -117,7 +120,14 @@ export function RootPrompt({ lang, words, voice, links }: {
     <div data-block="wznxc" className="flex w-full flex-col gap-4" data-root-home={state}>
       <PromptInput
         onSubmit={() => void send(combined)}
-        className="[&_[data-slot=input-group]]:transition-colors hover:[&_[data-slot=input-group]]:border-primary/60 focus-within:[&_[data-slot=input-group]]:border-primary focus-within:[&_[data-slot=input-group]]:ring-2 focus-within:[&_[data-slot=input-group]]:ring-primary/30"
+        className={cn(
+          // Поле — главный предмет экрана: крупнее, мягкая тень в тон акцента; наведение и фокус — свечение акцентом (владелец).
+          "[&_[data-slot=input-group]]:rounded-2xl [&_[data-slot=input-group]]:bg-card [&_[data-slot=input-group]]:transition-[border-color,box-shadow] [&_[data-slot=input-group]]:duration-300",
+          "[&_[data-slot=input-group]]:shadow-[0_12px_40px_-18px_color-mix(in_oklab,var(--primary)_45%,transparent)]",
+          "hover:[&_[data-slot=input-group]]:border-primary/50 hover:[&_[data-slot=input-group]]:shadow-[0_0_0_1px_color-mix(in_oklab,var(--primary)_35%,transparent),0_14px_44px_-14px_color-mix(in_oklab,var(--primary)_55%,transparent)]",
+          "focus-within:[&_[data-slot=input-group]]:border-primary focus-within:[&_[data-slot=input-group]]:shadow-[0_0_0_3px_color-mix(in_oklab,var(--primary)_22%,transparent),0_16px_48px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)]",
+          "[&_textarea]:min-h-24 [&_textarea]:text-base",
+        )}
       >
         <PromptInputBody>
           {chosen ? (
@@ -162,24 +172,38 @@ export function RootPrompt({ lang, words, voice, links }: {
       {v.note ? <p data-block="hb6bu" className="text-center text-xs text-muted-foreground">{v.note}</p> : null}
       {state === "not-architect" ? <p data-block="t60z0" className="text-center text-sm text-destructive" role="alert">{words.notArchitect}</p> : null}
       {state === "failed" ? <p data-block="eqxq1" className="text-center text-sm text-destructive" role="alert">{words.failed}</p> : null}
-      <div data-block="bki2e" className="grid w-full gap-3 sm:grid-cols-3">
-        {words.cards.map((c) => (
-          <Button
-            key={c.id}
-            type="button"
-            variant="outline"
-            onClick={() => setCard(card === c.id ? null : c.id)}
-            aria-pressed={card === c.id}
-            data-root-card={c.id}
-            className={cn(
-              "h-auto flex-col items-start gap-1.5 rounded-xl bg-card p-4 text-left whitespace-normal transition-colors hover:border-primary/60",
-              card === c.id ? "border-primary ring-2 ring-primary/30" : "border-border",
-            )}
-          >
-            <span className="text-sm font-semibold text-foreground">{c.title}</span>
-            <span className="text-xs leading-relaxed font-normal text-muted-foreground">{c.text}</span>
-          </Button>
-        ))}
+      {/* 587-3 (владелец 2026-10-24): «Количество строк заголовки каждой карточки зафиксируй два … в описании … четыре. Карточки должны
+          быть одинаково ровно выровнены»; свечение — при наведении и у выбранной. Строки зафиксированы высотой (`min-h` = 2 и 4 строки
+          при `leading-5`) и обрезкой (`line-clamp`), карточки одной высоты (сетка тянет, `h-full`). */}
+      <div data-block="bki2e" className="grid w-full items-stretch gap-3 pt-2 sm:grid-cols-3">
+        {words.cards.map((c) => {
+          const Icon = CARD_ICONS[c.id] ?? Sparkles
+          const on = card === c.id
+          return (
+            <Button
+              key={c.id}
+              type="button"
+              variant="outline"
+              onClick={() => setCard(on ? null : c.id)}
+              aria-pressed={on}
+              data-root-card={c.id}
+              className={cn(
+                "relative flex h-full flex-col items-start justify-start gap-3 rounded-2xl bg-card p-4 text-left whitespace-normal",
+                "transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+                on
+                  ? "border-primary shadow-[0_0_0_1px_var(--primary),0_12px_36px_-10px_color-mix(in_oklab,var(--primary)_55%,transparent)]"
+                  : "border-border hover:border-primary/50 hover:shadow-[0_0_0_1px_color-mix(in_oklab,var(--primary)_30%,transparent),0_10px_32px_-12px_color-mix(in_oklab,var(--primary)_45%,transparent)]",
+              )}
+            >
+              <span className={cn("flex size-9 items-center justify-center rounded-xl transition-colors", on ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary")}>
+                <Icon aria-hidden className="size-4.5" />
+              </span>
+              {on ? <Check aria-hidden className="absolute top-4 right-4 size-4 text-primary" /> : null}
+              <span className="line-clamp-2 min-h-10 text-sm leading-5 font-semibold text-foreground">{c.title}</span>
+              <span className="line-clamp-4 min-h-20 text-xs leading-5 font-normal text-muted-foreground">{c.text}</span>
+            </Button>
+          )
+        })}
       </div>
     </div>
   )

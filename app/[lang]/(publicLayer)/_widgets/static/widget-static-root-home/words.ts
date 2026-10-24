@@ -7,6 +7,8 @@ export type RootHomeCard = { id: string; title: string; text: string; task: stri
 export type RootHomeWords = {
   pill: string
   heading: string
+  /** Одна строка под заголовком, до 20 слов (навык taste, «hero stack discipline»). */
+  sub: string
   placeholder: string
   send: string
   chosen: string
