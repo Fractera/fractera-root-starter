@@ -1,9 +1,18 @@
 # Fractera Root — the site at the root of the node domain
 
-A custom element (owner, 2026-10-21: «Root это не нативный элемент, это кастомный элемент … должен оставаться пустым таким же как
-стандартный custom template»). Since **v2.0.0** (node step 549-6) it is the standard custom template `fractera-custom-item-starter`
-v0.3.124 with nothing of its own: passport id `root`, port 24683. The project shell `/api/shell/<lang>` and menu `/api/menu/<lang>` that the
-other elements read are the template doors. The former pages of root (v1.7.36) stay in this repository's history.
+A custom element. Since **v3.0.0** (node step 587, owner 2026-10-24: «мы сейчас удалим старый код, стартуем с кастомного шаблона, и
+немного допишем логики и дизайна чтобы это был именно стартовый шаблон корня») it is the tree of the standard custom template
+`fractera-custom-item-starter` v0.3.140 plus only three things of its own:
+- **the home** — an AI agent first screen (`app/[lang]/(publicLayer)/_widgets/static/widget-static-root-home/`, its README): a pill to the
+  Claude subscription, a heading, the ai-elements `PromptInput` with voice and three compact cards; the sent task survives sign-in and
+  reaches the core (`app/api/first-task/route.ts` → the core's `/api/node/first-task`), where the main agent's terminal or Telegram bot
+  takes it;
+- **the starter banner** (`components/shell/starter-banner.client.tsx`) links to the core's «Passport → How it works» by `ARCHITECT_URL`
+  and has a «Don't show again» box kept in `localStorage`;
+- own files: passport id `root`, port 24683 (`NODE-CONTRACT.json`), this README, package name `fractera-root`.
+Everything else must equal the template: a newer template version is brought over the same way (tree of the template + these files).
+The project shell `/api/shell/<lang>` and menu `/api/menu/<lang>` that the other elements read are the template doors. Former versions
+(v1.7.36 pages, v2.x the bare template) stay in this repository's history.
 
 ---
 
