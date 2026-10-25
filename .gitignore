@@ -107,3 +107,6 @@ public/fonts/
 
 # 549-6: the trial build (NEXT_DIST_DIR=.next-p), never in git
 .next-p/
+
+# REA studies of other products — the study pass (node step 594): someone else's code and pages, never in git
+/study/
