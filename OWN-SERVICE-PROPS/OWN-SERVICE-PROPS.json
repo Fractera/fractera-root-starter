@@ -1,8 +1,8 @@
 {
   "id": "root",
   "name": "root",
-  "shortDescription": "WEB4 element root, the site at the root of the node domain, from fractera-custom-item-starter v0.3.124 on 2026-10-21 (node step 549-6). Its capabilities are written by its agent from Settings → Capabilities description.",
-  "longDescription": "",
+  "shortDescription": "The main site of the project at the root of the node's domain; its home is the first screen of the node's AI agent, where a person types or says a task and it reaches the main agent.",
+  "longDescription": "The site at the root of the node's domain: a custom element on the standard custom template and the place where the project's main site grows. Its home is an AI agent first screen: a link to the Claude subscription, a heading, a prompt box with voice input and three cards. A task sent there survives sign-in and goes to the core (/api/first-task, then the core's /api/node/first-task), where the main agent picks it up in its terminal or its Telegram bot. A starter banner leads to the core's Passport, How it works. The other elements read the project shell and menu from it (/api/shell/<lang>, /api/menu/<lang>).",
   "accepts": "",
   "returns": "",
   "designSkill": "impeccable",
