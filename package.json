@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "private": true,
   "scripts": {
+    "need": "node scripts/need.mjs",
     "check:routes": "node scripts/check-routes.mjs",
     "node": "node scripts/node.mjs",
     "rea": "node scripts/rea.mjs",
