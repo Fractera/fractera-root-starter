@@ -175,7 +175,8 @@ export function RootPrompt({ lang, words, voice, links }: {
       {state === "failed" ? <p data-block="eqxq1" className="text-center text-sm text-destructive" role="alert">{words.failed}</p> : null}
       {/* 587-3 (владелец 2026-10-24): «Количество строк заголовки каждой карточки зафиксируй два … в описании … четыре. Карточки должны
           быть одинаково ровно выровнены»; свечение — при наведении и у выбранной. Строки зафиксированы высотой (`min-h` = 2 и 4 строки
-          при `leading-5`) и обрезкой (`line-clamp`), карточки одной высоты (сетка тянет, `h-full`). */}
+          при `leading-5`) и обрезкой (`line-clamp`), карточки одной высоты — их тянет сетка (`items-stretch`). 🔒 `h-auto`, не `h-full`:
+          Safari на Mac считает 100% высоты кнопки не от ряда сетки, и карточки вытягивались на экран, наезжая на панель ниже. */}
       <div data-block="bki2e" className="grid w-full items-stretch gap-3 pt-2 sm:grid-cols-3">
         {words.cards.map((c) => {
           const Icon = CARD_ICONS[c.id] ?? Sparkles
@@ -189,7 +190,7 @@ export function RootPrompt({ lang, words, voice, links }: {
               aria-pressed={on}
               data-root-card={c.id}
               className={cn(
-                "relative flex h-full flex-col items-start justify-start gap-3 rounded-2xl bg-card p-4 text-left whitespace-normal",
+                "relative flex h-auto flex-col items-start justify-start gap-3 rounded-2xl bg-card p-4 text-left whitespace-normal",
                 "transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:translate-y-0",
                 on
                   ? "border-primary shadow-[0_0_0_1px_var(--primary),0_12px_36px_-10px_color-mix(in_oklab,var(--primary)_55%,transparent)]"
