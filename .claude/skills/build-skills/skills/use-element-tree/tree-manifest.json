@@ -524,7 +524,7 @@
   ".claude/skills/own-service-props-skills/skills/telegram-channel",
   ".claude/skills/shadcn",
   ".claude/skills/workspace-skills/skills/order-summary",
-  ".claude/skills/workspace-skills/skills/schedule-cron-automations-calendar-reminders-recurring-and-one-time-tasks",
+  ".claude/skills/own-service-props-skills/skills/schedule-cron-automations-calendar-reminders-recurring-and-one-time-tasks",
   ".claude/skills/workspace-skills/skills/use-a2a",
   "APP-CONFIG",
   "DESIGN-CONFIG",
