@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react"
 import { ChevronDown } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { isTemporaryHostname } from "./temporary-host"
 
 // ЧТО ЖДЁТ АРХИТЕКТОРА — ВНУТРИ ЯЩИКА «МОЙ АККАУНТ» ЯДРА (узел, шаг 356-1). Слово владельца 2026-10-01: «перенести её в выдвижной
 // ящик мой аккаунт под страницы архитектора … раскрывающиеся список … меню третьего уровня в котором будут перечислены терминалы и
@@ -15,6 +16,8 @@ import { cn } from "@/lib/utils"
 // свёрнуты). Нечего — ни точки, ни списков. Свежесть — открытие страницы, открытие ящика, возврат на вкладку; таймеров нет
 // (тот же выбор владельца, что у полосы 345). Закрыть терминал здесь нельзя — только на его странице.
 // Источник — дверь ядра `/api/node/attention`; у сайта и других служб адреса нет, и этот код у них не включается.
+// 652-2 (2026-11-05): на временном адресе дверь отказывает намеренно (терминалы и предпросмотры — не для ссылки, которую пересылают),
+// и каждая страница пульта там печатала в консоль 403. Там её не спрашивают: точки и списков нет, как и было.
 
 export type AttentionItem = { id: string; name: string; href: string; commit?: string | null }
 export type Attention = { terminals: AttentionItem[]; previews: AttentionItem[] }
@@ -24,7 +27,7 @@ export type AttentionWords = { terminals: string; deployments: string; go: strin
 export function useAttention(url: string | undefined): { attention: Attention | null; refresh: () => void } {
   const [attention, setAttention] = useState<Attention | null>(null)
   const refresh = useCallback(() => {
-    if (!url) return
+    if (!url || isTemporaryHostname(window.location.hostname)) return
     fetch(url, { cache: "no-store", credentials: "include" })
       .then((r) => (r.ok ? r.json() : null))
       .then((d: ({ ok?: boolean } & Partial<Attention>) | null) =>
