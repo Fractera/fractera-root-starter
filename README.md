@@ -11,6 +11,9 @@ A custom element. Since **v3.0.0** (node step 587, owner 2026-10-24: «мы се
   and has a «Don't show again» box kept in `localStorage`;
 - own files: passport id `root`, port 24683 (`NODE-CONTRACT.json`), this README, package name `fractera-root`.
 Everything else must equal the template: a newer template version is brought over the same way (tree of the template + these files).
+Since **v3.0.23** (node step 654-6) root opens the node's stores with its own key `ELEMENT_KEY` like every custom element — its own
+database file, files, vectors, graph spaces and memory, never a neighbour's (`npm run stores`, the skill `use-own-stores`); the node's
+data key `DATA_SECRET` is no longer given to it.
 The project shell `/api/shell/<lang>` and menu `/api/menu/<lang>` that the other elements read are the template doors. Former versions
 (v1.7.36 pages, v2.x the bare template) stay in this repository's history.
 
