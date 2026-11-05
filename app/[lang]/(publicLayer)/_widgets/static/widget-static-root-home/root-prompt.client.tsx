@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { AppWindow, Check, CheckCircle2, Factory, Network, Sparkles, Users, X, type LucideIcon } from "lucide-react"
+import { AppWindow, Check, CheckCircle2, Factory, Megaphone, Network, Sparkles, Target, Users, X, type LucideIcon } from "lucide-react"
 import {
   PromptInput,
   PromptInputBody,
@@ -32,7 +32,7 @@ import type { RootHomeWords } from "./words"
 const DRAFT_KEY = "fractera:first-task"
 
 // Значок карточки по её id (одно семейство значков проекта — lucide). `integrator` — четвёртая карточка (узел, шаг 649-2).
-const CARD_ICONS: Record<string, LucideIcon> = { swarm: Network, fullstack: AppWindow, factory: Factory, integrator: Users }
+const CARD_ICONS: Record<string, LucideIcon> = { swarm: Network, fullstack: AppWindow, factory: Factory, integrator: Users, content: Megaphone, personal: Target }
 
 type State = "idle" | "sending" | "accepted" | "not-architect" | "failed"
 
@@ -181,7 +181,7 @@ export function RootPrompt({ lang, words, voice, links }: {
           Safari на Mac считает 100% высоты кнопки не от ряда сетки, и карточки вытягивались на экран, наезжая на панель ниже. */}
       {/* 649-2 (владелец 2026-11-05: «создать четвёртую вкладку интегратора агентов»): четыре в ряд на компьютере, по две на
           планшете, одна на телефоне. */}
-      <div data-block="bki2e" className="grid w-full items-stretch gap-3 pt-2 sm:grid-cols-2 lg:grid-cols-4">
+      <div data-block="bki2e" className="grid w-full items-stretch gap-3 pt-2 sm:grid-cols-2 lg:grid-cols-3">
         {words.cards.map((c) => {
           const Icon = CARD_ICONS[c.id] ?? Sparkles
           const on = card === c.id

@@ -22,7 +22,7 @@
         "title": "Create a Web4 swarm of A2A agents",
         "text": "The agents of your elements find each other and agents of other nodes, agree on the work and are paid through Lagrix.",
         "task": "I want to create a Web4 swarm of A2A agents.",
-        "more": "Choose this to work more efficiently and get paid for your expertise without hunting for clients. Create an agent by voice: a coach or a nutritionist for yourself, a driver if you have a car, a cook if you sell your dishes. On the free Web4 internet every person has agents for any task. They find other agents and agree on the work on your behalf, with no platform in between."
+        "more": "Choose this to work more efficiently and get paid for your expertise without hunting for clients. Create an agent by voice: a driver if you have a car, a cook if you sell your dishes. On the free Web4 internet every person has agents for any task. They find other agents and agree on the work on your behalf, with no platform in between."
       },
       {
         "id": "fullstack",
@@ -44,6 +44,20 @@
         "text": "One architect gives everyone an element of their own. A person creates a Telegram bot and simply talks to the agent, never opening the computer.",
         "task": "I want to create agents for my family or my team.",
         "more": "Many people have heard what AI can do but never let it into their lives: even ChatGPT feels hard to them, and they cannot build an agent of their own on the usual platforms. Here one architect is enough. They set up an element for each person; the person signs in as its administrator, creates a Telegram bot and from then on simply talks to it. The agent becomes a deep memory, a personal coach, a household budget or a teacher of a foreign language, programming and AI. It can also sell the person's services: rides, help around the house, home cooking to order. Everyone works on their own Claude subscription. Choose this to make the life of a family or a team more efficient, with no central servers living at your expense."
+      },
+      {
+        "id": "content",
+        "title": "Create a content factory",
+        "text": "A channel for every platform, author portraits and posts in their voices. The node reads the response to every publication and catches hot topics first.",
+        "task": "I want to create a content factory for my channels.",
+        "more": "People run their social networks from a chat window, and it works. A node does more: every channel gets its own agent, an element of author portraits writes in the voices you admire, the numbers of every post come back and show what works on each platform, and a scout watches social networks, Telegram channels, YouTube and the news to catch a topic while it rises. Every publication waits for your yes."
+      },
+      {
+        "id": "personal",
+        "title": "Create your own agents",
+        "text": "A coach, a dietitian, an economist, an investor, a keeper of important dates. Say in Telegram what you need, and the agent finds the best way.",
+        "task": "I want my own agents to help me with my goals.",
+        "more": "Your own agents work for you alone: a coach for your training, a dietitian for your meals, an economist for your budget, an investor for your savings, a keeper of the dates you must not miss, like a tax return or a car service. Each remembers everything you tell it, keeps your photos and documents and talks to you from your phone. Say what you need: the agent looks for the best method, proposes it, and then works in the chat or on a page of its own."
       }
     ],
     "accepted": {

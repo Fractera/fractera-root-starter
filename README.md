@@ -4,7 +4,7 @@ A custom element. Since **v3.0.0** (node step 587, owner 2026-10-24: «мы се
 немного допишем логики и дизайна чтобы это был именно стартовый шаблон корня») it is the tree of the standard custom template
 `fractera-custom-item-starter` v0.3.140 plus only three things of its own:
 - **the home** — an AI agent first screen (`app/[lang]/(publicLayer)/_widgets/static/widget-static-root-home/`, its README): a pill to the
-  Claude subscription, a heading, the ai-elements `PromptInput` with voice and three compact cards; the sent task survives sign-in and
+  Claude subscription, a heading, the ai-elements `PromptInput` with voice and six compact cards in two rows (658-3); the sent task survives sign-in and
   reaches the core (`app/api/first-task/route.ts` → the core's `/api/node/first-task`), where the main agent's terminal or Telegram bot
   takes it;
 - **the starter banner** (`components/shell/starter-banner.client.tsx`) links to the core's «Passport → How it works» by `ARCHITECT_URL`
