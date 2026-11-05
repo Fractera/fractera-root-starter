@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { AppWindow, Check, CheckCircle2, Factory, Network, Sparkles, X, type LucideIcon } from "lucide-react"
+import { AppWindow, Check, CheckCircle2, Factory, Network, Sparkles, Users, X, type LucideIcon } from "lucide-react"
 import {
   PromptInput,
   PromptInputBody,
@@ -31,8 +31,8 @@ import type { RootHomeWords } from "./words"
 
 const DRAFT_KEY = "fractera:first-task"
 
-// Значок карточки по её id (одно семейство значков проекта — lucide).
-const CARD_ICONS: Record<string, LucideIcon> = { swarm: Network, fullstack: AppWindow, factory: Factory }
+// Значок карточки по её id (одно семейство значков проекта — lucide). `integrator` — четвёртая карточка (узел, шаг 649-2).
+const CARD_ICONS: Record<string, LucideIcon> = { swarm: Network, fullstack: AppWindow, factory: Factory, integrator: Users }
 
 type State = "idle" | "sending" | "accepted" | "not-architect" | "failed"
 
@@ -105,7 +105,7 @@ export function RootPrompt({ lang, words, voice, links }: {
 
   if (state === "accepted") {
     return (
-      <div data-block="v4x9t" className="flex w-full flex-col items-center gap-4 rounded-xl border border-primary/40 bg-primary/5 p-6 text-center" data-root-home="accepted">
+      <div data-block="v4x9t" className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 rounded-xl border border-primary/40 bg-primary/5 p-6 text-center" data-root-home="accepted">
         <CheckCircle2 aria-hidden className="size-8 text-primary" />
         <p data-block="jayw3" className="text-lg font-semibold text-foreground">{words.accepted.title}</p>
         <p data-block="heyiz" className="max-w-xl text-sm text-muted-foreground">{words.accepted.text}</p>
@@ -122,6 +122,8 @@ export function RootPrompt({ lang, words, voice, links }: {
       <PromptInput
         onSubmit={() => void send(combined)}
         className={cn(
+          // 649-1: поле держит меру чтения, лента под ним — ширину переключателя подвала.
+          "mx-auto max-w-3xl",
           // Поле — главный предмет экрана: крупнее, мягкая тень в тон акцента; наведение и фокус — свечение акцентом (владелец).
           "[&_[data-slot=input-group]]:rounded-2xl [&_[data-slot=input-group]]:bg-card [&_[data-slot=input-group]]:transition-[border-color,box-shadow] [&_[data-slot=input-group]]:duration-300",
           "[&_[data-slot=input-group]]:shadow-[0_12px_40px_-18px_color-mix(in_oklab,var(--primary)_45%,transparent)]",
@@ -177,7 +179,9 @@ export function RootPrompt({ lang, words, voice, links }: {
           быть одинаково ровно выровнены»; свечение — при наведении и у выбранной. Строки зафиксированы высотой (`min-h` = 2 и 4 строки
           при `leading-5`) и обрезкой (`line-clamp`), карточки одной высоты — их тянет сетка (`items-stretch`). 🔒 `h-auto`, не `h-full`:
           Safari на Mac считает 100% высоты кнопки не от ряда сетки, и карточки вытягивались на экран, наезжая на панель ниже. */}
-      <div data-block="bki2e" className="grid w-full items-stretch gap-3 pt-2 sm:grid-cols-3">
+      {/* 649-2 (владелец 2026-11-05: «создать четвёртую вкладку интегратора агентов»): четыре в ряд на компьютере, по две на
+          планшете, одна на телефоне. */}
+      <div data-block="bki2e" className="grid w-full items-stretch gap-3 pt-2 sm:grid-cols-2 lg:grid-cols-4">
         {words.cards.map((c) => {
           const Icon = CARD_ICONS[c.id] ?? Sparkles
           const on = card === c.id

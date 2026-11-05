@@ -14,6 +14,11 @@ import { rootHomeWords } from "./words"
 // карточки и центр — бриф владельца (образец v0), поэтому запреты навыка на них здесь не действуют.
 // 🔒 Страница предрендерена: сервер отдаёт заголовок, карточки и поле в HTML; живое (выбор карточки, голос, отправка) — островок.
 // 🔒 Адрес ядра — `ARCHITECT_URL` узла (как у баннера стартера в `app/[lang]/layout.tsx`), без рукописного домена.
+// 🔒 ШИРИНА — ЛЕНТА СТРАНИЦЫ, А НЕ ЧИСЛО (узел, шаг 649-1). Владелец 2026-11-05: «внизу в подвале есть кнопка сделать экран шире и
+// сделать экран уже она не используется а должна. И сейчас лента в центральной странице выглядит очень узкой … не поместится в ней
+// четыре карточки». ✗ Было `max-w-[760px]`: на экране 1440 лента 760, кнопка подвала не двигала ничего. Теперь колонка носит
+// `data-app-column` (80rem, узкая — 64rem, `styles/globals.css`), карточки и рассказ идут по ней, а поле ввода держит меру чтения
+// `max-w-3xl` (как у первого экрана v0). Сторож — `check-layout`, правило «bare-widget-without-column».
 const RISE = "animate-in fade-in slide-in-from-bottom-2 duration-700 fill-mode-both motion-reduce:animate-none"
 
 export function RootHome({ lang }: { lang: string }) {
@@ -27,7 +32,7 @@ export function RootHome({ lang }: { lang: string }) {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px] bg-[radial-gradient(55%_60%_at_50%_0%,color-mix(in_oklab,var(--primary)_16%,transparent),transparent_70%)]"
       />
-      <div data-block="r7hq2" className="mx-auto flex min-h-[calc(100dvh-8rem)] w-full max-w-[760px] flex-col items-center px-4 pt-16 pb-16 md:pt-24">
+      <div data-block="r7hq2" data-app-column className="flex min-h-[calc(100dvh-8rem)] flex-col items-center px-4 pt-16 pb-16 md:pt-24">
         <a
           href={at("/build/subscription")}
           className={`${RISE} group inline-flex items-center gap-2 rounded-full border border-border bg-background/80 py-1 pr-2 pl-1 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:border-primary/50 hover:text-foreground`}

@@ -37,6 +37,13 @@
         "text": "Make your own versions of popular products: the node studies how they work with reverse engineering and builds yours on their ideas.",
         "task": "I want to create an app factory with my own versions of popular products.",
         "more": "It may seem everything has been invented already: teams worked on many products for years, and we are grateful for their ideas. Ideas and principles are not protected by copyright, so building your own on them is legal. The node studies how a popular product works, and in a few hours you assemble your own solution with your own code and design. Choose this to create ten or a hundred such products on a server or a home computer."
+      },
+      {
+        "id": "integrator",
+        "title": "Create agents for a family or a team",
+        "text": "One architect gives everyone an element of their own. A person creates a Telegram bot and simply talks to the agent, never opening the computer.",
+        "task": "I want to create agents for my family or my team.",
+        "more": "Many people have heard what AI can do but never let it into their lives: even ChatGPT feels hard to them, and they cannot build an agent of their own on the usual platforms. Here one architect is enough. They set up an element for each person; the person signs in as its administrator, creates a Telegram bot and from then on simply talks to it. The agent becomes a deep memory, a personal coach, a household budget or a teacher of a foreign language, programming and AI. It can also sell the person's services: rides, help around the house, home cooking to order. Everyone works on their own Claude subscription. Choose this to make the life of a family or a team more efficient, with no central servers living at your expense."
       }
     ],
     "accepted": {

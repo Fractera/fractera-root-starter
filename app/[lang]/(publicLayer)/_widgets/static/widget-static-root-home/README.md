@@ -1,7 +1,7 @@
-# widget-static-root-home — the home of root: an AI agent first screen (node step 587)
+# widget-static-root-home — the home of root: an AI agent first screen (node steps 587, 649)
 
 The home page of the root element. A pill to the Claude subscription in the core, a heading, the ai-elements `PromptInput` with voice
-and a send button, and three compact cards under it. A click on a card selects it and puts its task above the field as a chip; the
+and a send button, and four compact cards under it: the Web4 swarm, the full-stack app, the app factory and the integrator (649-2). A click on a card selects it and puts its task above the field as a chip; the
 text sent is the card's task plus the person's words.
 
 ## Where it lives
@@ -19,6 +19,11 @@ text sent is the card's task plus the person's words.
    Telegram bot then takes the task (core, step 587-5).
 
 The browser alone cannot carry the task: the terminal and Telegram live on the core's address, and browser storage is per address.
+
+## Width
+The column carries `data-app-column`: 80rem, 64rem when the footer's width button is pressed, the whole screen on a phone
+(`styles/globals.css`). The field keeps `max-w-3xl`; the cards (four in a row from `lg`, two from `sm`) and the story under them follow
+the column. A number for the column's width is caught by `check-layout` (`bare-widget-without-column`, step 649-1).
 
 ## Changing it
 Texts — `_data/en.json` and `_data/ru.json` (`rootHome`); the phrase «From idea to money 99% faster» on the full-stack card is the

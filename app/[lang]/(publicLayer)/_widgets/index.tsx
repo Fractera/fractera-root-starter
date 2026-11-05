@@ -13,6 +13,6 @@ export const WIDGETS: Record<string, (lang: string) => ReactNode> = {
   'widget-static-policy-analytics': (lang) => <PolicyAnalytics lang={lang} />,
   // Главная эталонного стартового шаблона — одна надпись по центру (узел, шаг 542).
   'widget-static-reference-title': (lang) => <ReferenceTitle lang={lang} />,
-  // Главная root — первый экран ИИ-агента с тремя карточками (узел, шаг 587-3).
+  // Главная root — первый экран ИИ-агента с четырьмя карточками (узел, шаги 587-3 и 649-2).
   'widget-static-root-home': (lang) => <RootHome lang={lang} />,
 }

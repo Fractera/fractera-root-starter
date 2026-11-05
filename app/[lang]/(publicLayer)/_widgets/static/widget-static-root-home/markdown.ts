@@ -1,6 +1,6 @@
 import { rootHomeWords } from "./words"
 
-// Главная root для машин (markdown-копия страницы и llms-full.txt): заголовок и три карточки.
+// Главная root для машин (markdown-копия страницы и llms-full.txt): заголовок и карточки.
 export function markdown(lang: string): string {
   const w = rootHomeWords(lang)
   if (!w) return ""
