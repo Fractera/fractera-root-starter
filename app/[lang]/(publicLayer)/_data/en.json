@@ -62,11 +62,9 @@
         "more": "Your own agents work for you alone: a coach for your training, a dietitian for your meals, an economist for your budget, an investor for your savings, a keeper of the dates you must not miss, like a tax return or a car service. Each remembers everything you tell it, keeps your photos and documents and talks to you from your phone. Say what you need: the agent looks for the best method, proposes it, and then works in the chat or on a page of its own."
       }
     ],
-    "accepted": {
-      "title": "Task accepted",
-      "text": "It waits for your agent in the node. Connect Claude Code, and the agent starts with this task. Or connect Telegram, and the bot asks whether to start it.",
-      "claude": "Connect Claude Code",
-      "telegram": "Connect Telegram"
+    "reply": {
+      "text": "Your request will be sent to development as soon as you finish signing in to Claude Code. You will now be taken to a page where you can sign in. Below you will find a button to continue the conversation in the terminal or in Telegram (recommended).",
+      "continue": "Continue"
     },
     "notArchitect": "Only the architect of this node can hand a task to its agent. Sign in with the architect account.",
     "failed": "The node did not take the task. Try again."

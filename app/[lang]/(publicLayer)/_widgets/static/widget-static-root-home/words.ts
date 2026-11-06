@@ -18,7 +18,8 @@ export type RootHomeWords = {
   prev: string
   next: string
   cards: RootHomeCard[]
-  accepted: { title: string; text: string; claude: string; telegram: string }
+  /** 665: ответ после отправки — печатается как поток (без модели); `continue` ведёт на вход в подписку Claude Code в ядре. */
+  reply: { text: string; continue: string }
   notArchitect: string
   failed: string
 }

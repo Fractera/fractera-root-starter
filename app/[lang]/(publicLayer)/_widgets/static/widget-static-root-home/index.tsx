@@ -55,7 +55,7 @@ export function RootHome({ lang }: { lang: string }) {
             lang={lang}
             words={w}
             voice={voiceStrings(lang)}
-            links={{ claude: at("/build/subscription"), telegram: at("/build/telegram") }}
+            links={{ claude: at("/build/subscription") }}
           />
         </div>
       </div>

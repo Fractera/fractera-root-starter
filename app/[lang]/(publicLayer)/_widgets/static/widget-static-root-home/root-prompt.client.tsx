@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { AppWindow, Check, CheckCircle2, ChevronLeft, ChevronRight, Factory, Megaphone, Network, Sparkles, Target, Users, X, type LucideIcon } from "lucide-react"
+import { AppWindow, Check, ChevronLeft, ChevronRight, Factory, Megaphone, Network, Sparkles, Target, Users, X, type LucideIcon } from "lucide-react"
 import {
   PromptInput,
   PromptInputBody,
@@ -11,11 +11,12 @@ import {
   PromptInputTextarea,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { MicIcon } from "@/components/form/mic-icon"
 import { useVoiceRecorder, type AllVoiceStrings } from "@/_tools/tool-voice-input/client/use-voice-recorder"
 import { signInRedirectUrl } from "@/lib/runtime-urls"
 import { cn } from "@/lib/utils"
+import { RootReply } from "./root-reply.client"
 import type { RootHomeWords } from "./words"
 
 // ОСТРОВОК ГЛАВНОЙ ROOT (узел, шаги 587-3 и 587-4).
@@ -50,26 +51,33 @@ export function RootPrompt({ lang, words, voice, links }: {
   lang: string
   words: RootHomeWords
   voice: AllVoiceStrings
-  links: { claude: string; telegram: string }
+  links: { claude: string }
 }) {
   const [text, setText] = useState("")
+  // 665: что ушло ядру — пузырём человека над ответом (и после возврата со входа, когда задание пришло из черновика).
+  const [sent, setSent] = useState("")
   // 587-3 (владелец 2026-10-24): «По умолчанию пусть первая карточка будет подсвечена».
   const [card, setCard] = useState<string | null>(words.cards[0]?.id ?? null)
   const [state, setState] = useState<State>("idle")
   const areaRef = useRef<HTMLTextAreaElement>(null)
   const v = useVoiceRecorder({ targetRef: areaRef, value: text, onChange: setText, lang, strings: voice })
   const chosen = words.cards.find((c) => c.id === card) ?? null
-  // 662-4: карусель — лента, удержание карточки и автопрокрутка раз в 3 с.
+  // 662-4: карусель — лента и автопрокрутка раз в 3 с.
+  // 665 (владелец 2026-11-06): «анимация прекращается сразу после того как мы нажимаем на любую карточку и в дальнейшем прокрутка
+  // возможно только в ручном режиме. Это позволит сохранить выбранный режим в Input». ✗ Замер 665: клик по «factory» — через 3,5 с
+  // выбрана «integrator», через 7 с «content», и стрелка ленту не останавливала. Теперь первое нажатие на карточку или стрелку
+  // выключает автопрокрутку до перезагрузки страницы.
   const track = useRef<HTMLDivElement>(null)
-  const [held, setHeld] = useState(false)
+  const [auto, setAuto] = useState(true)
   const downAt = useRef(0)
   const step = (d: number) => {
+    setAuto(false)
     const n = words.cards.length
     const at = Math.max(0, words.cards.findIndex((c) => c.id === card))
     setCard(words.cards[(at + d + n) % n]?.id ?? null)
   }
   useEffect(() => {
-    if (card === null || held || text.trim() !== "") return
+    if (!auto || card === null || text.trim() !== "") return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
     const t = window.setTimeout(() => {
       const n = words.cards.length
@@ -77,7 +85,7 @@ export function RootPrompt({ lang, words, voice, links }: {
       setCard(words.cards[(at + 1) % n]?.id ?? null)
     }, 3000)
     return () => window.clearTimeout(t)
-  }, [card, held, text, words.cards])
+  }, [auto, card, text, words.cards])
   useEffect(() => {
     const box = track.current
     const el = box?.querySelector<HTMLElement>(`[data-root-slide="${card}"]`)
@@ -103,7 +111,7 @@ export function RootPrompt({ lang, words, voice, links }: {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ text: task }),
     }).catch(() => null)
-    if (r?.ok) { dropDraft(); setState("accepted"); return }
+    if (r?.ok) { dropDraft(); setSent(task); setState("accepted"); return }
     setState(r?.status === 403 ? "not-architect" : "failed")
   }
 
@@ -130,19 +138,9 @@ export function RootPrompt({ lang, words, voice, links }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (state === "accepted") {
-    return (
-      <div data-block="v4x9t" className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 rounded-xl border border-primary/40 bg-primary/5 p-6 text-center" data-root-home="accepted">
-        <CheckCircle2 aria-hidden className="size-8 text-primary" />
-        <p data-block="jayw3" className="text-lg font-semibold text-foreground">{words.accepted.title}</p>
-        <p data-block="heyiz" className="max-w-xl text-sm text-muted-foreground">{words.accepted.text}</p>
-        <div data-block="z341y" className="flex flex-wrap justify-center gap-2">
-          <a href={links.claude} className={buttonVariants({ size: "sm" })}>{words.accepted.claude}</a>
-          <a href={links.telegram} className={buttonVariants({ variant: "outline", size: "sm" })}>{words.accepted.telegram}</a>
-        </div>
-      </div>
-    )
-  }
+  // 665 (владелец 2026-11-06): вместо карточки «Задание принято» — ответ без модели, напечатанный как поток, и «Продолжить» на вход в подписку.
+  if (state === "accepted") return <RootReply task={sent} text={words.reply.text} cta={words.reply.continue} href={links.claude} />
+
 
   return (
     <div data-block="wznxc" className="flex w-full flex-col gap-4" data-root-home={state}>
@@ -212,7 +210,8 @@ export function RootPrompt({ lang, words, voice, links }: {
           котором если пользователь не участвует в прокрутке каждые 3 секунды карточки сдвигаются нижний блок с информации обновляется, при
           нажатии на какую-либо карточку проигрывание приостанавливается пока пользователю удерживает эту карточку»): лента по одной карточке
           на телефоне, по две на планшете, по три на компьютере; каждые 3 с выбирается следующая (рассказ ниже следует за ней). Стоит, пока
-          карточку держат, пока в поле есть текст (иначе менялась бы задача под рукой человека), когда выбор снят и при «меньше движения». */}
+          в поле есть текст (иначе менялась бы задача под рукой человека), когда выбор снят и при «меньше движения»; 665 — первое нажатие
+          на карточку или стрелку останавливает её насовсем, дальше лента листается только руками. */}
       <div data-block="bki2e" className="relative w-full pt-2" data-root-carousel>
         <div data-block="bki2f" ref={track} className="-mx-2 flex snap-x snap-mandatory scroll-px-2 items-stretch gap-3 overflow-x-auto scroll-smooth px-2 pt-1 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {words.cards.map((c) => {
@@ -225,10 +224,7 @@ export function RootPrompt({ lang, words, voice, links }: {
                 variant="outline"
                 // 662-4: отпускание после удержания — не клик: выбор остаётся (иначе удержание снимало бы карточку).
                 onClick={() => { if (Date.now() - downAt.current > 400) return; setCard(on ? null : c.id) }}
-                onPointerDown={() => { downAt.current = Date.now(); setHeld(true) }}
-                onPointerUp={() => setHeld(false)}
-                onPointerLeave={() => setHeld(false)}
-                onPointerCancel={() => setHeld(false)}
+                onPointerDown={() => { downAt.current = Date.now(); setAuto(false) }}
                 aria-pressed={on}
                 data-root-card={c.id}
                 className={cn(

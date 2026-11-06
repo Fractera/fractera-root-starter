@@ -7,6 +7,7 @@ text sent is the card's task plus the person's words.
 ## Where it lives
 - `index.tsx` — the server part (prerendered): pill, heading, cards and field are in the HTML. The core address is `ARCHITECT_URL`.
 - `root-prompt.client.tsx` — the island: card choice, voice (`useVoiceRecorder`), sending.
+- `root-reply.client.tsx` — what the island shows once the core has the task: the person's message, the typed reply, «Continue» (665).
 - `words.ts` — the words come from the page data `(publicLayer)/_data/<lang>.json` → `rootHome` (en and ru).
 - `markdown.ts` — the same heading and cards for machines.
 
@@ -15,8 +16,10 @@ text sent is the card's task plus the person's words.
    node becomes the architect) → back to this page.
 2. With an architect session the island posts the task to this site's door `POST /api/first-task`; the door checks the architect role and
    passes the task to the core `POST /api/node/first-task` with the node key. The core keeps one task in `data/node/first-task.json`.
-3. The page shows «Task accepted» with links to connect Claude Code and Telegram in the core. The terminal of the main agent or the
-   Telegram bot then takes the task (core, step 587-5).
+3. The page shows the sent text as the person's message and a reply under it, typed out like a model's stream but with no model at all
+   (step 665, the owner's words in `rootHome.reply`): the request goes to development right after the Claude Code sign-in. «Continue»
+   opens the core's subscription page (`/build/subscription`); there is no timer that navigates by itself, and «reduce motion» shows the
+   whole reply at once. The terminal of the main agent or the Telegram bot then takes the task (core, step 587-5).
 
 The browser alone cannot carry the task: the terminal and Telegram live on the core's address, and browser storage is per address.
 
