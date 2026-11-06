@@ -14,6 +14,9 @@ export type RootHomeWords = {
   send: string
   chosen: string
   clear: string
+  /** 662-4: подписи стрелок карусели. */
+  prev: string
+  next: string
   cards: RootHomeCard[]
   accepted: { title: string; text: string; claude: string; telegram: string }
   notArchitect: string

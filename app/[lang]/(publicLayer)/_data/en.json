@@ -16,6 +16,8 @@
     "send": "Send",
     "chosen": "Chosen task",
     "clear": "Remove the chosen task",
+    "prev": "Previous card",
+    "next": "Next card",
     "cards": [
       {
         "id": "swarm",

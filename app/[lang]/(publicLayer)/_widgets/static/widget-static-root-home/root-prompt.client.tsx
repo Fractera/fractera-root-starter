@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { AppWindow, Check, CheckCircle2, Factory, Megaphone, Network, Sparkles, Target, Users, X, type LucideIcon } from "lucide-react"
+import { AppWindow, Check, CheckCircle2, ChevronLeft, ChevronRight, Factory, Megaphone, Network, Sparkles, Target, Users, X, type LucideIcon } from "lucide-react"
 import {
   PromptInput,
   PromptInputBody,
@@ -59,6 +59,33 @@ export function RootPrompt({ lang, words, voice, links }: {
   const areaRef = useRef<HTMLTextAreaElement>(null)
   const v = useVoiceRecorder({ targetRef: areaRef, value: text, onChange: setText, lang, strings: voice })
   const chosen = words.cards.find((c) => c.id === card) ?? null
+  // 662-4: карусель — лента, удержание карточки и автопрокрутка раз в 3 с.
+  const track = useRef<HTMLDivElement>(null)
+  const [held, setHeld] = useState(false)
+  const downAt = useRef(0)
+  const step = (d: number) => {
+    const n = words.cards.length
+    const at = Math.max(0, words.cards.findIndex((c) => c.id === card))
+    setCard(words.cards[(at + d + n) % n]?.id ?? null)
+  }
+  useEffect(() => {
+    if (card === null || held || text.trim() !== "") return
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+    const t = window.setTimeout(() => {
+      const n = words.cards.length
+      const at = words.cards.findIndex((c) => c.id === card)
+      setCard(words.cards[(at + 1) % n]?.id ?? null)
+    }, 3000)
+    return () => window.clearTimeout(t)
+  }, [card, held, text, words.cards])
+  useEffect(() => {
+    const box = track.current
+    const el = box?.querySelector<HTMLElement>(`[data-root-slide="${card}"]`)
+    if (!box || !el) return
+    // Текущая карточка — первая в ленте («карточки сдвигаются»); у конца ленты браузер останавливается сам. Двигается только лента,
+    // страница по вертикали — нет. ✗ Проверка «уже видна» ошибалась посреди плавной прокрутки и оставляла карточку за краем.
+    box.scrollTo({ left: el.offsetLeft - box.offsetLeft, behavior: "smooth" })
+  }, [card])
   const combined = [chosen?.task, text.trim()].filter(Boolean).join("\n\n")
 
   /** Вошёл ли человек и архитектор ли он: 401 — нет входа, иначе роли сессии. */
@@ -181,35 +208,55 @@ export function RootPrompt({ lang, words, voice, links }: {
           Safari на Mac считает 100% высоты кнопки не от ряда сетки, и карточки вытягивались на экран, наезжая на панель ниже. */}
       {/* 649-2 (владелец 2026-11-05: «создать четвёртую вкладку интегратора агентов»): четыре в ряд на компьютере, по две на
           планшете, одна на телефоне. */}
-      <div data-block="bki2e" className="grid w-full items-stretch gap-3 pt-2 sm:grid-cols-2 lg:grid-cols-3">
-        {words.cards.map((c) => {
-          const Icon = CARD_ICONS[c.id] ?? Sparkles
-          const on = card === c.id
-          return (
-            <Button
-              key={c.id}
-              type="button"
-              variant="outline"
-              onClick={() => setCard(on ? null : c.id)}
-              aria-pressed={on}
-              data-root-card={c.id}
-              className={cn(
-                "relative flex h-auto flex-col items-start justify-start gap-3 rounded-2xl bg-card p-4 text-left whitespace-normal",
-                "transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:translate-y-0",
-                on
-                  ? "border-primary shadow-[0_0_0_1px_var(--primary),0_12px_36px_-10px_color-mix(in_oklab,var(--primary)_55%,transparent)]"
-                  : "border-border hover:border-primary/50 hover:shadow-[0_0_0_1px_color-mix(in_oklab,var(--primary)_30%,transparent),0_10px_32px_-12px_color-mix(in_oklab,var(--primary)_45%,transparent)]",
-              )}
-            >
-              <span className={cn("flex size-9 items-center justify-center rounded-xl transition-colors", on ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary")}>
-                <Icon aria-hidden className="size-4.5" />
-              </span>
-              {on ? <Check aria-hidden className="absolute top-4 right-4 size-4 text-primary" /> : null}
-              <span className="line-clamp-2 min-h-10 text-sm leading-5 font-semibold text-foreground">{c.title}</span>
-              <span className="line-clamp-4 min-h-20 text-xs leading-5 font-normal text-muted-foreground">{c.text}</span>
-            </Button>
-          )
-        })}
+      {/* 662-4 (владелец 2026-11-06: «используй карусель с кнопками прокрутки влево и вправо, добавь автоматизированное проигрывание в
+          котором если пользователь не участвует в прокрутке каждые 3 секунды карточки сдвигаются нижний блок с информации обновляется, при
+          нажатии на какую-либо карточку проигрывание приостанавливается пока пользователю удерживает эту карточку»): лента по одной карточке
+          на телефоне, по две на планшете, по три на компьютере; каждые 3 с выбирается следующая (рассказ ниже следует за ней). Стоит, пока
+          карточку держат, пока в поле есть текст (иначе менялась бы задача под рукой человека), когда выбор снят и при «меньше движения». */}
+      <div data-block="bki2e" className="relative w-full pt-2" data-root-carousel>
+        <div data-block="bki2f" ref={track} className="-mx-2 flex snap-x snap-mandatory scroll-px-2 items-stretch gap-3 overflow-x-auto scroll-smooth px-2 pt-1 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {words.cards.map((c) => {
+            const Icon = CARD_ICONS[c.id] ?? Sparkles
+            const on = card === c.id
+            return (
+              <div data-block="gh70h" key={c.id} data-root-slide={c.id} className="flex shrink-0 basis-full snap-start sm:basis-[calc((100%-0.75rem)/2)] lg:basis-[calc((100%-1.5rem)/3)]">
+              <Button
+                type="button"
+                variant="outline"
+                // 662-4: отпускание после удержания — не клик: выбор остаётся (иначе удержание снимало бы карточку).
+                onClick={() => { if (Date.now() - downAt.current > 400) return; setCard(on ? null : c.id) }}
+                onPointerDown={() => { downAt.current = Date.now(); setHeld(true) }}
+                onPointerUp={() => setHeld(false)}
+                onPointerLeave={() => setHeld(false)}
+                onPointerCancel={() => setHeld(false)}
+                aria-pressed={on}
+                data-root-card={c.id}
+                className={cn(
+                  "relative flex h-auto w-full flex-col items-start justify-start gap-3 rounded-2xl bg-card p-4 text-left whitespace-normal",
+                  "transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+                  on
+                    ? "border-primary shadow-[0_0_0_1px_var(--primary),0_12px_36px_-10px_color-mix(in_oklab,var(--primary)_55%,transparent)]"
+                    : "border-border hover:border-primary/50 hover:shadow-[0_0_0_1px_color-mix(in_oklab,var(--primary)_30%,transparent),0_10px_32px_-12px_color-mix(in_oklab,var(--primary)_45%,transparent)]",
+                )}
+              >
+                <span className={cn("flex size-9 items-center justify-center rounded-xl transition-colors", on ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary")}>
+                  <Icon aria-hidden className="size-4.5" />
+                </span>
+                {on ? <Check aria-hidden className="absolute top-4 right-4 size-4 text-primary" /> : null}
+                <span className="line-clamp-2 min-h-10 text-sm leading-5 font-semibold text-foreground">{c.title}</span>
+                <span className="line-clamp-4 min-h-20 text-xs leading-5 font-normal text-muted-foreground">{c.text}</span>
+              </Button>
+              </div>
+            )
+          })}
+        </div>
+        <div data-block="bki2g" className="mt-3 flex items-center justify-center gap-2">
+          <Button type="button" variant="outline" size="icon" onClick={() => step(-1)} aria-label={words.prev} data-root-prev className="size-8 rounded-full"><ChevronLeft aria-hidden className="size-4" /></Button>
+          <div data-block="bki2h" className="flex items-center gap-1.5" aria-hidden>
+            {words.cards.map((c) => <span key={c.id} className={cn("h-1.5 rounded-full transition-all", card === c.id ? "w-5 bg-primary" : "w-1.5 bg-border")} />)}
+          </div>
+          <Button type="button" variant="outline" size="icon" onClick={() => step(1)} aria-label={words.next} data-root-next className="size-8 rounded-full"><ChevronRight aria-hidden className="size-4" /></Button>
+        </div>
       </div>
       {/* 587-3 (владелец 2026-10-24): «в случае выделения карточки внизу показать контейнер с более подробным рассказом … при нажатии на
           карточку подсвечивать внизу содержимое этой подсказки». Панель принадлежит выбранной карточке: тот же акцент и свечение,
