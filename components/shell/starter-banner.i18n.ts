@@ -64,6 +64,13 @@ const RU_PAGE_TEXT: StarterBannerStrings = {
   tail: '',
 }
 
+
+// 706-3 at root: the starter banner stays (the owner, 542 and 587-2) next to the owner's quick navigation strip.
+/** Слова для повода «сайт ещё не ваш» — полоса на всех страницах. */
+export function starterBannerStrings(lang: string): StarterBannerStrings {
+  return lang === 'ru' ? RU : EN
+}
+
 /** Слова для повода «у страницы ещё нет текста» — врезка служебных страниц. */
 export function pageTextBannerStrings(lang: string): StarterBannerStrings {
   return lang === 'ru' ? RU_PAGE_TEXT : EN_PAGE_TEXT
