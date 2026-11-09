@@ -64,11 +64,6 @@ const RU_PAGE_TEXT: StarterBannerStrings = {
   tail: '',
 }
 
-/** Слова для повода «сайт ещё не ваш» — полоса на всех страницах. */
-export function starterBannerStrings(lang: string): StarterBannerStrings {
-  return lang === 'ru' ? RU : EN
-}
-
 /** Слова для повода «у страницы ещё нет текста» — врезка служебных страниц. */
 export function pageTextBannerStrings(lang: string): StarterBannerStrings {
   return lang === 'ru' ? RU_PAGE_TEXT : EN_PAGE_TEXT
