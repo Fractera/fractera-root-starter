@@ -1,12 +1,10 @@
 ---
 name: use-auth
 description: >
-  Builder skill. How sign-in, roles and locks work in this Fractera element — who signs people in, which roles exist and how
-  they inherit, how a branch, a page and a door are locked, the owner and temporary-address bypasses, guests, and how to add a
-  role. Load it whenever a task mentions signing in, a login, a cabinet, «only for buyers», «admins only», a role, access, «who
-  can see this», a guest, a private page or door, or the users table — and before you write any check of who the visitor is.
-  The thing you cannot guess: this element never signs anyone in itself (the node's auth element does), the list of roles lives
-  in one file, and on this computer you pass every lock — what you see is not what a visitor sees.
+  Builder skill. Sign-in, roles and locks — who signs people in (the node's auth element), the roles and how they inherit, locking
+  a branch, a page or a door, guests, adding a role. Load it when a task mentions a login, a cabinet, «only for buyers», «admins
+  only», a role, access, «who can see this», a private page or door, the users table, and before writing any check of who the
+  visitor is.
 ---
 
 <!-- PROOF · PROVEN 2026-10-07: loaded twice; after the fix the door task planned the stranger check right · report: development-docs/proofs/2026-10-07-node-skills.md -->
@@ -81,7 +79,7 @@ Owner of the node, 2026-10-24: «архитектор это супер поль
 - **The users table** (`/admin/users`, widget `widget-dynamic-users-table`) is the core tab «Users» limited to this application:
   search, role filter, sort, pages, histories, batch actions — no organizations. Its door `app/api/users/[[...path]]` forwards the
   visitor's cookie, the single sign-on ticket and this element's id to the auth element's `/api/app-users` (its README has the rules).
-- **«My account» drawer** (`lib/menu/account-links.ts`): Accounts, Blocks, Design, Site settings — for the roles of the admin layer
-  (`PROTECTED_GROUP_ROLES.admin`); the pages (`admin/_pages/{users,blocks,design,site-settings}`, `meta.roles: ["admin"]`) and their
+- **«My account» drawer** (`lib/menu/account-links.ts`): Accounts, Design, Site settings — for the roles of the admin layer
+  (`PROTECTED_GROUP_ROLES.admin`); the pages (`admin/_pages/{users,design,site-settings}`, `meta.roles: ["admin"]`) and their
   save doors (`admin/api/settings/*`) let the architect and the administrator in. A new page for the administrator of this element —
   the same three places: the page's `meta.roles`, its door, a line in `ADMIN_PAGES`.

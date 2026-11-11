@@ -1,6 +1,9 @@
 ---
 name: order-summary
-description: Work skill (every element) — never for building. Save a short summary of an order — work this element did for an agent of another node (a2a) — when that work is closed. Use it before telling the node «done» on any order from another node, whatever the work was (a page section, a picture, a service in the physical world). Not for the element's own development: that goes to development-docs/.
+description: >
+  Work skill (every element) — never for building. Save a short summary of an order — work this element did for an agent of
+  another node (a2a) — when it is closed. Use it before telling the node «done» on any order from another node, whatever the work
+  was. Not for the element's own development: that goes to development-docs/.
 ---
 
 <!-- PROOF · PROVEN 2026-10-06: wrote an order summary after each live A2A task · report: development-docs/proofs/2026-10-06-wake-and-a2a-skills.md -->
@@ -33,7 +36,7 @@ conversation (`contextId`); several tasks of one conversation go into the same s
   "terms": "<what was agreed: when, where (city and district at most), how much>",
   "iterations": 3,
   "rejected": [{ "what": "first draft with a dark background", "why": "the customer's brand is light" }],
-  "result": "<what was delivered and where it lives now, e.g. block hero-v2 in the catalog>",
+  "result": "<what was delivered and where it lives now, e.g. section hero-v2 in the catalog>",
   "status": "done",
   "learned": "<what this order taught the element, or empty>"
 }

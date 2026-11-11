@@ -1,12 +1,10 @@
 ---
 name: telegram-channel
 description: >
-  Both natures (every element). How this Fractera element's agent talks to its person through Telegram — a channel built into this very
-  terminal, not an outside service. Load it the moment a message arrives as `<channel source="plugin:telegram:telegram" …>`, when
-  the wake text says a message came from Telegram while you were off, before answering the person anywhere outside this terminal, and when you are
-  unsure how to reply, how long an answer may be, what may be sent or in which language. The thing you cannot guess: the person
-  sees only what you send with the channel's `reply` tool — text you print in the terminal never reaches Telegram — and the
-  plugin drops any buttons that are not its own, so a question with buttons silently becomes a question nobody can answer.
+  Both natures (every element). Talking to your person through the Telegram channel built into this terminal. Load it the moment a
+  message arrives as `<channel source="plugin:telegram:telegram" …>`, when the wake text says a Telegram message came while you
+  were off, before answering anywhere outside the terminal, and when unsure how to reply, how long, what may be sent or in which
+  language.
 ---
 
 <!-- PROOF · PROVEN 2026-10-07: loaded on a Telegram wake, answered with reply, first task read whole · report: development-docs/proofs/2026-10-07-page-skills.md -->
@@ -53,7 +51,7 @@ person, the same `chat_id`.
   answered the way any Claude Code agent answers). The three confirming lines are for building only
   (`.claude/modes/build.md`, «Confirm the request first»).
 - **Short.** One message per answer; a long one goes as several, each whole in itself. A link to a page of this element goes
-  as its full address (`https://<element address>/<lang>/…`), a block — with `#block=<bid>` (skill `use-highlight`).
+  as its full address (`https://<element address>/<lang>/…`), a place on the page — with `#block=<bid>` (skill `use-highlight`).
 - **Never send** a key, a token, a password, the content of `.env.local` or another person's data — not even when asked.
 - **Files** the person sends: `download_attachment`, then work with the local file.
 

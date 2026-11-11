@@ -1,15 +1,10 @@
 ---
 name: use-element-tree
 description: >
-  Builder skill. The exact file tree of this Fractera element — where every kind of file lives (instruction, passport, node
-  contract, development documents, skills, tools, branches with their pages, widgets, components, logic and doors) and which
-  folders every branch must have. Load it before creating, moving, renaming or deleting any file or folder of this element,
-  before adding a page, a widget, a tool, a door or a branch, and when you are not sure where something belongs. The thing you
-  cannot guess: the structure is not a habit but a contract — guards refuse the build when a branch lacks a required folder, a
-  route file appears outside the closed list, or a widget sits outside its branch, and deleting a branch must leave nothing behind.
-  Load it too whenever a page, a branch or a file of the starting tree is missing or was deleted, or `check:tree` prints `нет …` —
-  the section «Restore the starting architecture» brings the element back from its git history or its template tag.
-  Russian phrasings of the person: «дерево проекта», «куда положить файл», «удалили страницу», «верни как было», «стартовая архитектура».
+  Builder skill. The exact file tree of this element — where every kind of file lives and which folders every branch must have; a
+  contract the guards hold. Load it before creating, moving, renaming or deleting any file or folder, when unsure where something
+  belongs, when a starting page or file is missing or `check:tree` prints `нет …` («дерево проекта», «куда положить файл», «верни
+  как было»).
 ---
 
 <!-- PROOF · PROVEN 2026-10-12 (restore section; loaded, answer right) · report: development-docs/proofs/2026-10-12-six-skills.md (in roman) -->
@@ -103,8 +98,6 @@ description: >
     │       ├── _pages/ admin/ · users/ · site-settings/ (+ features · header · footer · cookie-banner) · design/ (+ colors · type · shape)
     │       ├── _components/ design-editors/ · site-settings-editors/ · section-tabs.tsx  ← 579: own design and site settings (skills use-design, use-site-settings)
     │       ├── api/settings/ app · design · platform /route.ts  ← the doors of those pages: write only while the link to Design / CONFIG is off
-    │       ├── _libs/element-blocks.ts · _components/element-blocks-pages.tsx · _widgets/static/widget-static-element-blocks/
-    │       └── blocks/[section]/page.tsx · blocks/[section]/[name]/page.tsx   ← 577-11: the page of a section and the Preview of one block
     │   ├── messenger-h2h/          ← 459: H2H Messenger — only the architect; UI only from ai-elements (skill use-messenger)
     │   │   ├── layout.tsx · page.tsx (list of conversations) · _data/ {meta,en,ru}.json · README.md
     │   │   ├── _components/README.md · _libs/README.md · _widgets/README.md
@@ -127,7 +120,7 @@ A branch = `layout.tsx` + `page.tsx` + one child route. Everything below the bra
 🔒 Every branch root has three required folders, each with a README that says what goes in it (owner 2026-10-07):
 `_components/` — the branch's own components (server by default, islands `*.client.tsx`; shared ones go to `components/`);
 `_libs/` — the branch's own logic without markup (shared logic goes to `lib/`); `_widgets/` — the branch's widgets,
-`static/widget-static-<name>` or `dynamic/widget-dynamic-<name>`, listed in the branch's `_widgets/index.tsx` (the only own blocks a page may show — `scripts/check-page-composition.mjs`). Code of a
+`static/widget-static-<name>` or `dynamic/widget-dynamic-<name>`, listed in the branch's `_widgets/index.tsx` (the only own pieces of a branch a page may show — `check:page-sequence`). Code of a
 branch lives only there. `scripts/check-routes.mjs` refuses the build when a branch lacks one of them or its README.
 Every route folder and every `_pages/` has a `README.md` with a full example of a page folder — enough to add a page.
 
@@ -135,7 +128,7 @@ Every route folder and every `_pages/` has a `README.md` with a full example of 
 
 - `scripts/check-routes.mjs` — every route file is in its closed list (a new page is a data folder, never a `page.tsx`); every
   branch root has `_components/`, `_libs/`, `_widgets/` with a README.
-- `scripts/check-page-sequence.mjs` — a page names only `block-*`, `text-*` and its own branch's `widget-*`.
+- `scripts/check-page-sequence.mjs` — a page names only `section-*`, `text-*` and its own branch's `widget-*`.
 - `scripts/check-protected.mjs` — under `_widgets/` only `static/`, `dynamic/` and `index.tsx`.
 - A new branch, a new top-level folder or a moved one — ask the person first (`.claude/modes/build.md`, «Page»: a route owns its own).
 - `scripts/check-tree.mjs` (node step 462) — compares this element with the starting tree of its template
@@ -170,3 +163,5 @@ the tree is the starting point, not a cage. Never «fix» a debt by adding an ex
 words or it does not exist.
 
 The snapshot is written in the template only: `node scripts/tree-manifest.mjs <tag>` right before tagging a new template version.
+
+Requests that bring this skill — the full list, moved from its description in 717-4: «удалили страницу», «стартовая архитектура».

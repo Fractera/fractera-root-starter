@@ -1,13 +1,10 @@
 ---
 name: use-design
 description: >
-  Builder skill. Where the look of this element is decided and changed: fonts, the colours of the light and dark theme, the type
-  scale, corners, borders, spacing and the app width are design tokens in `DESIGN-CONFIG`, not code. Load it when the person asks
-  to change colours, a theme, a font, «make it darker», «rounder corners», «bigger text», «our brand colours», «where do I change
-  the design», when they ask what the page /admin/design shows, and before you write any colour, font or radius into a widget or a
-  block. What you cannot guess: the page opens with the BRIEF (who the site is for, character, references, what to avoid, the
-  design skill — the passport's `design` block, step 706-4), and the tokens belong to this element alone (node steps 706 and 716); a
-  saved token redraws every page at once, with no build.
+  Builder skill. Where the look is decided — the brief and this element's own tokens in `DESIGN-CONFIG` (fonts, colours of both
+  themes, type scale, corners, spacing, width). Load it when the person asks to change colours, a theme, a font, «make it darker»,
+  «bigger text», «our brand colours», «where do I change the design», asks about /admin/design, and before writing any colour,
+  font or radius into code.
 ---
 
 <!-- PROOF · NOT PROVEN yet: written, never checked by a live run (rules: development-docs/README.md, «Proof marks») -->
@@ -15,7 +12,7 @@ description: >
 # use-design
 
 > Informational, not binding: know a better way for the case in front of you — do it your way and say so. Two things are not optional:
-> a colour, a font or a radius never goes into a widget or a block as a value (only as a token), and you never edit `DESIGN-CONFIG`
+> a colour, a font or a radius never goes into a widget or a section as a value (only as a token), and you never edit `DESIGN-CONFIG`
 > by hand — the person changes the look on the page, the door writes the file.
 
 **Process: build** — a new token or a new setting of the workshop is code: commit and a build of the element; confirm with the three
@@ -26,7 +23,7 @@ page and needs no build — see «What needs a build».
 
 Every page of this element is drawn on the same tokens — `--primary`, `--accent`, `--destructive`, the neutrals, `--radius`, the
 font roles and the type scale (`lib/design-css.ts` turns `DESIGN-CONFIG` into them when a page is drawn; pages stay static and are redrawn when the design changes). Change a token once and every
-page, block and widget follows; a colour written into one widget is paid again on the next one and drifts from the rest. That is
+page, section and widget follows; a colour written into one widget is paid again on the next one and drifts from the rest. That is
 why the workshop exists: the look is decided in one place, as data.
 
 ## Who owns the tokens
@@ -34,6 +31,14 @@ why the workshop exists: the look is decided in one place, as data.
 This element alone (node steps 706 and 716): no other element of the node writes them, and the only link an element has — to the
 shared CONFIG — carries site settings, never the look. A sibling born «like X» (`create --look-like`) starts with X's
 tokens and brief as its own copy.
+
+**The same look as a sibling, later** (node step 717-5) — a family of elements whose working pages share one design. You never read
+the sibling's folder and never ask its agent. The person asks the core's main agent; it puts the look the sibling took into the core
+into your intake: a request `development-docs/pre-steps/<date>.md` and the data `<date>.look-from-<id>.json`. You apply it with
+`npm run design:take -- development-docs/pre-steps/<date>.look-from-<id>.json`: the brief goes into the passport (`inheritedFrom`
+names the sibling), each token branch the sibling has replaces yours, the rest stays. A copy, never a live link — the sibling changing
+later changes nothing here. Then `npm run check:config-schemas`, `npm run eyes`, commit, the person approves. Your own sections stay
+yours: the look is shared, the code is not.
 
 ## The brief
 
@@ -81,3 +86,5 @@ the core.
 - Colours, fonts and radius in a section or a widget — only tokens (`bg-primary`, `text-muted-foreground`, `rounded-[var(--radius)]`).
 - The workshop edits this element only; it sends nothing to the other elements of the node.
 - Every container of the editors carries `data-block` (`npm run widgets:ids`).
+
+Requests that bring this skill — the full list, moved from its description in 717-4: «rounder corners».

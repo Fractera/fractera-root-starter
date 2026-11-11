@@ -1,6 +1,10 @@
 ---
 name: node-elements-detection
-description: Both natures (every element). How to reach another element of this node when a task needs something you do not do — sign-in, storing data or files, settings, design, or any ability a neighbour may already have — through the core's main agent, which names the neighbour; never by listing the node, never by a neighbour you picked yourself. Use it whenever a task touches something outside this element, even if the person does not name the other element, and before you think of building another element's job into yourself.
+description: >
+  Both natures (every element). Reaching another element of this node — sign-in, data or files, settings or any ability a
+  neighbour may have — only through the core's main agent, which names the neighbour; never by listing the node or picking one
+  yourself. Use it whenever a task touches something outside this element, and before building another element's job into
+  yourself.
 ---
 
 <!-- PROOF · CHANGED 2026-10-20 (node step 548-14): no list of the node; CHANGED 2026-11-03 (node step 636): the neighbour is named by the core's main agent — not proven again yet -->
@@ -15,7 +19,7 @@ A hint, not a law: models of late 2026 work worse under rigid step-by-step instr
 
 A node holds ten elements today and a thousand tomorrow. A list of all of them on every wake would grow with each new element,
 and every agent of the node would pay for it on every wake — the owner of the node, 2026-10-20: the cost of an agent must not grow
-with the node. So you hold only where you live (`npm run passport -- me`, block `node`: the core, the main agent's terminal, how
+with the node. So you hold only where you live (`npm run passport -- me`, its part `node`: the core, the main agent's terminal, how
 many elements) and ask for a neighbour when a task needs one. The core's main agent names it — the owner of the node, 2026-11-03:
 a first contact always goes only through the orchestrator agent, «скажи кто я хочу с ним договориться»:
 
@@ -32,7 +36,7 @@ its agent, do not rule it out by its card.
 
 ## The connectors you already have
 
-auth, data, config, design and the core are i2i agreed in advance — their APIs are in your `links` (`npm run passport -- me`) and
+auth, data, config and the core are i2i agreed in advance (the look is your own — `DESIGN-CONFIG/`) — their APIs are in your `links` (`npm run passport -- me`) and
 in skill `use-i2i`. Use them in code; never search for them and never ask their agents.
 
 ## How you work with a neighbour

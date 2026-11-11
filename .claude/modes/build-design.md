@@ -48,21 +48,25 @@ pin carries into the whole element:
 4. **`DESIGN.md`** in the prototype's folder — the rules tokens cannot hold (composition, rhythm, imagery, «do» and «don't»).
 5. **The page** — its words and sections in the prototype's `en.json` / `ru.json` (the same format as any page; empty home → write the
    page from the brief and the product's description). No colour in the words: `npm run prototype -- done` and `check:prototypes` refuse
-   it. A new section is your own component, static, words from data, `data-block` on every container, colours only through tokens.
+   it. A section the element has not is this prototype's own until the pin: its folder in the prototype's `sections/` and its line in
+   `sections/index.ts`, the same shape as `components/sections/` (`index.tsx` with `Section` and `Shape`, `markdown.ts`, `README.md`) —
+   static, words from data, `data-block` on every container (`npm run widgets:ids`), colours only through tokens. It never repeats a kind
+   of the element: a new look of an existing section is a new kind (`check:sections`). It is code: the page draws it after a build.
 6. `npm run prototype -- done <id>`, then the screenshots into its `shots/`: `npm run eyes -- <this element's address>/<lang>/prototypes/<id>
    --out "app/[lang]/(protectedLayer)/prototypes/_pages/<id>/shots/desktop.png"` and the same with `--width 390` → `mobile.png`.
 7. Commit; answer the core with the prototype's address (`npm run reply-core` when the task asks for it). Nothing goes to the public
    page until the pin.
 
-**The pin** — the task «Build process, design: pin the prototype <id>»: `npm run design:pin -- <id>` (its tokens become
-`DESIGN-CONFIG/design-config.json`, its `DESIGN.md` the element's, its words the source page, the passport records `designSkill` and
-`design.pinned`; every prototype goes to `_archive/`), remove any section code written only for a prototype that lost,
-`npm run describe:publish`, commit, «Preview & Deploy». From then on every page of this element follows the pinned look: read
+**The pin** — the task «Build process, design: pin the prototype <id>»: commit, then `npm run design:pin -- <id>` (its tokens
+become `DESIGN-CONFIG/design-config.json`, its `DESIGN.md` the element's, its words the source page, its own sections the element's —
+folders in `components/sections/` with their lines; the passport records `designSkill` and `design.pinned`; the losers' sections leave
+the tree — git keeps them, their records name the commit; every prototype goes to `_archive/` without code). It names the sections no
+page uses any more — delete the ones nothing needs. Then `npm run describe:publish`, commit, «Preview & Deploy». From then on every page of this element follows the pinned look: read
 `design.pinned` and `DESIGN.md` before any design work.
 
 ## The design of a page — the order
 
-1. **The brief** — the passport's `design` block (`OWN-SERVICE-PROPS/OWN-SERVICE-PROPS.json`), written by the person on this element's
+1. **The brief** — the passport's `design` part (`OWN-SERVICE-PROPS/OWN-SERVICE-PROPS.json`), written by the person on this element's
    «Design» page (`/<lang>/admin/design`, the first section): who the site is for, its character in up to five words, references (a link
    and/or an uploaded screenshot — `media`, shown at `/api/media/<id>/file`), what to avoid; the skill is pinned from the core's Design
    tab (`design.pinned`), never chosen here. `inheritedFrom` — the look
@@ -74,7 +78,7 @@ pin carries into the whole element:
 3. **The sections** — your own components in this element, as the product needs them; there is no catalogue to search. The section
    contract stays: words come from the language cells of page data (never hard-coded in JSX), every container carries `data-block`
    (`npm run widgets:ids`), the section is static, colours are tokens, and the machine copy of the page (`/<lang>/index.md`) carries its
-   text. Pages of documents keep the four document sections (section-head, faq, toc, warning-card).
+   text. Pages of documents keep the three document sections (section-head, section-faq, section-warning-card); the table of contents is drawn by the page template.
 4. **Seen before shown** — `npm run eyes` on the page at 1440 and 500 px; read it against the slop checklist and the brief's «avoid»;
    what reads as a template default is redone before the person sees it.
 5. **Then stop:** commit, `current-step.md`, the screenshot to the person; their grade is the proof, not your opinion.

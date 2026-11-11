@@ -1,13 +1,10 @@
 ---
 name: use-shadcn
 description: >
-  Builder skill. The gatekeeper of the vendored `shadcn` skill in this Fractera element: every widget, tool and block is built
-  only from shadcn components (`components/ui`) — nothing hand-made — and where our law is louder than the shadcn skill.
-  Load it before writing any button, input, select, textarea, table, tabs, dialog, toast, form or card; before adding a shadcn
-  component; whenever the person asks for "a form", "a table", "a modal", "a notification", "a toggle", "make it look like …";
-  and the moment the shadcn skill tells you to compose a Dialog or pick a toast. The thing you cannot guess: a raw `<button>` or
-  `<table>` looks fine and builds fine, but it leaves the node's design system — it does not re-skin with the design tokens,
-  does not keep keyboard and screen-reader behaviour, and gets no highlight address; `check-shadcn-rules` refuses it.
+  Builder skill, the gatekeeper of the vendored `shadcn`: every widget, tool and section is built only from `components/ui`. Load
+  it before writing any button, input, select, table, tabs, dialog, toast, form or card, before adding a shadcn component, when
+  the person asks for «a form», «a table», «a modal», «a notification», «a toggle», and when the shadcn skill suggests a Dialog or
+  a toast.
 ---
 
 <!-- PROOF · PARTIAL 2026-10-07: the law kept in four tasks (shadcn only, refusal of a raw button); the skill itself never loaded · report: development-docs/proofs/2026-10-07-page-skills.md -->
@@ -17,14 +14,14 @@ description: >
 > Informational, not binding: know a better way for the case in front of you — do it your way and say so. The one thing that
 
 **Process: build** — this skill changes the element as a thing: code, commit, rebuild; confirm with the three lines of `.claude/modes/build.md` («Confirm the request first»).
-> is not optional: no hand-made control in a widget, a tool or a block.
+> is not optional: no hand-made control in a widget, a tool or a section.
 
 The vendored `shadcn` skill (`.claude/skills/shadcn/`, provenance in its `SOURCE.md`) owns **how** its components compose — use
 it for that. This skill owns **what is allowed** in this element.
 
 ## The law
 
-Widgets (`<branch>/_widgets/`), tools (`_tools/`), blocks (`components/blocks/`) and every component they import are built
+Widgets (`<branch>/_widgets/`), tools (`_tools/`), sections (`components/sections/`) and every component they import are built
 from `components/ui` and the typography primitives. A control the folder does not have is added, never written by hand:
 
 ```
@@ -70,3 +67,5 @@ A shadcn container (`Card`, `Field`, `Accordion`, `Table`, `Tabs` …) gets `dat
 
 `npm run prebuild` passes: `check-shadcn-rules` (no raw control, the shadcn style rules), `check:dialogs`, `check:widget-ids`.
 Never hand-edit anything under `.claude/skills/shadcn/` — `npx skills update` overwrites it.
+
+Requests that bring this skill — the full list, moved from its description in 717-4: «make it look like …».

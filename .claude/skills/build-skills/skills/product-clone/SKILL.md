@@ -2,11 +2,8 @@
 name: product-clone
 description: >
   Builder skill. The person wants a product like an existing one — «like Product Hunt», «a clone of X», «make it work as X does».
-  Load it before the product quiz plans such a product. You check each site's rules first, then learn how the product works
-  from what is allowed, map its areas and scenarios, and plan stages 0…N of the person's own product with its coverage and parity.
-  The thing you cannot guess: a site whose robots.txt or terms forbid automated study is never analysed — the person gives a series
-  of screenshots instead, or names similar sites whose rules allow it; and only functions are taken, never code, texts, images,
-  design, data or names.
+  Load it before the product quiz plans such a product: site rules first, then how it works, its areas and scenarios, stages 0…N
+  of the person's own product.
 ---
 
 <!-- PROOF · NOT PROVEN yet: written 2026-10-22 (node step 556-3); the first live run is step 556-5 -->
@@ -23,7 +20,7 @@ The owner of the node, 2026-10-22: «если человеку нужно соз
 должен предоставить серии скриншотов последовательно … можешь попросить пользователя предоставить копии сайтов которые выполняют те же
 самые задачи» — a site that forbids it: a series of screenshots, one after another; or ask for similar sites that do the same job.
 
-This skill feeds `product-quiz`: it adds the block `references` and the scenarios they show; the quiz keeps its own rules (one
+This skill feeds `product-quiz`: it adds the part `references` and the scenarios they show; the quiz keeps its own rules (one
 question at a time, numbered text choices, only the person confirms, the element's default language, `humanizer` for every text).
 
 ## 1. Inputs — ask before anything else
@@ -86,7 +83,7 @@ account that «не должен быть реальным пользовате�
   they are not afraid to lose. Then open the node's login window on this computer (`npm run study -- login <site>`): the person ticks
   three statements, types the site name and signs in himself. You never ask for a password and never create an account.
 - Then study the internal pages in the study pass, naming the areas you need. For each area it chooses: a walk of its own through
-  the node's study browser (reads only — a guard blocks every write), a walk the person drives while REA records, or screenshots — and
+  the node's study browser (reads only — a guard refuses every write), a walk the person drives while REA records, or screenshots — and
   returns a map of screens and transitions with the points of no return (what happens after «send» or «pay» is seen only when the
   person does it himself, in his test account).
 - In `references.products` the site gets `"account": { "kind": "test", "consentAt": "<the date from npm run study -- accounts>" }`.

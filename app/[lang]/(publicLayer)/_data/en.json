@@ -2,7 +2,7 @@
   "title": "What will you build?",
   "description": "Describe a project, and the AI agent of your node builds it: a Web4 swarm of A2A agents, a large full-stack app or an app factory.",
   "keywords": "",
-  "blocks": [
+  "body": [
     {
       "kind": "widget-static-root-home",
       "bid": "rh001"
@@ -29,7 +29,7 @@
       {
         "id": "fullstack",
         "title": "Create a large full-stack app",
-        "text": "From idea to money 99% faster. Sign-in, data, design and blocks are already in the node, so the agent builds only your product.",
+        "text": "From idea to money 99% faster. Sign-in, data, design and sections are already in the node, so the agent builds only your product.",
         "task": "I want to create a large full-stack app.",
         "more": "A real app built with Claude Code needs many services: sign-in, a database, access roles, design and much more. The hard part is putting them together in the right order. That is already done here. You get a ready architecture and add only your own ideas to this solid core. Choose this to grow a reliable product that holds high load, on a server or on your own computer."
       },
