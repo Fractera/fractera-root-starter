@@ -604,7 +604,7 @@
         "en": "Collapsible bands in a panel — several items, one or many open; the «what is it» note above a list.",
         "ru": "Раскрывающиеся полосы в панели — несколько пунктов, открыт один или несколько; пояснение «что это» над списком."
       },
-      "how": "import { Accordion } from \"@/components/ui/accordion\" — one owner per kind (use-primitives).",
+      "how": "import { Accordion } from \"@/components/ui/accordion\" — one owner per kind.",
       "words": {
         "en": [
           "accordion",
@@ -630,7 +630,7 @@
         "en": "A callout box: an informational, warning or error message inside the page.",
         "ru": "Плашка сообщения внутри страницы: сведение, предупреждение или ошибка."
       },
-      "how": "import { Alert } from \"@/components/ui/alert\" — one owner per kind (use-primitives).",
+      "how": "import { Alert } from \"@/components/ui/alert\" — one owner per kind.",
       "words": {
         "en": [
           "alert",
@@ -656,7 +656,7 @@
         "en": "A person's round picture with initials as the fallback.",
         "ru": "Круглая картинка человека с инициалами, если картинки нет."
       },
-      "how": "import { Avatar } from \"@/components/ui/avatar\" — one owner per kind (use-primitives).",
+      "how": "import { Avatar } from \"@/components/ui/avatar\" — one owner per kind.",
       "words": {
         "en": [
           "avatar",
@@ -680,7 +680,7 @@
         "en": "A small label: a state, a role, a count.",
         "ru": "Маленькая метка: состояние, роль, число."
       },
-      "how": "import { Badge } from \"@/components/ui/badge\" — one owner per kind (use-primitives).",
+      "how": "import { Badge } from \"@/components/ui/badge\" — one owner per kind.",
       "words": {
         "en": [
           "badge",
@@ -711,7 +711,7 @@
         "en": "The one button of the product: variants default, outline, secondary, ghost, destructive, link; sizes including icon.",
         "ru": "Единственная кнопка продукта: варианты default, outline, secondary, ghost, destructive, link; размеры, включая значок."
       },
-      "how": "import { Button } from \"@/components/ui/button\" — one owner per kind (use-primitives).",
+      "how": "import { Button } from \"@/components/ui/button\" — one owner per kind.",
       "words": {
         "en": [
           "button",
@@ -790,7 +790,7 @@
         "en": "Buttons joined into one group, e.g. a segmented choice.",
         "ru": "Кнопки, собранные в одну группу, например выбор из сегментов."
       },
-      "how": "import { ButtonGroup } from \"@/components/ui/button-group\" — one owner per kind (use-primitives).",
+      "how": "import { ButtonGroup } from \"@/components/ui/button-group\" — one owner per kind.",
       "words": {
         "en": [
           "button group",
@@ -815,7 +815,7 @@
         "en": "A card: a framed group with a title, a description, content and actions.",
         "ru": "Карточка: обрамлённая группа с заголовком, описанием, содержимым и действиями."
       },
-      "how": "import { Card } from \"@/components/ui/card\" — one owner per kind (use-primitives).",
+      "how": "import { Card } from \"@/components/ui/card\" — one owner per kind.",
       "words": {
         "en": [
           "card",
@@ -839,7 +839,7 @@
         "en": "Charts on the theme's tokens (recharts inside).",
         "ru": "Графики на токенах темы (внутри recharts)."
       },
-      "how": "import { ChartContainer } from \"@/components/ui/chart\" — one owner per kind (use-primitives).",
+      "how": "import { ChartContainer } from \"@/components/ui/chart\" — one owner per kind.",
       "words": {
         "en": [
           "chart",
@@ -863,7 +863,7 @@
         "en": "A checkbox — a yes/no choice or one of a list.",
         "ru": "Флажок — выбор да/нет или один из списка."
       },
-      "how": "import { Checkbox } from \"@/components/ui/checkbox\" — one owner per kind (use-primitives).",
+      "how": "import { Checkbox } from \"@/components/ui/checkbox\" — one owner per kind.",
       "words": {
         "en": [
           "checkbox",
@@ -891,7 +891,7 @@
         "en": "One part that opens and closes («more», details).",
         "ru": "Одна часть, которая раскрывается и сворачивается («подробнее», детали)."
       },
-      "how": "import { Collapsible } from \"@/components/ui/collapsible\" — one owner per kind (use-primitives).",
+      "how": "import { Collapsible } from \"@/components/ui/collapsible\" — one owner per kind.",
       "words": {
         "en": [
           "collapsible",
@@ -919,7 +919,7 @@
         "en": "A searchable list with arrow keys (cmdk) — with Popover it is the combobox under a field.",
         "ru": "Список с поиском и стрелками (cmdk); вместе с Popover — выпадающий список под полем."
       },
-      "how": "import { Command } from \"@/components/ui/command\" — one owner per kind (use-primitives).",
+      "how": "import { Command } from \"@/components/ui/command\" — one owner per kind.",
       "words": {
         "en": [
           "combobox",
@@ -946,7 +946,7 @@
         "en": "The shadcn dialog primitive — NOT used directly: every modal is AppDialog.",
         "ru": "Примитив диалога shadcn — напрямую НЕ используется: каждое модальное окно — AppDialog."
       },
-      "how": "import { Dialog } from \"@/components/ui/dialog\" — one owner per kind (use-primitives).",
+      "how": "import { Dialog } from \"@/components/ui/dialog\" — one owner per kind.",
       "words": {
         "en": [
           "dialog primitive",
@@ -971,7 +971,7 @@
         "en": "A menu that drops from a button: actions, a choice, a switch.",
         "ru": "Меню, выпадающее от кнопки: действия, выбор, переключатель."
       },
-      "how": "import { DropdownMenu } from \"@/components/ui/dropdown-menu\" — one owner per kind (use-primitives).",
+      "how": "import { DropdownMenu } from \"@/components/ui/dropdown-menu\" — one owner per kind.",
       "words": {
         "en": [
           "dropdown menu",
@@ -998,7 +998,7 @@
         "en": "The empty state of a list or a page: an icon, words and the next action.",
         "ru": "Пустое состояние списка или страницы: значок, слова и следующее действие."
       },
-      "how": "import { EmptyState } from \"@/components/ui/empty-state\" — one owner per kind (use-primitives).",
+      "how": "import { EmptyState } from \"@/components/ui/empty-state\" — one owner per kind.",
       "words": {
         "en": [
           "empty state",
@@ -1020,7 +1020,7 @@
         "en": "A form field with its label, description and error; FieldGroup for a form.",
         "ru": "Поле формы с подписью, описанием и ошибкой; FieldGroup для формы."
       },
-      "how": "import { Field } from \"@/components/ui/field\" — one owner per kind (use-primitives).",
+      "how": "import { Field } from \"@/components/ui/field\" — one owner per kind.",
       "words": {
         "en": [
           "form field",
@@ -1046,7 +1046,7 @@
         "en": "A card that appears on hover — a preview of a link or a person.",
         "ru": "Карточка при наведении — превью ссылки или человека."
       },
-      "how": "import { HoverCard } from \"@/components/ui/hover-card\" — one owner per kind (use-primitives).",
+      "how": "import { HoverCard } from \"@/components/ui/hover-card\" — one owner per kind.",
       "words": {
         "en": [
           "hover card",
@@ -1071,7 +1071,7 @@
         "en": "A one-line text input (16px — Safari does not zoom).",
         "ru": "Однострочное поле ввода (16px — Safari не увеличивает страницу)."
       },
-      "how": "import { Input } from \"@/components/ui/input\" — one owner per kind (use-primitives).",
+      "how": "import { Input } from \"@/components/ui/input\" — one owner per kind.",
       "words": {
         "en": [
           "input",
@@ -1116,7 +1116,7 @@
         "en": "A field with buttons or icons inside it (search with a clear button).",
         "ru": "Поле с кнопками или значками внутри (поиск с кнопкой очистки)."
       },
-      "how": "import { InputGroup } from \"@/components/ui/input-group\" — one owner per kind (use-primitives).",
+      "how": "import { InputGroup } from \"@/components/ui/input-group\" — one owner per kind.",
       "words": {
         "en": [
           "input group",
@@ -1142,7 +1142,7 @@
         "en": "The label of a control.",
         "ru": "Подпись элемента управления."
       },
-      "how": "import { Label } from \"@/components/ui/label\" — one owner per kind (use-primitives).",
+      "how": "import { Label } from \"@/components/ui/label\" — one owner per kind.",
       "words": {
         "en": [
           "label",
@@ -1175,7 +1175,7 @@
         "en": "The browser's own select styled by the theme — works without JavaScript.",
         "ru": "Собственный список браузера в стиле темы — работает без JavaScript."
       },
-      "how": "import { NativeSelect } from \"@/components/ui/native-select\" — one owner per kind (use-primitives).",
+      "how": "import { NativeSelect } from \"@/components/ui/native-select\" — one owner per kind.",
       "words": {
         "en": [
           "native select",
@@ -1199,7 +1199,7 @@
         "en": "The site navigation with dropdown panels (the shell's mega menu).",
         "ru": "Навигация сайта с выпадающими панелями (мега-меню оболочки)."
       },
-      "how": "import { NavigationMenu } from \"@/components/ui/navigation-menu\" — one owner per kind (use-primitives).",
+      "how": "import { NavigationMenu } from \"@/components/ui/navigation-menu\" — one owner per kind.",
       "words": {
         "en": [
           "navigation menu",
@@ -1223,7 +1223,7 @@
         "en": "Page numbers and back/next — inside TableTools for lists.",
         "ru": "Номера страниц и назад/вперёд — для списков внутри TableTools."
       },
-      "how": "import { Pagination } from \"@/components/ui/pagination\" — one owner per kind (use-primitives).",
+      "how": "import { Pagination } from \"@/components/ui/pagination\" — one owner per kind.",
       "words": {
         "en": [
           "pagination",
@@ -1249,7 +1249,7 @@
         "en": "A floating panel anchored to a trigger — never a hand-built absolute div.",
         "ru": "Плавающая панель у кнопки — никогда не самодельный absolute div."
       },
-      "how": "import { Popover } from \"@/components/ui/popover\" — one owner per kind (use-primitives).",
+      "how": "import { Popover } from \"@/components/ui/popover\" — one owner per kind.",
       "words": {
         "en": [
           "popover",
@@ -1273,7 +1273,7 @@
         "en": "A scrolling area with the theme's scrollbar.",
         "ru": "Прокручиваемая область со скроллбаром темы."
       },
-      "how": "import { ScrollArea } from \"@/components/ui/scroll-area\" — one owner per kind (use-primitives).",
+      "how": "import { ScrollArea } from \"@/components/ui/scroll-area\" — one owner per kind.",
       "words": {
         "en": [
           "scroll area",
@@ -1295,7 +1295,7 @@
         "en": "A styled select — one of several values.",
         "ru": "Стилизованный список выбора — одно из нескольких значений."
       },
-      "how": "import { Select } from \"@/components/ui/select\" — one owner per kind (use-primitives).",
+      "how": "import { Select } from \"@/components/ui/select\" — one owner per kind.",
       "words": {
         "en": [
           "select",
@@ -1326,7 +1326,7 @@
         "en": "A thin line between groups.",
         "ru": "Тонкая линия между группами."
       },
-      "how": "import { Separator } from \"@/components/ui/separator\" — one owner per kind (use-primitives).",
+      "how": "import { Separator } from \"@/components/ui/separator\" — one owner per kind.",
       "words": {
         "en": [
           "separator",
@@ -1355,7 +1355,7 @@
         "en": "A side panel sliding from an edge — drawers, a deal's details, the terminal drawer.",
         "ru": "Боковая панель, выезжающая с края — ящики, подробности сделки, ящик терминала."
       },
-      "how": "import { Sheet } from \"@/components/ui/sheet\" — one owner per kind (use-primitives).",
+      "how": "import { Sheet } from \"@/components/ui/sheet\" — one owner per kind.",
       "words": {
         "en": [
           "sheet",
@@ -1382,7 +1382,7 @@
         "en": "A grey placeholder while something loads.",
         "ru": "Серая заглушка, пока что-то грузится."
       },
-      "how": "import { Skeleton } from \"@/components/ui/skeleton\" — one owner per kind (use-primitives).",
+      "how": "import { Skeleton } from \"@/components/ui/skeleton\" — one owner per kind.",
       "words": {
         "en": [
           "skeleton",
@@ -1406,7 +1406,7 @@
         "en": "A slider to pick a number or a range by dragging.",
         "ru": "Ползунок: выбрать число или диапазон перетаскиванием."
       },
-      "how": "import { Slider } from \"@/components/ui/slider\" — one owner per kind (use-primitives).",
+      "how": "import { Slider } from \"@/components/ui/slider\" — one owner per kind.",
       "words": {
         "en": [
           "slider",
@@ -1433,7 +1433,7 @@
         "en": "The spinning sign of a running action.",
         "ru": "Крутящийся знак идущего действия."
       },
-      "how": "import { Spinner } from \"@/components/ui/spinner\" — one owner per kind (use-primitives).",
+      "how": "import { Spinner } from \"@/components/ui/spinner\" — one owner per kind.",
       "words": {
         "en": [
           "spinner",
@@ -1458,7 +1458,7 @@
         "en": "An on/off switch. (shadcn/ui)",
         "ru": "Переключатель вкл/выкл."
       },
-      "how": "import { Switch } from \"@/components/ui/switch\" — one owner per kind (use-primitives).",
+      "how": "import { Switch } from \"@/components/ui/switch\" — one owner per kind.",
       "words": {
         "en": [
           "switch",
@@ -1487,7 +1487,7 @@
         "en": "The table primitive — for a list with search and pages take TableTools.",
         "ru": "Примитив таблицы — для списка с поиском и страницами берите TableTools."
       },
-      "how": "import { Table } from \"@/components/ui/table\" — one owner per kind (use-primitives).",
+      "how": "import { Table } from \"@/components/ui/table\" — one owner per kind.",
       "words": {
         "en": [
           "table",
@@ -1517,7 +1517,7 @@
         "en": "A multi-line text area; with voice — VoiceTextarea.",
         "ru": "Многострочная область текста; с голосом — VoiceTextarea."
       },
-      "how": "import { Textarea } from \"@/components/ui/textarea\" — one owner per kind (use-primitives).",
+      "how": "import { Textarea } from \"@/components/ui/textarea\" — one owner per kind.",
       "words": {
         "en": [
           "textarea",
@@ -1547,7 +1547,7 @@
         "en": "A hint on hover or focus — never title= on a button.",
         "ru": "Подсказка при наведении или фокусе — никогда не title= на кнопке."
       },
-      "how": "import { Tooltip } from \"@/components/ui/tooltip\" — one owner per kind (use-primitives).",
+      "how": "import { Tooltip } from \"@/components/ui/tooltip\" — one owner per kind.",
       "words": {
         "en": [
           "tooltip",
@@ -1575,7 +1575,7 @@
         "en": "The text primitives: headings and paragraphs with the project's scale — never a hand-classed heading.",
         "ru": "Примитивы текста: заголовки и абзацы со шкалой проекта — никогда не заголовок со своими классами."
       },
-      "how": "import { H1 } from \"@/components/ui/typography\" — one owner per kind (use-primitives).",
+      "how": "import { H1 } from \"@/components/ui/typography\" — one owner per kind.",
       "words": {
         "en": [
           "heading",
