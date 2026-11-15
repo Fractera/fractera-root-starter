@@ -40,6 +40,7 @@ export const designConfigSchema = z.looseObject({
     heading: fontRole.optional(),
     body: fontRole.optional(),
     mono: fontRole.optional(),
+    display: fontRole.optional(),
   }),
   type: z.looseObject({
     scale: z.number().optional(),

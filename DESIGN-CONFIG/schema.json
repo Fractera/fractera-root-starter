@@ -143,6 +143,21 @@
             "family"
           ],
           "additionalProperties": {}
+        },
+        "display": {
+          "type": "object",
+          "properties": {
+            "family": {
+              "type": "string"
+            },
+            "import": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "family"
+          ],
+          "additionalProperties": {}
         }
       },
       "additionalProperties": {}

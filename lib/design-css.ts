@@ -144,6 +144,8 @@ export function buildDesignCss(cfg: DesignConfig = getDesignConfig(), scope: Des
     heading: "--font-heading",
     body: "--font-body",
     mono: "--font-mono-user",
+    // Step 7: the display role — one striking heading (the first screen), never body text; unset → the heading font.
+    display: "--font-display-user",
   }
 
   for (const [role, font] of Object.entries(cfg.fonts ?? {})) {

@@ -32,7 +32,7 @@ export function RootHome({ lang }: { lang: string }) {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px] bg-[radial-gradient(55%_60%_at_50%_0%,color-mix(in_oklab,var(--primary)_16%,transparent),transparent_70%)]"
       />
-      <div data-block="r7hq2" data-app-column className="flex min-h-[calc(100dvh-8rem)] flex-col items-center px-4 pt-16 pb-16 md:pt-24">
+      <div data-block="r7hq2" data-app-column className="flex min-h-[calc(100dvh-8rem)] flex-col items-center px-4 pt-8 pb-16 md:pt-12">
         <a
           href={at("/build/subscription")}
           className={`${RISE} group inline-flex items-center gap-2 rounded-full border border-border bg-background/80 py-1 pr-2 pl-1 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:border-primary/50 hover:text-foreground`}
@@ -45,7 +45,8 @@ export function RootHome({ lang }: { lang: string }) {
         </a>
         <H1
           data-block="s78y5"
-          className={`${RISE} mt-6 text-center font-sans text-4xl font-semibold tracking-tight text-balance delay-100 md:text-6xl`}
+          scale="hero"
+          className={`${RISE} mt-8 max-w-[34ch] text-center font-display [font-weight:500] text-[length:min(var(--fs-hero),5.4vw)] leading-[1.1] tracking-[-0.02em] text-balance delay-100 md:mt-10`}
         >
           {w.heading}
         </H1>

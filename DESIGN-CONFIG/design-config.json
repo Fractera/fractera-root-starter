@@ -18,5 +18,11 @@
       "border": "#1e3a8a",
       "destructive": "#f87171"
     }
+  },
+  "fonts": {
+    "display": {
+      "family": "Unbounded",
+      "import": "/fonts/unbounded.css"
+    }
   }
 }

@@ -24,11 +24,12 @@ import { saveDesign } from "./design-save"
 // отдаёт сам узел (`public/fonts/`), и под каждым это написано: наружу страница не
 // ходит, без интернета шрифт на месте.
 
-type Role = "heading" | "body" | "mono"
+type Role = "heading" | "body" | "mono" | "display"
 type Choice = { family: string; import?: string }
 type State = Partial<Record<Role, Choice>>
 
-const ROLES: Role[] = ["heading", "body", "mono"]
+// Step 7: «display» — the face of one striking heading (the home's first screen); unset, it follows the headings.
+const ROLES: Role[] = ["heading", "body", "mono", "display"]
 
 export function DesignFonts({ initial, ui }: { initial: State; ui: DesignUi["fonts"] }) {
   const [state, setState] = useState<State>(initial)
@@ -168,6 +169,12 @@ export function DesignFonts({ initial, ui }: { initial: State; ui: DesignUi["fon
           <p data-block="vnpmu"
             className="text-[length:var(--fs-h3)] font-bold leading-tight text-foreground"
             style={{ fontFamily: state.heading?.family }}
+          >
+            {ui.previewText}
+          </p>
+          <p data-block="sebuk"
+            className="text-[length:var(--fs-h3)] font-semibold leading-tight tracking-[-0.02em] text-foreground"
+            style={{ fontFamily: state.display?.family ?? state.heading?.family }}
           >
             {ui.previewText}
           </p>

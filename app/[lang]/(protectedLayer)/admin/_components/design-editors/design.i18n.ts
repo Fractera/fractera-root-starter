@@ -24,7 +24,7 @@
 
 const EN = {
   "fonts": {
-    "intro": "Three roles, one decision each: headings, body text, and monospace. The set opens on the system font — it downloads nothing and reaches no third party.",
+    "intro": "Four roles, one decision each: headings, body text, monospace, and a display face for the one heading of the first screen. The set opens on the system font — it downloads nothing and reaches no third party.",
     "roles": {
       "heading": {
         "label": "Headings",
@@ -37,6 +37,10 @@ const EN = {
       "mono": {
         "label": "Monospace",
         "description": "Code, identifiers, numbers in tables."
+      },
+      "display": {
+        "label": "Display",
+        "description": "The one striking heading of the first screen. Left unset, it follows the headings."
       }
     },
     "systemOption": "System font — no download",
@@ -264,7 +268,7 @@ const EN = {
 
 const RU: typeof EN = {
   "fonts": {
-    "intro": "Три роли, по одному решению на каждую: заголовки, основной текст, моноширинный. Набор открывается системным шрифтом — он ничего не скачивает и никуда не обращается.",
+    "intro": "Четыре роли, по одному решению на каждую: заголовки, основной текст, моноширинный и витринный — для одного заголовка первого экрана. Набор открывается системным шрифтом — он ничего не скачивает и никуда не обращается.",
     "roles": {
       "heading": {
         "label": "Заголовки",
@@ -277,6 +281,10 @@ const RU: typeof EN = {
       "mono": {
         "label": "Моноширинный",
         "description": "Код, идентификаторы, числа в таблицах."
+      },
+      "display": {
+        "label": "Витринный",
+        "description": "Один эффектный заголовок первого экрана. Не выбран — берёт шрифт заголовков."
       }
     },
     "systemOption": "Системный шрифт — без загрузки",

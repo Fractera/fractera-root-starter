@@ -59,6 +59,8 @@ export const FONT_CATALOGUE: FontEntry[] = [
   { family: "Montserrat", import: local("montserrat"), alphabets: ["latin", "cyrillic"], kind: "sans" },
   { family: "Rubik", import: local("rubik"), alphabets: ["latin", "cyrillic", "arabic"], kind: "sans" },
   { family: "Noto Sans", import: local("noto-sans"), alphabets: ["latin", "cyrillic", "greek"], kind: "sans" },
+  // Step 7: a wide display grotesque drawn for Cyrillic first — for the display role (one hero heading), too loud for body text.
+  { family: "Unbounded", import: local("unbounded"), alphabets: ["latin", "cyrillic"], kind: "sans" },
 
   // ── С засечками ────────────────────────────────────────────────────────────
   { family: "Playfair Display", import: local("playfair-display"), alphabets: ["latin", "cyrillic"], kind: "serif" },

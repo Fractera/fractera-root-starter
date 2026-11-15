@@ -6,6 +6,7 @@
     { "family": "Montserrat", "slug": "montserrat", "pkg": "@fontsource-variable/montserrat", "css": ["wght.css"] },
     { "family": "Rubik", "slug": "rubik", "pkg": "@fontsource-variable/rubik", "css": ["wght.css"] },
     { "family": "Noto Sans", "slug": "noto-sans", "pkg": "@fontsource-variable/noto-sans", "css": ["wght.css"] },
+    { "family": "Unbounded", "slug": "unbounded", "pkg": "@fontsource-variable/unbounded", "css": ["wght.css"] },
     { "family": "Playfair Display", "slug": "playfair-display", "pkg": "@fontsource-variable/playfair-display", "css": ["wght.css"] },
     { "family": "Merriweather", "slug": "merriweather", "pkg": "@fontsource-variable/merriweather", "css": ["wght.css"] },
     { "family": "Lora", "slug": "lora", "pkg": "@fontsource-variable/lora", "css": ["wght.css"] },

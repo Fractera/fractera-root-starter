@@ -61,8 +61,8 @@ export type ColorRole =
   | "input"
   | "ring"
 
-/** Роли шрифта: заголовки, текст, моноширинный. */
-export type FontRole = "heading" | "body" | "mono"
+/** Роли шрифта: заголовки, текст, моноширинный и витринный (`display` — один эффектный заголовок первого экрана, шаг 7). */
+export type FontRole = "heading" | "body" | "mono" | "display"
 
 export type DesignConfig = {
   /**
