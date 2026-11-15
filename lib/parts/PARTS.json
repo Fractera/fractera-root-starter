@@ -60,7 +60,8 @@
         "components/ui/textarea",
         "lib/i18n/voice-field.i18n",
         "lib/utils"
-      ]
+      ],
+      "bodyHash": "86af0d43b06596af"
     },
     {
       "id": "access-gate",
