@@ -103,7 +103,8 @@
     "recommend": "node scripts/recommend.mjs",
     "ask-person": "node scripts/ask-person.mjs",
     "check:openai-calls": "node scripts/check-openai-calls.mjs",
-    "test:openai-errors": "node scripts/test-openai-errors.mjs"
+    "test:openai-errors": "node scripts/test-openai-errors.mjs",
+    "browser": "node scripts/browser.mjs"
   },
   "dependencies": {
     "@a2a-js/sdk": "1.3.0",
