@@ -1410,7 +1410,8 @@
       "usedBy": [
         "components/ai-elements/message.tsx",
         "components/ai-elements/prompt-input.tsx",
-        "components/auth/setup-ladder.client.tsx"
+        "components/auth/setup-ladder.client.tsx",
+        "components/shell/quick-nav.client.tsx"
       ]
     },
     {

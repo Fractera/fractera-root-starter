@@ -2,9 +2,9 @@
 import { useEffect, useState } from 'react'
 import { Compass, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { isLoopbackHostname } from '@/lib/auth/owner-at-machine'
 import { isTemporaryHostname } from '@/lib/auth/temporary-address'
-import { isShowcaseHostname } from '@/lib/showcase'
 import { quickNavVisible } from './quick-nav-visibility'
 import type { QuickNavWords } from './quick-nav.i18n'
 
@@ -34,9 +34,9 @@ export function QuickNav({ lang, words, designHref, settingsHref, subscriptionHr
   useEffect(() => {
     if (sessionStorage.getItem(HIDDEN_KEY) === '1') return
     const host = window.location.hostname
-    const place = { loopback: isLoopbackHostname(host), temporary: isTemporaryHostname(host), showcase: isShowcaseHostname(host) }
+    const place = { loopback: isLoopbackHostname(host), temporary: isTemporaryHostname(host) }
     if (quickNavVisible(place, null)) { setShown(true); return }
-    if (place.temporary || place.showcase) return
+    if (place.temporary) return
     let alive = true
     fetch('/api/me', { cache: 'no-store', credentials: 'include' })
       .then((r) => (r.ok ? r.json() : null))
@@ -67,10 +67,17 @@ export function QuickNav({ lang, words, designHref, settingsHref, subscriptionHr
               {width} · {stepName(width)}{skill ? ` · ${words.skill}: ${skill}` : ''}
             </span>
           ) : null}
-          <Button variant="ghost" size="icon-sm" type="button" aria-label={words.hide} title={words.hide}
-            onClick={() => { sessionStorage.setItem(HIDDEN_KEY, '1'); setShown(false) }}>
-            <X aria-hidden className="size-4" />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon-sm" type="button" aria-label={words.hide}
+                  onClick={() => { sessionStorage.setItem(HIDDEN_KEY, '1'); setShown(false) }}>
+                  <X aria-hidden className="size-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{words.hide}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </span>
       </div>
     </nav>
